@@ -75,4 +75,4 @@ data/.minio.sys
 celerybeat-schedule
 
 # PyCharm
-idea/
+.idea/
