@@ -1,1 +1,3 @@
 @import "@less/invenio_app_rdm/variables";
+
+@mediumWidth: 15px;
