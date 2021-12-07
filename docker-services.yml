@@ -5,7 +5,7 @@ services:
       context: ./
       args:
         - ENVIRONMENT=DEV
-    image: bma-project
+    image: big-map-archive
     restart: "unless-stopped"
     environment:
       - "INVENIO_ACCOUNTS_SESSION_REDIS_URL=redis://cache:6379/1"
@@ -16,12 +16,12 @@ services:
       - "INVENIO_CELERY_RESULT_BACKEND=redis://cache:6379/2"
       - "INVENIO_SEARCH_ELASTIC_HOSTS=['es:9200']"
       - "INVENIO_SECRET_KEY=CHANGE_ME"
-      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://bma-project:bma-project@db/bma-project"
+      - "INVENIO_SQLALCHEMY_DATABASE_URI=postgresql+psycopg2://big-map-archive:big-map-archive@db/big-map-archive"
       - "INVENIO_WSGI_PROXIES=2"
       - "INVENIO_RATELIMIT_STORAGE_URL=redis://cache:6379/3"
   frontend:
     build: ./docker/nginx/
-    image: bma-project-frontend
+    image: big-map-archive-frontend
     restart: "unless-stopped"
     ports:
       - "80"
@@ -36,9 +36,9 @@ services:
     image: postgres:12.4
     restart: "unless-stopped"
     environment:
-      - "POSTGRES_USER=bma-project"
-      - "POSTGRES_PASSWORD=bma-project"
-      - "POSTGRES_DB=bma-project"
+      - "POSTGRES_USER=big-map-archive"
+      - "POSTGRES_PASSWORD=big-map-archive"
+      - "POSTGRES_DB=big-map-archive"
     ports:
       - "5432:5432"
   pgadmin:
@@ -49,7 +49,7 @@ services:
       - "5051:443"
     environment:
       PGADMIN_DEFAULT_EMAIL: "francois.liot@epfl.ch"
-      PGADMIN_DEFAULT_PASSWORD: "bma-project"
+      PGADMIN_DEFAULT_PASSWORD: "big-map-archive"
   mq:
     image: rabbitmq:3.8-management
     restart: "unless-stopped"

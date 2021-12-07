@@ -4,9 +4,9 @@ logfile = /logs/invenio-cli.log
 
 [cookiecutter]
 project_name = BIG-MAP Archive
-project_shortname = bma-project
-project_site = bma-project.com
-github_repo = bma-project/bma-project
+project_shortname = big-map-archive
+project_site = big-map-archive@materialscloud.org
+github_repo = materialscloud-org/big-map-archive
 description = BIG-MAP Archive InvenioRDM Instance
 author_name = Francois Liot
 author_email = francois.liot@epfl.ch

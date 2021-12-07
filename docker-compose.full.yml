@@ -63,7 +63,7 @@ services:
       file: docker-services.yml
       service: app
     command: ["uwsgi /opt/invenio/var/instance/uwsgi_ui.ini"]
-    image: bma-project
+    image: big-map-archive
     ports:
       - "5000"
     volumes:
@@ -77,7 +77,7 @@ services:
       file: docker-services.yml
       service: app
     command: ["uwsgi /opt/invenio/var/instance/uwsgi_rest.ini"]
-    image: bma-project
+    image: big-map-archive
     ports:
       - "5000"
     volumes:
@@ -90,7 +90,7 @@ services:
       file: docker-services.yml
       service: app
     command: ["celery -A invenio_app.celery worker --loglevel=INFO"]
-    image: bma-project
+    image: big-map-archive
     depends_on:
       es:
         condition: service_started
