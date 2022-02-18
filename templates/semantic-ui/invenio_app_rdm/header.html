@@ -56,8 +56,13 @@
                     </div>
                   </li>
                     {%- else %}
-                      <li class={{ "navbar-item navbar-options active" if item.active and loop.depth == 0 else "navbar-item" }}>
-                      <a href="{{ item.url }}">{{ item.text|safe }}</a></li>
+                  <li class="navbar-item navbar-button">
+                    {%- if item.text == 'Uploads' %}
+                      <a class="ui button" href="{{ item.url }}">My records</a>
+                    {%- else %}
+                        <a href="{{ item.url }}">{{ item.text|safe }}</a>
+                    {%- endif %}
+                  </li>
                       {%- endif %}
                 {%- endfor %}
             {%- endblock navbar_nav %}
