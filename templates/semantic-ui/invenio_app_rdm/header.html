@@ -34,7 +34,7 @@
                     <div class="navbar-item navbar-search-bar" id="header-search-bar">
                       <form class="form" action="{{ config.THEME_SEARCH_ENDPOINT }}" role="search">
                         <div class="ui action icon input">
-                          <input type="text" name="q" placeholder="{{ _('Search') }}">
+                          <input type="text" name="q" placeholder="{{ _('Search publications') }}">
                           <button type="submit" class="ui icon search button">
                             <i class="icon search"></i>
                           </button>
@@ -57,11 +57,18 @@
                   </li>
                     {%- else %}
                   <li class="navbar-item navbar-button">
-                    {%- if item.text == 'Uploads' %}
-                      <a class="ui button" href="{{ item.url }}">My records</a>
-                    {%- else %}
-                        <a href="{{ item.url }}">{{ item.text|safe }}</a>
-                    {%- endif %}
+                      <ul class="rdm-sign-buttons">
+                        <li class="navbar-item navbar-button">
+                            {%- if config.ACCOUNTS %}
+                                {%- if current_user.is_authenticated %}
+                                    <form>
+                                        <a class="ui button" href="{{ url_for('invenio_search_ui.search') }}">Publications</a>
+                                        <a class="ui button" href="{{ url_for('invenio_app_rdm_records.deposit_search') }}">My records</a>
+                                    </form>
+                                {%- endif %}
+                            {%- endif %}
+                        </li>
+                      </ul>
                   </li>
                       {%- endif %}
                 {%- endfor %}
