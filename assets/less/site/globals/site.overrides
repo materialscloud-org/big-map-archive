@@ -1,7 +1,7 @@
 @import "@less/invenio_app_rdm/theme";
 
 .big-map-logo {
-  width: 50px;
+  width: 100px;
   height: auto;
   font-size: @medium;
 }
