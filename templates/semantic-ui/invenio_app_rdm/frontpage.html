@@ -14,7 +14,22 @@
 {%- block page_body %}
 {%- block first_section%}
 <section class="get-started-section section-content-white-bg">
-  <span class="section-title frontpage-title">{{ _("Welcome to BIG-MAP Archive!") }}</span>
+  <span class="section-title frontpage-title"><h2>{{ _("Welcome to BIG-MAP Archive") }}</h2></span>
+  <div class="ui container">
+    <div class="centered">
+      <span>The BIG-MAP Archive allows you to store publications, datasets, software, images, videos or any other resource type. </span>
+    </div>
+    <div class="ui padded relaxed centered grid">
+    The Battery Interface Genome – Materials Acceleration Platform (BIG-MAP) project is part of the large-scale and long-term European research initiative BATTERY 2030+. Here, we propose a radical paradigm shift in battery innovation, which will lead to a dramatic speed-up in the battery discovery and innovation time; reaching a 5-10 fold increase relative to the current rate of discovery within the next 5-10 years. BIG-MAP relies on the development of a unique R&D infrastructure and accelerated methodology that unites and integrates insights from leading experts, competences and data across the entire battery (discovery) value chain with Artificial Intelligence (AI), High Performance Computing (HPC), large-scale and high-throughput characterization and and autonomous synthesis robotics. In short, BIG-MAP aims to reinvent the way we invent batteries and to develop core modules and Key Demonstrators of a Materials Acceleration Platform specifically designed for accelerated discovery of battery materials and interfaces.
+    </div>
+  </div>
+  <br><br>
+  <div class="ui container">
+    <div class="centered">
+      <span class="frontpage-title"><h2>{{ _("Access the BIG-MAP Archive in 3 steps") }}</h2></span>
+    </div>
+  </div>
+
   <div class="ui container">
     <div class="ui padded relaxed centered grid">
       <div class="invenio-rdm-project-goals">
@@ -47,7 +62,7 @@
           <h3 class="section-title">{{ _("Store/Retrieve") }}</h3>
           <div class="command-line">
             {% trans %}
-              BIG-MAP Archive allows you to store publications, datasets, software, images, videos or any other resource type.
+              Browse through published records, download files and upload your own research.
             {% endtrans %}
           </div>
         </div>
