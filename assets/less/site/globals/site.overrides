@@ -90,3 +90,7 @@ button.ui.icon.search.button {
     padding: 1em;
   }
 }
+
+#dashboard-tab div.ui.container {
+    padding-top: 1px;
+}
