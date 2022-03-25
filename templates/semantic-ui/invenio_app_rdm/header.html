@@ -1,3 +1,13 @@
+{#
+    -*- coding: utf-8 -*-
+    Copyright (C) 2019-2020 CERN.
+    Copyright (C) 2019-2020 Northwestern University.
+    Copyright (C) 2021 New York University.
+
+    Invenio App RDM is free software; you can redistribute it and/or modify it
+    under the terms of the MIT License; see LICENSE file for more details.
+#}
+
 <div>
   <header class="theme header">
     <div class="outer-navbar">
@@ -37,16 +47,6 @@
                 {%- endif %}
             </li>
               {%- block navbar_nav %}
-                {%- for item in current_menu.submenu('main').children|sort(attribute='order') if item.visible recursive %}
-                    {%- if item.children %}
-                  <li class="navbar-item navbar-options">
-                    <div class="dropdown{{ ' active' if item.active else '' }}">
-                      <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                        aria-expanded="false" href="{{ item.url }}">{{ item.text|safe }} <b class="caret"></b></a>
-                      <ul class="dropdown-menu">{{ loop(item.children|sort(attribute='order')) }}</ul>
-                    </div>
-                  </li>
-                    {%- else %}
                   <li class="navbar-item navbar-button">
                       <ul class="rdm-sign-buttons">
                         <li class="navbar-item navbar-button">
@@ -60,8 +60,6 @@
                         </li>
                       </ul>
                   </li>
-                      {%- endif %}
-                {%- endfor %}
             {%- endblock navbar_nav %}
             <li class="navbar-item navbar-button">
               <ul class="rdm-sign-buttons">
@@ -98,5 +96,3 @@
   {%- include "invenio_theme/breadcrumbs.html" %}
   {%- endblock breadcrumbs %}
 </div>
-
-

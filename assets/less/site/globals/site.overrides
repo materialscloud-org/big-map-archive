@@ -32,12 +32,12 @@ li.navbar-item.navbar-button {
 }
 
 .user-profile {
-	text-align: right !important;
+    text-align: right !important;
 	margin-left: auto;
 }
 
-footer.footer-global div {
-	background-color: black;
+.user-profile a.ui.button {
+    overflow: unset !important;
 }
 
 span.section-title.frontpage-title h2 {
