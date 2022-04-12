@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "ff3e6b9c5443668b679afcd1f6d3b2bedd2e1e4f1abd299f69728fd29f1897a2"
+            "sha256": "3ffe7c0ad9121f28bd038dc16e5addf943114bdd7aa5d474f3eb2344299fc267"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -1108,11 +1108,13 @@
             "version": "==1.4.2"
         },
         "invenio-search-ui": {
+            "editable": true,
+            "git": "https://github.com/materialscloud-org/invenio-search-ui-bma.git",
             "hashes": [
                 "sha256:8fb9aa6b09cf21307298641a1368d3d2acb550e3d568b2478d68aff360d0f11f",
                 "sha256:cb46ad84b3e93f37e6c9a95b5e0b236d1d78a25c6ec6fc4385394b29ed62620e"
             ],
-            "version": "==2.0.10"
+            "ref": "e45a66c4ff552469277a11411c4276bd244ea666"
         },
         "invenio-theme": {
             "hashes": [
@@ -1244,11 +1246,11 @@
         },
         "jupyterlab-pygments": {
             "hashes": [
-                "sha256:2d48bcdd666043afc086af56adaf6bb79bbeffb1d73ed00ec4a2113f6cc22581",
-                "sha256:8feffeec1799aaaea5b889add289e0c6dd648ea049be800fde814de46bf99f83"
+                "sha256:05f8056a18fec9ebef01f705443d81edb16bb03d27371f23c0ae135a85a76029",
+                "sha256:121da770930e348895f89d6bdfce7e7e6a8bb574162923f9c9ef5a20c61619c6"
             ],
             "markers": "python_version >= '3.7'",
-            "version": "==0.2.0"
+            "version": "==0.2.1"
         },
         "kombu": {
             "hashes": [
