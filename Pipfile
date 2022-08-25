@@ -7,13 +7,11 @@ verify_ssl = true
 check-manifest = ">=0.25"
 
 [packages]
-#invenio-app-rdm = {extras = ["postgresql", "elasticsearch7", "s3"], version = "==9.0.0"}
-invenio-app-rdm = {git = "git@github.com:materialscloud-org/invenio-app-rdm.git", editable = true, ref = "develop", extras = ["postgresql", "elasticsearch7", "s3"]}
+invenio-app-rdm = {extras = ["postgresql", "elasticsearch7"], version = "==9.0.2"}
 uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
 uwsgi-tools = ">=1.1.1"
-invenio-s3 = "==1.0.5"
-sentry-sdk = "==1.9.0"
+invenio_s3 = "==1.0.5"
 
 [requires]
 python_version = "3.8"
