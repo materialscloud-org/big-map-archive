@@ -1,0 +1,53 @@
+{# -*- coding: utf-8 -*-
+
+  This file is part of Invenio.
+  Copyright (C) 2015-2020 CERN.
+
+  Invenio is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+{%- extends config.ACCOUNTS_COVER_TEMPLATE %}
+{% from "invenio_accounts/_macros.html" import render_field, form_errors %}
+
+{% block page_body %}
+
+  <div class="ui padded segments big form">
+    <div class="ui segment padded relaxed">
+      <h3 class="ui login header">Access to BIG-MAP Archive is restricted</h3>
+      <p style="color: black; text-align: left">If you belong to BIG-MAP, a user account on the archive may have already been created on your behalf.</p>
+      <p style="color: black; text-align: left">To login for the first time without your current password, click <a href="/lost-password/">First-time log in</a>, enter your email address, and follow instructions.</p>
+      <p style="color: black; text-align: left">To request an account, send an email at <span style="color: #005b9e">big-map-archive@materialscloud.org</span> specifying your name, email address, affiliation, and BIG-MAP work package.</p>
+      <div class="divider hidden"></div>
+
+
+{#      {%- with form = register_user_form %}
+        <form action="{{ url_for_security('register') }}" method="POST"
+              name="register_user_form">
+          {{ form.hidden_tag() }}
+          {%- block registration_form_fields scoped %}
+            {{ render_field(form.email, icon="user icon", autofocus=True, errormsg='email' in form.errors) }}
+            {{ render_field(form.password, icon="lock icon", errormsg='password' in form.errors) }}
+            {%- if form.password_confirm %}
+              {{ render_field(form.password_confirm, icon="lock icon", errormsg=False) }}
+            {%- endif %}
+          {%- endblock registration_form_fields %}
+
+          {%- if form.recaptcha %}
+            <div class="grouped fields">{{ form.recaptcha() }}</div>
+          {%- endif %}
+
+          <button type="submit" class="ui fluid large signup submit button">
+            <i class="ui edit outline icon"></i>{{ _('Sign up') }}
+          </button>
+        </form>
+      {%- endwith %}#}
+      <div class="divider hidden"></div>
+    </div>
+
+    <div class="ui primary segment padded text-muted">
+      {{ _('Already have an account?') }}
+      <a href="{{ url_for_security('login', next=request.args.get('next')) }}">{{ _('Log in') }}</a>
+    </div>
+  </div>
+
+{% endblock page_body %}
