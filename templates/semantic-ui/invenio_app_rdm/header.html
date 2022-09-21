@@ -14,12 +14,12 @@
       {%- block navbar %}
       <div class="ui container invenio-header-container">
         <nav id="invenio-nav" class="ui inverted menu borderless stackable p-0">
-          <div class="item logo p-0">
+          <div class="item" style="padding-right: 20px">
             {%- block navbar_header %}
                 {%- block brand %}
                   {%- if config.THEME_LOGO %}
                     <a class="logo-link" href="/">
-                      <img class="ui image rdm-logo"
+                      <img class="ui image big-map-logo"
                             src="{{ url_for('static', filename=config.THEME_LOGO) }}"
                             alt="{{ _(config.THEME_SITENAME) }}"/>
                     </a>

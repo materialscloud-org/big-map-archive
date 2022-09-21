@@ -1,0 +1,3 @@
+.big-map-logo {
+  max-height: @75px;
+}
