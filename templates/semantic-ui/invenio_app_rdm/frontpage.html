@@ -1,0 +1,76 @@
+{#
+  Copyright (C) 2019-2020 CERN.
+  Copyright (C) 2019-2020 Northwestern University.
+  Copyright (C) 2021 New York University.
+
+  Invenio App RDM is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+{%- extends "invenio_theme/frontpage.html" %}
+
+{%- block page_header %}
+{%- include "invenio_app_rdm/header_frontpage.html" %}
+{%- endblock page_header %}
+
+{%- block page_body %}
+{%- block first_section %}
+<div class="get-started-section section-content white-bg">
+  <h2 class="section-title">
+    {{ _("A secure site for sharing files with the BIG-MAP community") }}
+    <br> manually &amp; programmatically
+  </h2>
+
+  <div class="ui container three column stackable grid center aligned vertically padded relaxed">
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="upload huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Upload") }}</h3>
+        <div class="command-line">
+          Upload GB-sized files & files of any format.
+        </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="archive huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Store") }}</h3>
+          <div class="command-line">
+            Keep uploaded files private.
+          </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="unlock huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Publish") }}</h3>
+          <div class="command-line">
+            Make uploaded files available to BIG-MAP.
+          </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="search huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Search") }}</h3>
+          <div class="command-line">
+            Perform faceted search & advanced queries.
+          </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="download huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Download") }}</h3>
+        <div class="command-line">
+          Download any file of any published record.
+        </div>
+      </div>
+    <div class="row one column center aligned">
+      <div class="sixteen wide column">
+          <div class="ui primary button labeled icon big goto-button">
+            <i class="file alternate outline icon"></i>
+            <a href=""
+                target="_blank">{{ _("Tutorials (soon)") }}</a>
+          </div>
+          <div class="ui primary button labeled icon big goto-button">
+            <i class="file alternate outline icon"></i>
+            <a href=""
+                target="_blank">{{ _("FAQ (soon)") }}</a>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+{%- endblock first_section %}
+{%- endblock page_body %}
