@@ -15,9 +15,19 @@
         {%- block footer_top_left %}
           <div class="ui grid">
             <div class="rdm-footer five wide tablet two wide computer column">
-              <h2 class="ui small header">{{_ ("About BIG-MAP")}}</h2>
-              <p><a href="https://www.big-map.eu/">Official website</a></p>
+              <h2 class="ui small header">{{_ ("Archive's REST API")}}</h2>
+              <p><a href="https://inveniordm.docs.cern.ch/reference/rest_api_index/">Documentation</a></p>
+              <p><a href="https://github.com/materialscloud-org/big-map-archive-api-examples">Python scripts</a></p>
             </div>
+            <div class="rdm-footer five wide tablet two wide computer column">
+                  <h2 class="ui small header">{{_ ("BATTERY2030+ projects")}}</h2>
+                  <p><a href="https://www.big-map.eu/">BIG-MAP</a></p>
+                  <p><a href="https://bat4ever.de/WordPress/">BAT4EVER</a></p>
+                  <p><a href="https://www.hidden-project.eu">HIDDEN</a></p>
+                  <p><a href="https://www.spartacus-battery.eu/">SPARTACUS</a></p>
+                  <p><a href="https://sensibat-project.eu">SENSIBAT</a></p>
+                  <p><a href="https://www.instabat.eu/">INSTABAT</a></p>
+                </div>
           {%- endblock footer_top_left %}
           <div class="six wide column right aligned">
             {%- block footer_top_right %}
@@ -28,13 +38,12 @@
     </div>
     {%- endblock footer_top %}
     {%- block footer_bottom %}
-{#    <div class="footer-bottom sub-footer">
+    <div class="footer-bottom sub-footer">
       <div class="ui container">
         <div class="ui grid">
           <div class="eight wide column left middle aligned">
             {%- block footer_bottom_left %}
-            {% trans invenio_rdm="http://inveniosoftware.org/products/rdm" %}Powered by <a
-              href="{{invenio_rdm}}">InvenioRDM</a>{% endtrans %}
+            Need help? Email us at big-map-archive@materialscloud.org.
             {%- endblock footer_bottom_left %}
           </div>
           <div class="eight wide column right aligned">
@@ -47,6 +56,6 @@
           </div>
         </div>
       </div>
-    </div>#}
+    </div>
     {%- endblock footer_bottom %}
 </footer>
