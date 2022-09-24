@@ -16,6 +16,11 @@
       <div class="divider hidden"></div>
       {%- block form_header %}
         <h3 class="ui login header">{{ _('Log in to account') }}</h3>
+
+        <p style="color: black; text-align: left">If you are a BIG-MAP member, an account may already have been created for you. In this case, you should have received a confirmation email from <span style="color: #005b9e">big-map-archive@materialscloud.org</span>.</p>
+        <p style="color: black; text-align: left">If this is your first time signing in, click the <b>forgot password link below</b> to set your password for the first time.</p>
+        <p style="color: black; text-align: left">To request an account, please contact us at <span style="color: #005b9e">big-map-archive@materialscloud.org</span>, specifying your email address.</p>
+        <div class="divider hidden"></div>
       {%- endblock form_header %}
 
       {%- block form_outer %}
@@ -37,18 +42,18 @@
 
     </div>
 
-    {%- block registerable %}
+{#    {%- block registerable %}
       {%- if security.registerable %}
         <div class="ui primary segment padded text-muted">
-            Log in for the first time?
-            <a href="{{ url_for_security('forgot_password') }}">{{ _('Set password first') }}</a>
+            Log in for the first time? Click
+            <a href="{{ url_for_security('forgot_password') }}">{{ _('Forgot password?') }}</a>
         </div>
         <div class="ui primary segment padded text-muted">
             {% trans sitename=config.ACCOUNTS_SITENAME %}New to BIG-MAP Archive?{% endtrans %}
             <a href="{{ url_for_security('register', next=request.args.get('next')) }}">{{ _('Sign up') }}</a>
         </div>
       {%- endif %}
-    {%- endblock registerable %}
+    {%- endblock registerable %}#}
   </div>
 
   {%- block recoverable %}
