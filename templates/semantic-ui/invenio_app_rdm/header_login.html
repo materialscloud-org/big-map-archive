@@ -11,7 +11,7 @@
 {%- if config.ACCOUNTS %}
     {%- if not current_user.is_authenticated %}
         <form>
-            <a href="{{ url_for_security('login', next=request.path) }}"
+            <a href="{{ url_for_security('login', next='/search') }}"
                class="ui button">
                 <i class="sign-in icon"></i>
                 {{ _('Log in') }}</a>
