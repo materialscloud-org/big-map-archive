@@ -9,10 +9,10 @@ check-manifest = ">=0.25"
 [packages]
 #invenio-app-rdm = {extras = ["postgresql", "elasticsearch7"], version = "==9.0.2"}
 invenio-app-rdm = {git = "https://github.com/materialscloud-org/invenio-app-rdm.git", editable = true, ref = "develop-bma", extras = ["postgresql", "elasticsearch7"]}
-invenio-drafts-resources = {git = "https://github.com/materialscloud-org/invenio-drafts-resources.git", editable = true, ref = "develop-bma"}
-invenio-oauth2server = {git = "https://github.com/materialscloud-org/invenio-oauth2server.git", editable = true, ref = "develop-bma"}
-invenio-rdm-records = {git = "https://github.com/materialscloud-org/invenio-rdm-records.git", editable = true, ref = "develop-bma"}
-invenio-s3 = {git = "https://github.com/materialscloud-org/invenio-s3.git", editable = true, ref = "develop-bma"}
+invenio_drafts_resources = {git = "https://github.com/materialscloud-org/invenio-drafts-resources.git", editable = true, ref = "develop-bma"}
+invenio_oauth2server = {git = "https://github.com/materialscloud-org/invenio-oauth2server.git", editable = true, ref = "develop-bma"}
+invenio_rdm_records = {git = "https://github.com/materialscloud-org/invenio-rdm-records.git", editable = true, ref = "develop-bma"}
+invenio_s3 = {git = "https://github.com/materialscloud-org/invenio-s3.git", editable = true, ref = "develop-bma"}
 invenio-search-ui = {git = "https://github.com/materialscloud-org/invenio-search-ui.git", editable = true, ref = "develop-bma"}
 uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
