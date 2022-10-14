@@ -48,8 +48,10 @@ services:
       - "5050:80"
       - "5051:443"
     environment:
-      PGADMIN_DEFAULT_EMAIL: "francois.liot@epfl.ch"
+      PGADMIN_DEFAULT_EMAIL: "info@big-map-archive.com"
       PGADMIN_DEFAULT_PASSWORD: "big-map-archive"
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
   mq:
     image: rabbitmq:3.8-management
     restart: "unless-stopped"

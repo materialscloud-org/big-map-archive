@@ -67,6 +67,12 @@ logs/
 # Invenio-cli per machine file
 .invenio.private
 
+# Document containing email addresses of users
+app_data/users.yaml
+
+# Document containing secrets (passwords...)
+invenio.cfg
+
 # S3 default bucket location
 data/default/*
 data/.minio.sys

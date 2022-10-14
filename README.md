@@ -1,4 +1,4 @@
-# BIG-MAP Archive
+# big-map-archive
 
 Welcome to your InvenioRDM instance.
 

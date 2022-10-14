@@ -1,6 +1,7 @@
 {#
   Copyright (C) 2019-2020 CERN.
   Copyright (C) 2019-2020 Northwestern University.
+  Copyright (C) 2021 New York University.
 
   Invenio App RDM is free software; you can redistribute it and/or modify it
   under the terms of the MIT License; see LICENSE file for more details.
@@ -12,58 +13,70 @@
 {%- endblock page_header %}
 
 {%- block page_body %}
-{%- block first_section%}
-<section class="get-started-section section-content-white-bg">
-  <span class="section-title frontpage-title">{{ _("Welcome to BIG-MAP Archive!") }}</span>
-  <div class="ui container">
-    <div class="ui padded relaxed centered grid">
-      <div class="invenio-rdm-project-goals">
-        <div class="rdm-goal">
-          <div class="flex-center-vertically">
-            <div class="numbering">1</div>
-          </div>
-          <h3 class="section-title">{{ _("Sign up") }}</h3>
-          <div class="command-line">
-            {% trans %}
-              Request an account by sending an email to francois.liot@epfl.ch.
-            {% endtrans %}
-          </div>
-        </div>
-        <div class="rdm-goal">
-          <div class="flex-center-vertically">
-            <div class="numbering">2</div>
-          </div>
-          <h3 class="section-title">{{ _("Sign in") }}</h3>
-            <div class="command-line">
-              {% trans %}
-                Change your password after your first login.
-              {% endtrans %}
-          </div>
-        </div>
-        <div class="rdm-goal">
-          <div class="flex-center-vertically">
-            <div class="numbering">3</div>
-          </div>
-          <h3 class="section-title">{{ _("Store/Retrieve") }}</h3>
-          <div class="command-line">
-            {% trans %}
-              BIG-MAP Archive allows you to store publications, datasets, software, images, videos or any other resource type.
-            {% endtrans %}
-          </div>
+{%- block first_section %}
+<div class="get-started-section section-content white-bg">
+  <h2 class="section-title">
+    A Repository for Sharing Files within the BIG-MAP Community
+  </h2>
+
+  <div class="ui container three column stackable grid center aligned vertically padded relaxed">
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="upload huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Upload") }}</h3>
+        <div class="command-line">
+          Upload files up to 10 GB in size <br>& of any format.
         </div>
       </div>
+{#      <div class="rdm-goal column">
+        <i aria-hidden="true" class="archive huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Store") }}</h3>
+          <div class="command-line">
+            Keep uploaded files private.
+          </div>
+      </div>#}
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="unlock huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Publish") }}</h3>
+          <div class="command-line">
+            Make your files available <br>to other BIG-MAP members.
+          </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="search huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Search") }}</h3>
+        <div class="command-line">
+          Search for records with ease.
+        </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="download huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Download") }}</h3>
+        <div class="command-line">
+          Download files of published records.
+        </div>
+      </div>
+      <div class="rdm-goal column">
+        <i aria-hidden="true" class="code huge icon" style="color: #0377cd"></i>
+        <h3 class="section-title">{{ _("Leverage API") }}</h3>
+        <div class="command-line">
+          Exchange files with the archive <br>from your own client applications.
+        </div>
+      </div>
+    <div class="row one column center aligned">
+      <div class="sixteen wide column">
+          <div class="ui primary button labeled icon big goto-button">
+            <i class="file alternate outline icon"></i>
+            <a href=""
+                target="_blank">{{ _("Tutorials (soon)") }}</a>
+          </div>
+          <div class="ui primary button labeled icon big goto-button">
+            <i class="file alternate outline icon"></i>
+            <a href=""
+                target="_blank">{{ _("FAQ (soon)") }}</a>
+          </div>
+        </div>
     </div>
   </div>
-  <div class="row inline-row">
-    <div class="inline-row-pane">
-      <div class="goto-button">
-        <a href="https://inveniordm.docs.cern.ch" target="_blank"><i class="file alternate outline icon"></i>{{ _("Docs") }}</a>
-      </div>
-      <div class="goto-button">
-        <a href="https://github.com/inveniosoftware" target="_blank"><i class="github icon"></i>{{ _("Code") }}</a>
-      </div>
-    </div>
-  </div>
-</section>
-{%- endblock first_section%}
-{%- endblock page_body%}
+</div>
+{%- endblock first_section %}
+{%- endblock page_body %}
