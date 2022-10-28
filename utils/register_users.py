@@ -12,9 +12,10 @@ from invenio_db import db
 from invenio_users_resources.services.users.tasks import reindex_user
 from invenio_app.factory import create_app
 
+
 def read_users(file):
     import json
-  
+
     f = open(file)
     data = json.load(f)
     accounts_created = 0
@@ -55,7 +56,7 @@ def create_user_account(email):
         print("\033[92mSent welcome email to {}\033[0m".format(email))
 
         # wait 10 seconds and then send email to reset password
-        # this is to avoid that the reset password email arrives before the 
+        # this is to avoid that the reset password email arrives before the
         # welcome email
         time.sleep(10)
 
@@ -75,6 +76,7 @@ def big_map_send_email(recipients, subject, email_body):
     msg = Message(subject, sender=sender, recipients=[recipients], body=email_body)
 
     mail.send(msg)
+
 
 def send_welcome_email(user):
     """Send welcome email."""
@@ -99,26 +101,28 @@ def send_welcome_email(user):
 
 
 def send_reset_password_email(user):
-        """Send email containing instructions to reset password."""
-        token, reset_link = default_reset_password_link_func(user)
-        subject = "BIG MAP ARCHIVE: please reset your password"
+    """Send email containing instructions to reset password."""
+    token, reset_link = default_reset_password_link_func(user)
+    subject = "BIG MAP ARCHIVE: please reset your password"
 
-        if config_value("SEND_PASSWORD_RESET_EMAIL"):
-            send_mail(
-                subject,
-                user.email,
-                "reset_instructions",
-                user=user,
-                reset_link=reset_link,
-            )
-            reset_password_instructions_sent.send(
-                current_app._get_current_object(), user=user, token=token
-            )
+    if config_value("SEND_PASSWORD_RESET_EMAIL"):
+        send_mail(
+            subject,
+            user.email,
+            "reset_instructions",
+            user=user,
+            reset_link=reset_link,
+        )
+        reset_password_instructions_sent.send(
+            current_app._get_current_object(), user=user, token=token
+        )
+
 
 def set_member_community(community, user):
     """Set user as member of community"""
-    #TODO
+    # TODO
     pass
+
 
 if __name__ == '__main__':
     app = create_app()
@@ -127,4 +131,3 @@ if __name__ == '__main__':
 
     file = '../app_data/users.json'
     read_users(file)
-
