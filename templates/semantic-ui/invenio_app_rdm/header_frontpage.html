@@ -18,11 +18,11 @@
 {%- block frontpage_search %}
 <div id="frontpage-search-bar" class="ui container fluid frontpage-header">
   <div class="ui container grid rel-mt-2">
-    <div class="row">
+{#    <div class="row">
       <div class="sixteen wide column center aligned">
         <h2 class="ui center aligned header inverted" style="color: orange">PRE-RELEASE DISCLAIMER: THIS IS A TEST VERSION—RECORDS ARE NOT BACKED UP</h2>
       </div>
-    </div>
+    </div>#}
     <div class="row">
       <div class="sixteen wide column center aligned">
         {%- block frontpage_title %}
@@ -38,7 +38,7 @@
           <div class="sixteen wide mobile eight wide computer column center aligned">
             <form action="{{ url_for('invenio_search_ui.search') }}" class="ui form" role="search">
               <div class="ui fluid big action input">
-                <input type="text" name="q" class="form-control" placeholder="{{ _('Search in publications') }}">
+                <input type="text" name="q" class="form-control" placeholder="{{ _('Search for publications') }}">
                 <button type="submit" class="ui icon search button" aria-label="{{ _('Search') }}"><i class="search icon"></i></button>
               </div>
             </form>

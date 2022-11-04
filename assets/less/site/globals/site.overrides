@@ -1,3 +1,107 @@
 .big-map-logo {
   max-height: @75px;
 }
+
+/* For web browsers with max width of 643px: */
+.outer-navbar {
+    background-image: url(../../../../static/images/batteries.png);
+    background-size: cover;
+    background-position: center center;
+}
+
+/* For web browsers with min width of 644px: */
+@media only screen and (min-width: 644px) {
+    .outer-navbar {
+        background-image: url(../../../../static/images/batteries.png);
+        background-size: contain; // background image will scale, will try to fit the content area, but will keep its aspect ratio
+        background-position: center center;
+    }
+}
+
+.outer-navbar #invenio-nav {
+    background: #195c61;
+}
+
+.ui.container {
+    width: auto !important;
+}
+
+.big-map-logo {
+    padding-left: 50px !important;
+}
+
+div.right.menu.item {
+    padding-right: 50px !important;
+}
+
+div#rdm-burger-toggle {
+    padding-right: 50px !important;
+    right: 0px !important;
+}
+
+button#rdm-burger-menu-icon {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+.footer-top {
+    background-color: #195c61;
+    padding: 2rem 0 4rem;
+}
+
+.footer-bottom, .sub-footer {
+    background-color: #46535b !important;
+    box-shadow: none !important;
+}
+
+#rdm-burger-menu-icon .navicon:before, #rdm-burger-menu-icon .navicon, #rdm-close-burger-menu-icon .navicon, #rdm-burger-menu-icon .navicon:after {
+    background: white !important;
+}
+
+ui container invenio-header-container {
+    padding: 0px;
+}
+
+div.ui.container.invenio-header-container {
+    margin: 0px !important;
+}
+
+.ui.search.button {
+    background-color: #b20702 !important;
+    color: #FFFFFF;
+    text-shadow: none;
+    background-image: none;
+    box-shadow: 0px 0em 0px 0px rgb(34 36 38 / 15%) inset;
+}
+
+.ui.primary.buttons .button, .ui.primary.button {
+    background-color: #195c61 !important;
+}
+
+.ui.primary.buttons .button:hover, .ui.primary.button:hover {
+    background-color: #0c2d30 !important;
+}
+
+.section-title {
+    color: #195c61 !important;
+}
+
+#invenio-nav.ui.menu .item:first-of-type {
+    padding: 0px !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button {
+    margin: 5px !important
+}
+
+div.rdm-footer.five.wide.tablet.two.wide.computer.column {
+    padding-left: 50px !important;
+}
+
+div.eight.wide.column.left.middle.aligned {
+    padding-left: 50px !important;
+}
+
+i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon {
+    color: #195c61 !important;
+}
