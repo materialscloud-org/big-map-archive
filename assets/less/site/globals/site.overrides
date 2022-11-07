@@ -102,3 +102,8 @@ div.eight.wide.column.left.middle.aligned {
 i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon {
     color: #195c61 !important;
 }
+
+.cover-page {
+    background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(89,255,82, 0.69));
+    background-color: #0377cd;
+}
