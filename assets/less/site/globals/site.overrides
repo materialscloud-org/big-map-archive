@@ -105,5 +105,22 @@ i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon
 
 .cover-page {
     background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(89,255,82, 0.69));
-    background-color: #0377cd;
+    background-color: #195c61 !important;
+}
+
+.ui.menu a.brand.active.item {
+    border-color: #195c61;
+    background-color: #195c61;
+}
+
+.ui.toggle.checkbox input#versions-toggle:checked ~ label:before {
+    background-color: #195c61 !important;
+}
+
+.ui.positive.buttons .button, .ui.positive.button {
+    background-color: #195c61 !important;
+}
+
+.ui.accordion.invenio-accordion-field .title {
+    background-color: #195c61 !important;
 }
