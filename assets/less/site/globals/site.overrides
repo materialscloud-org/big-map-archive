@@ -92,7 +92,7 @@ div.eight.wide.column.left.middle.aligned {
     padding-left: 50px !important;
 }
 
-i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon {
+i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
     color: #195c61 !important;
 }
 
@@ -120,10 +120,12 @@ i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon
 
 div.ui.primary.button.labeled.icon.big.goto-button {
     background-color: #2c8a4b !important;
+    width: 288px !important;
 }
 
 div.ui.primary.button.labeled.icon.big.goto-button:hover {
     background-color: #236e3c !important;
+    width: 288px !important;
 }
 
 button.ui.medium.fluid.icon.primary.left.labeled.button {
