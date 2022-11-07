@@ -22,10 +22,6 @@
     background: #195c61;
 }
 
-.ui.container {
-    width: auto !important;
-}
-
 .big-map-logo {
     padding-left: 50px !important;
 }
@@ -64,6 +60,7 @@ ui container invenio-header-container {
 
 div.ui.container.invenio-header-container {
     margin: 0px !important;
+    width: auto !important;
 }
 
 .ui.search.button {
