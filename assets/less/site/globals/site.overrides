@@ -187,3 +187,26 @@ a.ui.positive.right.floated.button:hover {
 button.ui.orange.medium.fluid.icon.left.labeled.button:hover {
     background-color: #cc580b !important;
 }
+
+  div.ui.blue.tiny.label {
+    background-color: #195c61 !important;
+    border-color: #195c61 !important;
+}
+
+div.ui.green.tiny.label {
+    background-color: #2c8a4b !important;
+    border-color: #2c8a4b !important;
+}
+
+div.extra i.green.icon {
+    color: #2c8a4b !important;
+}
+
+div.ui.red.tiny.label {
+    background-color: #b20702 !important;
+    border-color: #b20702 !important;
+}
+
+div.extra i.red.icon {
+    color: #b20702 !important;
+}
