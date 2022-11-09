@@ -17,9 +17,23 @@
       {%- block form_header %}
         <h3 class="ui login header">{{ _('Log in to account') }}</h3>
 
-        <p style="color: black; text-align: left">If you are a BIG-MAP member, an account may already have been created for you. In this case, you should have received a confirmation email from <span style="color: #005b9e">big-map-archive@materialscloud.org</span>.</p>
-        <p style="color: black; text-align: left">If this is your first time signing in, click the <b>forgot password link below</b> to set your password for the first time.</p>
-        <p style="color: black; text-align: left">To request an account, please contact us at <span style="color: #005b9e">big-map-archive@materialscloud.org</span>, specifying your email address.</p>
+        <p style="color: black; text-align: left">
+            If you are a BIG-MAP member, you may have received an email saying that an account was created on your behalf.
+        </p>
+        <p style="color: black; text-align: left">
+            The username for this account is your email address where you received the email.
+        </p>
+        <p style="color: black; text-align: left">
+            Before you can sign in, you must change the password, like this: click
+            <a href="{{ url_for_security('forgot_password') }}">{{ _('Forgot password?') }}</a>
+            and follow the instructions.
+        </p>
+        <p style="color: black; text-align: left">
+            To request an account, please contact us at
+            <span style="color: #005b9e">
+                big-map-archive@materialscloud.org
+            </span>.
+        </p>
         <div class="divider hidden"></div>
       {%- endblock form_header %}
 

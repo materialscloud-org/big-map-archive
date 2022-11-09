@@ -19,7 +19,8 @@
 }
 
 .outer-navbar #invenio-nav {
-    background: #195c61;
+    background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(44,138,75, 0.69));
+    background-color: #195c61 !important;
 }
 
 .big-map-logo {
@@ -47,7 +48,7 @@ button#rdm-burger-menu-icon {
 }
 
 .footer-bottom, .sub-footer {
-    background-color: #838487 !important;
+    background-color: #414143 !important;
     box-shadow: none !important;
 }
 
@@ -209,4 +210,8 @@ div.ui.red.tiny.label {
 
 div.extra i.red.icon {
     color: #b20702 !important;
+}
+
+h1.ui.header {
+    font-size: 3rem !important;
 }
