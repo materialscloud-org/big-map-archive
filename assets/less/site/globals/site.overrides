@@ -76,7 +76,7 @@ div.ui.container.invenio-header-container {
     color: #195c61 !important;
 }
 
-#invenio-nav.ui.menu .item:first-of-type {
+#invenio-nav.ui.inverted.menu.borderless.stackable.p-0 div.item:first-of-type {
     padding: 0px !important;
 }
 
