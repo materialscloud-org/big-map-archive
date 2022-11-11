@@ -52,17 +52,17 @@ def create_user_account(email):
             print("\n")
             return
 
-        send_welcome_email(user)
-        print("\033[92mSent welcome email to {}\033[0m".format(email))
+        # send_welcome_email(user)
+        # print("\033[92mSent welcome email to {}\033[0m".format(email))
 
         # wait 10 seconds and then send email to reset password
         # this is to avoid that the reset password email arrives before the
         # welcome email
-        time.sleep(10)
-
-        send_reset_password_email(user)
-        print("\033[92mSent email to reset password to {}\033[0m".format(email))
-        print("\n")
+        # time.sleep(10)
+        #
+        # send_reset_password_email(user)
+        # print("\033[92mSent email to reset password to {}\033[0m".format(email))
+        # print("\n")
     else:
         print("\033[94mWARNING: An account for user {} already exists.\033[0m".format(email))
 
