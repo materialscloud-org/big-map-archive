@@ -68,7 +68,7 @@ logs/
 .invenio.private
 
 # Document containing email addresses of users
-app_data/users.yaml
+app_data/users.*
 
 # Document containing secrets (passwords...)
 invenio.cfg
