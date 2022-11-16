@@ -4,7 +4,6 @@
 
 /* For web browsers with max width of 643px: */
 .outer-navbar {
-    background-image: url(../../../../static/images/batteries.png);
     background-size: cover;
     background-position: center center;
 }
@@ -12,7 +11,6 @@
 /* For web browsers with min width of 644px: */
 @media only screen and (min-width: 644px) {
     .outer-navbar {
-        background-image: url(../../../../static/images/batteries.png);
         background-size: contain; // background image will scale, will try to fit the content area, but will keep its aspect ratio
         background-position: center center;
     }

@@ -1,0 +1,2 @@
+/* Header */
+@navbarBackgroundImage: url(../../../../static/images/batteries.png);
