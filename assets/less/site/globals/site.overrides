@@ -213,3 +213,9 @@ div.extra i.red.icon {
 h1.ui.header {
     font-size: 3rem !important;
 }
+
+div.right.aligned.two.column.row.result-options.rel-mt-2 {
+    min-height: 38px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
