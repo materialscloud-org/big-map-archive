@@ -1,2 +1,3 @@
 /* Header */
 @navbarBackgroundImage: url(../../../../static/images/batteries.png);
+@navbarBackgroundColor: #195c61;
