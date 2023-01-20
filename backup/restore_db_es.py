@@ -53,9 +53,31 @@ def restore_es():
     os.system('invenio rdm-records rebuild-index')
     print("\033[32m\033[1m" + "Elasticsearch indexes have been restored" + "\033[0m")
 
+def update_files_location(app):
+    """Set files location to Object Store container"""
+    from datetime import datetime
+
+    with app.app_context():
+        db.create_all()
+        S3_CONTAINER = app.config.get('S3_CONTAINER')
+        now = datetime.now()
+
+        q = "update files_location set updated='{}', uri='s3://{}' where name='default-location';".format(now, S3_CONTAINER)
+        db.engine.execute(q)
+
+        # check update was successful
+        q = "select count(*) from files_location where uri='s3://{}' and name='default-location';".format(S3_CONTAINER)
+        results = db.engine.execute(q)
+        if results.fetchall()[0][0] == 1:
+            print("\033[32m\033[1m" + "Files location has been updated to {}".format(S3_CONTAINER) + "\033[0m")
+        else:
+            print("\033[32m\033[91m\033[1m" + "ERROR: Files location has NOT been updated to {}".format(S3_CONTAINER) +
+                  "\033[0m")
+
 
 if __name__ == '__main__':
     app = create_app()
     restore_db(app)
     restore_es()
+    update_files_location(app)
     print("\033[32m\033[1m"+"Database and elasticsearch indexes have been restored"+"\033[0m")
