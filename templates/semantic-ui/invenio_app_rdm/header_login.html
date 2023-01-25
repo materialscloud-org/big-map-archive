@@ -53,7 +53,7 @@
         {% endif %}#}
 
         {%- if config.USERPROFILES %}
-          <div role="menuitem" id="user-profile-dropdown" class="ui floating dropdown computer only">
+          <div role="menuitem" id="user-profile-dropdown" class="ui floating dropdown no-mobile">
             <button id="user-profile-dropdown-btn"
                     class="ui right labeled right floated icon button text"
                     aria-controls="user-profile-menu"
@@ -87,7 +87,7 @@
             </div>
           </div>
 
-          <div class="sub-menu mobile only tablet only">
+          <div class="sub-menu mobile only">
             <h2 class="ui small header">{{ _("My account") }}</h2>
 
             {%- for item in current_menu.submenu('settings').children if item.visible %}
