@@ -216,14 +216,14 @@ div.right.aligned.two.column.row.result-options.rel-mt-2 {
     padding-bottom: 0px;
 }
 
-@media all and (min-width: @tabletBreakpoint) {
+@media all and (min-width: @intermediateBreakpoint) {
   #invenio-nav #rdm-burger-toggle,
   #invenio-menu #rdm-close-burger-menu-icon {
     display: none;
   }
 }
 
-@media all and (max-width: @largestMobileScreen) {
+@media all and (max-width: @largestIntermediateScreen) {
   #invenio-nav.ui.menu {
 
     &.active #invenio-menu.ui.menu {
@@ -317,9 +317,17 @@ div.right.aligned.two.column.row.result-options.rel-mt-2 {
   }
 }
 
-@media all and (max-width: @largestMobileScreen) {
-  .no-mobile {
+@media all and (max-width: @largestIntermediateScreen) {
+  .no-intermediate {
     display: none !important;
+  }
+}
+
+.intermediate.only {
+  display: none;
+
+  @media all and (max-width: @largestIntermediateScreen) {
+    display: inline-block;
   }
 }
 

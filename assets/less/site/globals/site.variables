@@ -1,3 +1,5 @@
 /* Header */
 @navbarBackgroundImage: url(../../../../static/images/batteries.png);
 @navbarBackgroundColor: #195c61;
+@intermediateBreakpoint: 1000px;
+@largestIntermediateScreen: 999px;
