@@ -331,3 +331,8 @@ div.right.aligned.two.column.row.result-options.rel-mt-2 {
   }
 }
 
+@media only screen and (max-width: @largestMobileScreen) {
+  #invenio-nav.ui.stackable.menu {
+    flex-direction: row !important;
+  }
+}
