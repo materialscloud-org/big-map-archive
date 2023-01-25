@@ -1,3 +1,10 @@
+@media all and (min-width: 644px) {
+  #invenio-nav #rdm-burger-toggle,
+  #invenio-menu #rdm-close-burger-menu-icon {
+    display: none;
+  }
+}
+
 .big-map-logo {
   max-height: @75px;
 }
