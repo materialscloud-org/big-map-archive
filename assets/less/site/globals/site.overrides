@@ -116,11 +116,12 @@ i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon
 div.ui.primary.button.labeled.icon.big.goto-button {
     background-color: #257953 !important;
     width: 250px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
 }
 
 div.ui.primary.button.labeled.icon.big.goto-button:hover {
     background-color: #195c61 !important;
-    width: 250px !important;
 }
 
 button.ui.medium.fluid.icon.primary.left.labeled.button {
