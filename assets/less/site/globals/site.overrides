@@ -337,3 +337,11 @@ div.right.aligned.two.column.row.result-options.rel-mt-2 {
     flex-direction: row !important;
   }
 }
+
+.color-red {
+  color: #DB2828;
+}
+
+.pl-15 {
+  padding-left: 15px;
+}
