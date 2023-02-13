@@ -28,7 +28,7 @@ If you have any comments or questions, please send your emails to big-map-archiv
 
 ## Issues
 
-If you found a bug, please report the issue directly into [GitHub](https://github.com/materialscloud-org/big-map-archive/issues). If possible, give enough details so that the BIG-MAP Archive team is able to reproduce the encountered problem. Thank you!
+If you find a bug, please create an issue directly into [GitHub](https://github.com/materialscloud-org/big-map-archive/issues). If possible, give enough details so that the BIG-MAP Archive team is able to reproduce the encountered problem. Thank you!
 
 ## [For devops] Files and folders
 
