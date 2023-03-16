@@ -52,24 +52,20 @@
     </div>
     {%- endblock footer_top %}
     {%- block footer_bottom %}
-{#    <div class="footer-bottom sub-footer">
-      <div class="ui container">
-        <div class="ui grid">
-          <div class="eight wide column left middle aligned">
-            {%- block footer_bottom_left %}
-            Need help? Email us at big-map-archive@materialscloud.org.
-            {%- endblock footer_bottom_left %}
-          </div>
-          <div class="eight wide column right aligned">
-            {%- block footer_bottom_right %}
-            {%- if config.I18N_LANGUAGES %}
-            {% from "invenio_i18n/macros/language_selector.html" import language_selector_dropdown %}
-            {{ language_selector_dropdown() }}
-            {%- endif %}
-            {%- endblock footer_bottom_right %}
-          </div>
+    <div class="footer-bottom">
+        <div class="ui container">
+            <div class="ui grid centered">
+                <div class="funding">
+                    <img class="eu-flag" src="{{ url_for('static', filename="images/eu-flag.png") }}"
+                        alt="{{ _("eu-flag.png") }}"/>
+                    <div>
+                        This project has received funding from the European Union’s Horizon 2020 research and innovation programme under grant agreement No 957189.
+                        <br>
+                        It is part of BATTERY 2030+, the large-scale European research initiative for inventing the sustainable batteries of the future under grant agreement No 957213.
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>#}
+    </div>
     {%- endblock footer_bottom %}
 </footer>
