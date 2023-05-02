@@ -15,8 +15,8 @@
 # - Cache: Redis (exposed port: 6379)
 # - DB: (PostgresSQL/MySQL) (exposed port: 5432 or 3306)
 # - Message queue: RabbitMQ (exposed ports: 5672, 15672)
-# - Elasticsearch (exposed ports: 9200, 9300)
-# - Kibana (view ES indexes) (exposed ports: 5601)
+# - Search platform: (OpenSearch/Elasticsearch) (exposed ports: 9200, 9300)
+# - OpenSearch Dashboard/Kibana (view OS/ES indexes) (exposed ports: 5601)
 #
 version: '2.2'
 services:
@@ -32,18 +32,22 @@ services:
     extends:
       file: docker-services.yml
       service: mq
-  es:
+  search:
     extends:
       file: docker-services.yml
-      service: es
-  kibana:
+      service: search
+  opensearch-dashboards:
     extends:
       file: docker-services.yml
-      service: kibana
+      service: opensearch-dashboards
   pgadmin:
     extends:
       file: docker-services.yml
       service: pgadmin
+  s3:
+    extends:
+      file: docker-services.yml
+      service: s3
   # Frontend
   frontend:
     extends:
@@ -63,13 +67,11 @@ services:
       file: docker-services.yml
       service: app
     command: ["uwsgi /opt/invenio/var/instance/uwsgi_ui.ini"]
-    image: big-map-archive:latest
+    image: inveniordm:latest
     ports:
       - "5000"
     volumes:
       - static_data:/opt/invenio/var/instance/static
-      - uploaded_data:/opt/invenio/var/instance/data
-      - archived_data:/opt/invenio/var/instance/archive
 
   # API Rest Application
   web-api:
@@ -77,24 +79,19 @@ services:
       file: docker-services.yml
       service: app
     command: ["uwsgi /opt/invenio/var/instance/uwsgi_rest.ini"]
-    image: big-map-archive:latest
+    image: inveniordm:latest
     ports:
       - "5000"
-    volumes:
-      - uploaded_data:/opt/invenio/var/instance/data
-      - archived_data:/opt/invenio/var/instance/archive
 
   # Worker
   worker:
     extends:
       file: docker-services.yml
       service: app
-    command: ["celery -A invenio_app.celery worker --loglevel=INFO"]
-    image: big-map-archive:latest
-    volumes:
-      - uploaded_data:/opt/invenio/var/instance/data
+    command: ["celery -A invenio_app.celery worker --beat --loglevel=INFO"]
+    image: inveniordm:latest
     depends_on:
-      es:
+      search:
         condition: service_started
       cache:
         condition: service_started
@@ -104,5 +101,4 @@ services:
         condition: service_started
 volumes:
   static_data:
-  uploaded_data:
-  archived_data:
+  data:

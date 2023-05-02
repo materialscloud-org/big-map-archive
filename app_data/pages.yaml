@@ -1,0 +1,4 @@
+- url: /help/tutorial
+  title: Tutorial
+  description: Tutorial for using the archive
+  template: tutorial.html
