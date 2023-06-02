@@ -8,6 +8,9 @@ subjects:
 workpackages:
   pid-type: wp
   data-file: vocabularies/wp.yaml
+names:
+  pid-type: names
+  data-file: vocabularies/names_orcid.yaml
 # TODO: Uncoment this if you want to have all affiliations with ROR identifiers.
 # affiliations:
 #   pid-type: aff
