@@ -12,6 +12,7 @@ uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
 uwsgi-tools = ">=1.1.1"
 invenio_s3 = "==1.0.5"
+setuptools = "==45.2.0"
 
 [requires]
 python_version = "3.8"
