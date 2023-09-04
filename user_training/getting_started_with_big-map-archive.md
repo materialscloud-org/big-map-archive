@@ -85,7 +85,7 @@ In this section, users interact with the data repository through a command-line 
 
 - Put the `metadata.yaml` file in the `data/input` directory.
 - Put the data files to be uploaded and linked to the future record in the `data/input/upload` directory.
-- Execute this command with these options:
+- Execute this command:
 ```bash
 bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --publish
 ```
@@ -93,12 +93,12 @@ bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 
 ### Update the first version (metadata only)
 
-- Modify the contents of the `metadata.yaml` file (e.g., the title).
-- Execute this command with these options, after replacing `<record_id>` with the id of the first version:
+- Update the contents of the `metadata.yaml` file (e.g., the title).
+- Execute the following command, after replacing `<record_id>` with the id of the first version:
 ```bash
 bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=<record_id> --update-only
 ```
-- Once the execution is completed, check that your modifications appear as expected the record's web page.
+- Check that your modifications appear as expected in the record's web page.
 
 ### Create a second version and share it
 
