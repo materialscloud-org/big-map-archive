@@ -100,7 +100,7 @@ bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 ```
 - Check that your modifications appear as expected in the record's web page.
 
-### Create a second version and share it
+### Create and share a second version
 
 This time, let us update your entry by creating a second version.
 
