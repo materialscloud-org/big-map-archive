@@ -54,7 +54,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Switch the toggle on the left side of the web page to show both versions. 
 - Click any of the two versions. Find the card entitled "Versions" on the right side of the web page. You should be able to easily navigate from one version to the other by clicking the appropriate link.
 
-### Ask a trusted user to create and share a third version
+### Ask a collaborator to create and share a third version
 
 - Go to "My records" and click the record’s title.
 - Click "Collaborate" and "Get a link" to generate a URL that you will copy and send to another user of the archive. Equipped with this URL, he is granted the rights to edit the second version, create a third version, and share it with the other authenticated users. 
