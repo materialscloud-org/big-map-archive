@@ -66,9 +66,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 
 ## Towards automated data sharing and preservation
 
-We have developed a CLI tool to help users automate record management for data sharing and preservation on the BIG-MAP-Archive data repository. 
-Commands to create, update, and retrieve records can be executed at a terminal prompt and even called from custom applications. 
-More commands can be built upon those to meet special needs.
+In this section, users interact with the data repository through a command-line interface (CLI) application, which is installed on their machine. Commands to create, update, and retrieve records can be executed at terminal prompts and even called from custom applications. Note that other commands can be built upon those presented below to meet special user needs.
 
 ### Get an API token
 
