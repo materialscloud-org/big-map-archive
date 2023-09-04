@@ -72,11 +72,8 @@ In this section, users interact with the data repository through a command-line 
 
 To access endpoints of the data repository's API from a client application, you should supply a valid access token on each request. 
 
-- To create a token, click "API access tokens" in the header’s drop-down menu on the right side of the page.
-- Click "New token" and follow the displayed instructions. 
-
-Note that the access token is shown only once and has an unlimited lifetime (unless you delete it). 
-Treat it like a password: keep in a safe storage and do not to share with anyone else.
+- Click "API access tokens" in the header’s drop-down menu on the right side of the web page.
+- Click "New token" and follow the displayed instructions to create a token with unlimited lifetime. Note that the data repository shows the obtained token only once. Keep it in a safe storage and do not to share it with anyone else.
 
 ### Install the CLI app on your machine, configure, and prepare input files
 
