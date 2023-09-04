@@ -2,7 +2,7 @@
 
 This is a beginner-friendly exercise that takes you through the process of creating, sharing, updating, and retrieving records for BIG-MAP Archive. Before you start this tutorial, you should have access to a demo instance of the data repository, which enables you to try available features and commands without affecting the main instance. 
 
-## Manual data sharing and preservation using a web browser
+## Manual data sharing and preservation
 
 ### Log into the demo instance
 
