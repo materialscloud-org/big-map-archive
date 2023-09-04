@@ -38,8 +38,8 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 ### Update the first version
 
 - Go to "My records" and click the record’s title.
-- Click "Edit". You are not allowed to add, modify or delete file links.
-- Make a few minor changes to the record's metadata: fix a typo in the title, add a missing keyword, etc.
+- Click "Edit" to make changes to the record's metadata. However, you are allowed to add, modify, or delete file links.
+- Fix a typo in the title, add a missing keyword, etc.
 - Click "Share on archive" to save your changes.
 - Navigate to "Shared records" and click the record’s title. Your modifications should be taken into account.
 
