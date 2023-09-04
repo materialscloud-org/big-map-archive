@@ -35,10 +35,10 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Go to "My records" and click the record’s title.
 - Click "Share on archive" to make your record visible to all authenticated users. By sharing the record, you automatically give all authenticated users permission to read its metadata and download its linked files. Your record should now appear in the shared records' list. 
 
-### Update the first version
+### Update the first version (metadata only)
 
 - Go to "My records" and click the record’s title.
-- Click "Edit" to make changes to the record's metadata. However, you are allowed to add, modify, or delete file links.
+- Click "Edit" to update the record's metadata. However, you will not be allowed to add, modify, or delete file links.
 - Fix a typo in the title, add a missing keyword, etc.
 - Click "Share on archive" to save your changes.
 - Navigate to "Shared records" and click the record’s title. Your modifications should be taken into account.
