@@ -77,9 +77,9 @@ In this section, users interact with the data repository through a command-line 
 
 - Follow the [Quick start guide](https://github.com/materialscloud-org/big-map-archive-api-client#quick-start) to
   - install the CLI app on your machine
-  - prepare a configuration file that should contain your API token
-  - metadata file
-  - data files
+  - prepare a configuration file which contains your API token
+  - prepare a metadata file
+  - prepare a folder with your data files
 - Make sure that the command `bma record --help` is available in your working directory. If not, you may need to activate the virtual environment where the package `big-map-archive-api_client` is installed.
 
 ### Create and share (a first version of) an entry
