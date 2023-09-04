@@ -79,7 +79,7 @@ In this section, users interact with the data repository through a command-line 
   - install the CLI app on your machine
   - prepare a YAML configuration file that specifies the domain name and your API token for the data repository - filename: `bma_config.yaml`
   - prepare a YAML file that contains metadata (a title, a list of authors, etc) for future records - filename: `metadata.yaml`.
-- Test whether the command `bma record --help` is available from your working directory. If not, check that the virtual environment where the package `big-map-archive-api_client` is installed is indeed activated.
+- Test whether the command `bma record --help` is available from your working directory. If not, you may need to activate the virtual environment where the package `big-map-archive-api-client` is installed.
 
 ### Create and share (a first version of) an entry
 
