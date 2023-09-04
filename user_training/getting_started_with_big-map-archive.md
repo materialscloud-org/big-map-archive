@@ -6,7 +6,7 @@ This is a beginner-friendly exercise that takes you through the process of creat
 
 In this section, you interact with the data repository through a web browser.
 
-### Log into the demo instance
+### Log in to the demo instance
 
 - Navigate to the homepage.
 - Click "Log in", then "Forgot password?".
