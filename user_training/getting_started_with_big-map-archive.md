@@ -26,7 +26,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
   - Authors (compulsory). Note that adding another user as an author does not make him a co-owner of the record.
   - A description (optional).
   - A license (optional). The recommended license is the BIG-MAP license which allows re-distribution and re-use of work within the BIG-MAP community.
-  - Keywords (optional). Make sure that your keywords are entered one by one: there should be a small cross on the right side of each of them. You are allowed to create your own keywords. For instance, if you split a large dataset over multiple records, you may want to tag these records with the same 15 digit random number to help humans and machines retrieve the whole dataset easily using the built-in search engine. You can also use an autocomplete feature that suggests keywords based on input. Type, e.g., "wp".
+  - Keywords (optional). Any keyword is allowed. However, each keyword should be entered one by one: there should be a small cross on the right side of each of them. You can also benefit from an autocomplete feature that suggests keywords based on input. Type, e.g., "wp". Tip: if you split a large dataset over multiple entries, you may want to tag the first version of each entry with the same random number. This helps humans and machines retrieve the whole dataset easily using the built-in search engine. 
   - References to external documents (optional).
 - Click "Save" to create (the first version of) an entry. At this stage, it remains private and is visible to you only.
 
