@@ -64,6 +64,12 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Click "Shared records".
 - Type "+LNO +WP9" into the search box to find all shared records whose metadata contains LNO and WP9. Depending on the contents of the database, you may get zero, one, or more hits. For more advanced queries, such as searching for all shared records where the title contains LNO and WP9, read the provided search guide.
 
+## Towards automated data sharing and preservation using a command line client
+
+We have developed a CLI tool to help users automate record management for data sharing and preservation on the BIG-MAP-Archive data repository. 
+Commands to create, update, and retrieve records can be executed at a terminal prompt and even called from custom applications. 
+More commands can be built upon those to meet special needs.
+
 ### Get an API token
 
 To access endpoints of the data repository's API from a client application, you should supply a valid access token on each request. 
@@ -73,12 +79,6 @@ To access endpoints of the data repository's API from a client application, you 
 
 Note that the access token is shown only once and has an unlimited lifetime (unless you delete it). 
 Treat it like a password: keep in a safe storage and do not to share with anyone else.
-
-## Towards automated data sharing and preservation using a command line client
-
-We have developed a CLI tool to help users automate record management for data sharing and preservation on the BIG-MAP-Archive data repository. 
-Commands to create, update, and retrieve records can be executed at a terminal prompt and even called from custom applications. 
-More commands can be built upon those to meet special needs.
 
 ### Install the CLI app on your machine, configure, and prepare input files
 
