@@ -89,7 +89,7 @@ In this section, users interact with the data repository through a command-line 
 ```bash
 bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --publish
 ```
-- Once execution is completed, click the link that is printed in the terminal to access the record's web page.
+- Once the execution is completed, copy the record's id and click the link that is printed in the terminal to access the record's web page.
 
 ### Update the first version
 
