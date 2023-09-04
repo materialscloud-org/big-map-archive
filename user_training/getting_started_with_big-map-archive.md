@@ -38,12 +38,9 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 
 ### Update the first version
 
-At this stage, we assume that you wish to update your entry without creating a new version. 
-There may be a typo in the title of the first version, a missing keyword, etc.
-
 - Go to "My records" and click the record’s title.
 - Click "Edit". 
-- Make a few changes in the metadata: change the title, add a keyword, etc. You are not allowed to add, modify or delete file links.
+- Make a few minor changes to the record's metadata: fix a typo in the title, add a missing keyword, etc. You are not allowed to add, modify or delete file links.
 - Click "Share on archive" to save your changes.
 - Navigate to "Shared records" and check that your modifications appear as expected.
 
