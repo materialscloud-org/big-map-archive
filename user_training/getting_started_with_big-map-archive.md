@@ -1,4 +1,4 @@
-# Getting started with the BIG-MAP Archive data repository
+# Getting started with BIG-MAP Archive
 
 For this exercise, select a demo instance of BIG-MAP Archive that allows you to try available features and command-line commands without affecting the main data repository.
 
