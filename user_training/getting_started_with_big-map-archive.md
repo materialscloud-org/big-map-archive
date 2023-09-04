@@ -45,14 +45,13 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 
 ### Create and share a second version
 
-In this section, you will update your entry by creating a second version. There may be a missing file, a typo in the title, etc. 
-
 - Go to "My records" and click the record’s title.
-- Click "New version" and "Import files". The file links from the first version get imported into the second one.
-- Make a few changes: add a file, remove a file, change the title, etc.
-- Click "Share on archive".
-- Navigate to "Shared records" and check that the new version appears in the shared records’ list. By default, only the latest shared version of an entry appears in this list. 
-- Switch the toggle on the left side of the web page to display both versions of the entry. 
+- Click "New version" to create a second version of the entry.
+- Click "Import files" to import all file links from the first version into the second one.
+- Remove a file link, upload a file, change the title, etc.
+- Click "Share on archive" to make the second version visible to all authenticated users. 
+- Navigate to "Shared records". The second version should appear in the shared records’ list, contrary to the first version, which is now missing. This is due to the fact that only the latest shared version of an entry is displayed by default. 
+- Switch the toggle on the left side of the web page to show both versions. 
 - Click any of the two versions. Find the card entitled "Versions" on the right side of the web page. You should be able to easily navigate from one version to the other by clicking the appropriate link.
 
 ### [Optional] Ask a collaborator to create and share a third version of the entry
