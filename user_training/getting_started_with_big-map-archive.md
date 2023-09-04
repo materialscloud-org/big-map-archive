@@ -4,7 +4,7 @@ This is a beginner-friendly exercise that takes you through the process of creat
 
 ## Manual data sharing and preservation
 
-In this section, you interact with the data repository through a web browser.
+In this section, users interact with the data repository through a web browser.
 
 ### Log in to the demo instance
 
