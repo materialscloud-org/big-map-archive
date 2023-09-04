@@ -73,10 +73,14 @@ In this section, users interact with the data repository through a command-line 
 - Click "API access tokens" in the header’s drop-down menu on the right side of the web page.
 - Click "New token" and follow the instructions to create an API token with unlimited lifetime. Keep your token in a safe storage and do not to share with anyone else. It will give you access to API endpoints of the data repository. 
 
-### Install the CLI app on your machine, configure, and prepare input files
+### Get started with the CLI app
 
-Follow the [Quick start](https://github.com/materialscloud-org/big-map-archive-api-client#quick-start) section to get started with the CLI app. Note that an API token is required. 
-Make sure that the command `bma record --help` is available in your working directory. If not, you may need to activate the virtual environment where the package `big-map-archive-api_client` is installed.
+- Follow the [Quick start guide](https://github.com/materialscloud-org/big-map-archive-api-client#quick-start) to
+  - install the CLI app on your machine
+  - prepare a configuration file that should contain your API token
+  - metadata file
+  - data files
+- Make sure that the command `bma record --help` is available in your working directory. If not, you may need to activate the virtual environment where the package `big-map-archive-api_client` is installed.
 
 ### Create and share (a first version of) an entry
 
