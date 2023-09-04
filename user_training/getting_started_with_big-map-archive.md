@@ -91,12 +91,10 @@ bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 ```
 - Once the execution is completed, copy the record's id and click the link that is printed in the terminal to access the record's web page.
 
-### Update the first version
+### Update the first version (metadata only)
 
-Let us update your entry without creating a new version.
-
-- Update the contents of `metadata.yaml` located in `data/input` (e.g., modify the title).
-- Execute this command with these options, after replacing `<record_id>` with the previously obtained record's id:
+- Modify the contents of the `metadata.yaml` file (e.g., modify the title).
+- Execute this command with these options, after replacing `<record_id>` with the id of the first version:
 ```bash
 bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=<record_id> --update-only
 ```
