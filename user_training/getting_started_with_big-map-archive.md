@@ -4,6 +4,8 @@ This is a beginner-friendly exercise that takes you through the process of creat
 
 ## Manual data sharing and preservation
 
+You will access the web application (data repository) using a web browser.
+
 ### Log into the demo instance
 
 - Navigate to the homepage of the demo instance by either entering the url in a web browser 
