@@ -43,7 +43,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Click "Share on archive" to save your changes.
 - Navigate to "Shared records" and click the record’s title. Your modifications should be visible to all authenticated users.
 
-### Create a second version and share it
+### Create and share a second version
 
 In this section, you will update your entry by creating a second version. There may be a missing file, a typo in the title, etc. 
 
