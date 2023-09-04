@@ -59,12 +59,10 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Go to "My records" and click the record’s title.
 - Click "Collaborate" and "Get a link" to generate a URL to be sent to one of your collaborators. Equipped with this URL, he/she should be able to update your entry (e.g., create new versions) after login.
 
-### [Optional] Search for a shared record using the archive’s built-in search engine
+### Search for shared records using the built-in search engine
 
 - Click "Shared records".
-- Type "+LNO +WP9" into the search box to find all shared records whose metadata contains "LNO" and "WP9". Depending on the contents of the database, you may get zero, one, or more hits. 
-
-Read the search guide, if you wish to make more advanced queries, such as searching for all shared records where the title contains "LNO".
+- Type "+LNO +WP9" into the search box to find all shared records whose metadata contains "LNO" and "WP9". Depending on the contents of the database, you may get zero, one, or more hits. For more adanced advanced queries, such as searching for all shared records where the title contains "LNO" and "WP9", read the provided guide.
 
 ### Get an API token
 
