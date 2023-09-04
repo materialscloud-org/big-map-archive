@@ -41,7 +41,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Click "Edit" to update the record's metadata. Note that adding, modifying, or deleting file links are not allowed at this stage.
 - Add a keyword, an author, etc.
 - Click "Share on archive" to save your changes.
-- Navigate to "Shared records" and click the record’s title. Your modifications should be taken into account.
+- Navigate to "Shared records" and click the record’s title. Your modifications should be visible to all authenticated users.
 
 ### Create a second version and share it
 
