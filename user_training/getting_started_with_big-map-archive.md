@@ -62,7 +62,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 ### Search for shared records using the built-in search engine
 
 - Click "Shared records".
-- Type "+LNO +WP9" into the search box to find all shared records whose metadata contains "LNO" and "WP9". Depending on the contents of the database, you may get zero, one, or more hits. For more adanced advanced queries, such as searching for all shared records where the title contains "LNO" and "WP9", read the provided guide.
+- Type "+LNO +WP9" into the search box to find all shared records whose metadata contains "LNO" and "WP9". Depending on the contents of the database, you may get zero, one, or more hits. For more advanced queries, such as searching for all shared records where the title contains "LNO" and "WP9", read the provided search guide.
 
 ### Get an API token
 
