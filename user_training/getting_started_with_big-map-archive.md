@@ -98,7 +98,7 @@ bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 ```bash
 bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=<record_id> --update-only
 ```
-- Navigate to "Shared records" and check that your modifications appear as expected.
+- Once the execution is completed, check that your modifications appear as expected the record's web page.
 
 ### Create a second version and share it
 
