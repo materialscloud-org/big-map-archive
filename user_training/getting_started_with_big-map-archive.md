@@ -4,11 +4,11 @@ This is a beginner-friendly exercise that takes you through the process of creat
 
 ## Manual data sharing and preservation
 
-In this section, you will interact with the data repository through a web browser. Navigate to the homepage by either entering the url in the browser's search bar or clicking the button labeled "Test on demo" on the homepage of the main instance.
+In this section, you interact with the data repository through a web browser.
 
 ### Log into the demo instance
 
-- 
+- Navigate to the homepage by either entering the url in the browser's search bar or clicking the button labeled "Test on demo" on the homepage of the main instance.
 - Click "Log in", then "Forgot password?".
 - Enter your email address and click "Reset password". 
 If you receive an error message such as "Invalid email address", contact us at  big-map-archive@materialscloud.org.
