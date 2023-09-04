@@ -115,13 +115,11 @@ bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 
 ### Retrieve shared records
 
-Retrieving shared records is straightforward. 
-
-- For a single record, execute this command with these options, after replacing `<record_id>` with the sought-after record's id:
+- For a single record, execute this command, after replacing `<record_id>` with the sought-after record's id:
 ```bash
 bma record get --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json --record-id=<record_id>
 ```
-- For the latest shared version of each entry, execute this command with these options:
+- For the latest shared version of each entry, execute this command:
 ```bash
 bma record get-all --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json
 ```
