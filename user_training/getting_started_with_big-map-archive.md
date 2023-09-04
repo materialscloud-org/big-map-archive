@@ -83,13 +83,13 @@ In this section, users interact with the data repository through a command-line 
 
 ### Create and share (a first version of) an entry
 
-- Check that your current directory contains a `metadata.yaml` file located in `data/input` and the data files to be uploaded and linked to the future entry in `data/input/upload`.
+- Put the `metadata.yaml` file in the `data/input` directory.
+- Put the data files to be uploaded and linked to the future record in the `data/input/upload` directory.
 - Execute the command with the following options:
 ```bash
 bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --publish
 ```
-- Click the link printed in the terminal to access the record's web page.
-- Extract the record's id from the url of the web page (e.g., 816ne-zvh93)
+- Once execution is completed, click the link that is printed in the terminal to access the record's web page.
 
 ### Update the first version
 
