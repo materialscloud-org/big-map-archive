@@ -64,7 +64,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Click "Shared records".
 - Type "+LNO +WP9" into the search box to find all shared records whose metadata contains LNO and WP9. Depending on the contents of the database, you may get zero, one, or more hits. For more advanced queries, such as searching for all shared records where the title contains LNO and WP9, read the provided search guide.
 
-## Towards automated data sharing and preservation using a command line client
+## Towards automated data sharing and preservation
 
 We have developed a CLI tool to help users automate record management for data sharing and preservation on the BIG-MAP-Archive data repository. 
 Commands to create, update, and retrieve records can be executed at a terminal prompt and even called from custom applications. 
