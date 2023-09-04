@@ -34,9 +34,9 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 
 - Click "My records" in the header and find your newly created entry.
 - Click its title.
-- Click "Share on archive" to save and make your record visible to all authenticated users. By sharing records, owners give read and download permissions. BIG-MAP Archive is a private data repository, where access to shared records is restricted to authenticated users. 
-- Click "Shared records" in the header to check that your record appears in the shared records’ list.
-- Click the record’s title and click "Download" to start downloading one of the linked files. 
+- Click "Share on archive" to make your record visible to all authenticated users. By sharing the record, you automatically give all authenticated users permission to read its metadata and download its linked files. 
+
+Your record should now appear in the shared records' list. 
 
 ### Update the first version
 
