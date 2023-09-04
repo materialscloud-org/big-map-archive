@@ -102,11 +102,12 @@ bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 
 ### Create and share a second version
 
-This time, let us update your entry by creating a second version.
-
-- Update the contents of `metadata.yaml` located in `data/input` (e.g., modify the title).
-- Update the data files in `data/input/upload` (e.g., modify the contents of a file while keeping its name unchanged, add a file, and remove a file).
-- Execute this command with these options, after replacing `<record_id>` with the id of the first version:
+- Update the contents of the `metadata.yaml` file (e.g., the description).
+- Change the files in the `upload` directory:
+  - Modify the contents of a file but keep its name unchanged.
+  - Add a file.
+  - Remove a file.
+- Execute this command, after replacing `<record_id>` with the id of the first version:
 ```bash
 bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=<record_id> --link-all-files-from-previous --publish
 ```
