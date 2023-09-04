@@ -57,7 +57,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 ### Ask a collaborator to create and share a third version
 
 - Go to "My records" and click the record’s title.
-- Click "Collaborate" and "Get a link" to generate a URL to be sent to one of your collaborators. Equipped with this URL, he/she is able to update your entry (e.g., create new versions) after authentication.
+- Click "Collaborate" and "Get a link" to generate a URL to be sent to one of your collaborators. Equipped with this URL, he/she will be able to update your entry (e.g., create new versions) after login.
 
 ### [Optional] Search for a shared record using the archive’s built-in search engine
 
