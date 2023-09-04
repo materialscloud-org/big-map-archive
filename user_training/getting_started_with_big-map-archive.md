@@ -71,7 +71,7 @@ In this section, users interact with the data repository through a command-line 
 ### Get an API token
 
 - Click "API access tokens" in the header’s drop-down menu on the right side of the web page.
-- Click "New token" and follow the instructions to create an API token with unlimited lifetime. Keep your token in a safe storage and do not to share with anyone else. It will give you access to API endpoints of the data repository when sending requests via the CLI app. 
+- Click "New token" and follow the instructions to create an API token with unlimited lifetime. Keep your token in a safe storage and do not to share with anyone else. It will give you access to API endpoints of the data repository. 
 
 ### Install the CLI app on your machine, configure, and prepare input files
 
