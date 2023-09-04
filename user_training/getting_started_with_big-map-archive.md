@@ -1,6 +1,6 @@
 # Getting started with BIG-MAP Archive
 
-This is a beginner-friendly exercise that takes you through the process of creating, sharing, updating, and retrieving records for BIG-MAP Archive. You should have access to a demo instance of the data repository, which allows to try available features and command-line commands without affecting the main instance. 
+This is a beginner-friendly exercise that takes you through the process of creating, sharing, updating, and retrieving records for BIG-MAP Archive. Before you start this tutorial, make sure that you have access to a demo instance of the data repository, which allows its users to try available features and commands without affecting the main instance. 
 
 ## Manual data sharing and preservation using a web browser
 
