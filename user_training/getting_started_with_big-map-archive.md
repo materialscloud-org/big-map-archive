@@ -17,7 +17,7 @@ If you receive an error message such as "Invalid email address", contact us at b
 ### Create (a first version of) an entry
 
 - Click "New record" in the header.
-- Select the files that you wish to upload and link to the record. Drag and drop them in the drop zone (light gray region). 
+- Select the files to upload and link to the record. Drag and drop them in the drop zone (light gray region). 
 Note that you are limited to 100 files and a total file size of 100 GB. 
 For this exercise, we recommend choosing two small files (total size ≤ 1 MB) containing dummy data.
 - Fill in the record’s metadata:
