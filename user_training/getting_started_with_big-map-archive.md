@@ -34,9 +34,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 
 - Click "My records" in the header and find your newly created entry.
 - Click its title.
-- Click "Share on archive" to make your record visible to all authenticated users. By sharing the record, you automatically give all authenticated users permission to read its metadata and download its linked files. 
-
-Your record should now appear in the shared records' list. 
+- Click "Share on archive" to make your record visible to all authenticated users. By sharing the record, you automatically give all authenticated users permission to read its metadata and download its linked files. Your record should now appear in the shared records' list. 
 
 ### Update the first version
 
