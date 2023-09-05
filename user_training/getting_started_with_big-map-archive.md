@@ -9,10 +9,11 @@ In this section, users interact with the data repository through a web browser.
 ### Log in to the demo instance
 
 - Navigate to the homepage.
-- Click "Log in", then "Forgot password?".
-- Enter your email address and click "Reset password". 
-If you receive an error message such as "Invalid email address", contact us at big-map-archive@materialscloud.org.
-- Follow the instructions. At some point, choose a new password that must be at least 6 characters long. After your password reset, you are automatically logged in.
+- Click "Log in" and enter your account credentials.
+- In case of unknown or forgotten password:
+  - Click "Forgot password?". 
+  - Enter your email address and click "Reset password". If you receive an error message such as "Invalid email address", contact us at big-map-archive@materialscloud.org.
+  - Follow the instructions. At some point, choose a new password that must be at least 6 characters long. After your password reset, you are automatically logged in.
 
 ### Create (a first version of) an entry
 
