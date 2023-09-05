@@ -123,7 +123,7 @@ bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 Note that, if a data file remains unchanged from one version to the next, it is linked to both versions but uploaded only once. This saves storage space and avoids unnecessary use of bandwidth.
 - Navigate to "Shared records" and click the record's title. Observe the links imported from the first version, in addition to the links for the files in `data/input/upload`. The `--link-all-files-from-previous` flag is responsible for these extra links.
 
-### Retrieve shared records
+### Retrieve shared records' metadata
 
 - To retrieve the metadata of a specific shared record, execute this command, after replacing `<record_id>` with the sought-after record's id:
 ```bash
