@@ -25,7 +25,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Fill in the record’s metadata:
   - A resource type. This field is compulsory and describes the overall nature of your data files’ contents.
   - A title (compulsory).
-  - Authors (compulsory). Note that adding another user as an author does not make him a co-owner of the record.
+  - Authors (compulsory). Note that adding another user as an author does not make him or her a record's co-owner.
   - A description (optional).
   - A license (optional). The recommended license is the BIG-MAP license which allows re-distribution and re-use of work within the BIG-MAP community.
   - Keywords (optional). Any keyword is allowed. However, each keyword should be entered separately: there should be a small cross on the right side of each of them. You can also benefit from an autocomplete feature that suggests keywords based on input. Type, e.g., "wp". Recommendation: if you split a large dataset over multiple entries, you may want to tag the first version of each entry with the same random number. This helps humans and machines retrieve the whole dataset easily using the built-in search engine. 
