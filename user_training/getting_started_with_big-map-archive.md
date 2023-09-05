@@ -1,6 +1,6 @@
 # Getting started with BIG-MAP Archive
 
-This is a beginner-friendly exercise that takes you through the process of creating, sharing, updating, and retrieving records for BIG-MAP Archive. Before you start this tutorial, you should have access to a demo instance of the data repository (e.g., [https://big-map-archive-demo.materialscloud.org/](https://big-map-archive-demo.materialscloud.org/)), which enables you to try available features and commands without affecting the [main instance](https://archive.big-map.eu/). 
+This is a beginner-friendly exercise that takes you through the process of creating, sharing, updating, and retrieving records for BIG-MAP Archive. Before you start this tutorial, you should have a user account on a demo instance of the data repository (e.g., [https://big-map-archive-demo.materialscloud.org/](https://big-map-archive-demo.materialscloud.org/)), which enables you to try available features and commands without affecting the [main instance](https://archive.big-map.eu/). If this is not the case, email us big-map-archive@materialscloud.org.
 
 ## Manual data sharing and preservation
 
@@ -9,7 +9,7 @@ In this section, users interact with the data repository through a web browser.
 ### Log in to the demo instance
 
 - Navigate to the homepage.
-- Click "Log in" and enter your account credentials. If you receive an error message such as "Invalid email address", contact us at big-map-archive@materialscloud.org.
+- Click "Log in" and enter your account credentials. If you receive an error message such as "Invalid email address", contact us.
 - In case of unknown or forgotten password:
   - Click "Forgot password?". 
   - Enter your email address and click "Reset password".
