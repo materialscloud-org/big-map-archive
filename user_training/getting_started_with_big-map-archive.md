@@ -91,7 +91,7 @@ In this section, users interact with the data repository through a command-line 
   
 ### Create and share (a first version of) an entry
 
-- Move `metadata.yaml` in the `data/input` directory.
+- Move `metadata.yaml` to the `data/input` directory.
 - Put the data files to be uploaded and linked to the future record in the `data/input/upload` directory.
 - Execute the following command:
 ```bash
