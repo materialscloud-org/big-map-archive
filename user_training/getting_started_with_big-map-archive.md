@@ -129,7 +129,7 @@ Note that, if a data file remains unchanged from one version to the next, it is 
 ```bash
 bma record get --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json --record-id=<record_id>
 ```
-- To retrieve the metadata of the latest shared version of each entry, execute this command:
+- To get the metadata of the latest shared version of each entry, execute this command:
 ```bash
 bma record get-all --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json
 ```
