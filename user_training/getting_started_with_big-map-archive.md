@@ -63,7 +63,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Ask one of them to create a third version (without sharing).
 - Visit "My records". You should be able to see and edit the newly created draft.
 
-### Search through shared records's metadata
+### Search through shared records' metadata
 
 - Click "Shared records".
 - Type "+LNO +WP9" into the search box to find all shared records whose metadata contains LNO and WP9 using the built-in search engine. Depending on the contents of the database, you may get zero, one, or more hits. For more advanced queries, such as searching through specific fields in the metadata (e.g., the title), read the provided search guide.
