@@ -30,7 +30,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
   - A license (optional). The recommended license is the BIG-MAP license which allows re-distribution and re-use of work within the BIG-MAP community.
   - Keywords (optional). Any keyword is allowed. However, each keyword should be entered separately: there should be a small cross on the right side of each of them. You also benefit from an autocomplete feature that suggests keywords based on input. Type, e.g., "wp". Recommendation: if you split a large dataset over multiple entries, you may want to tag the first version of each entry with the same random number. This helps humans and machines retrieve the whole dataset easily using the built-in search engine. 
   - References to external documents (optional).
-- Click "Save" to create (the first version of) the entry. The draft is visible only to you (owner).
+- Click "Save" to create (the first version of) the entry. It remains visible only to you (owner).
 
 ### Share the first version
 
