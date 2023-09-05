@@ -120,7 +120,7 @@ bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/i
 ```bash
 bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=<record_id> --link-all-files-from-previous --publish
 ```
-Note that, if a data file remains unchanged from one version to the next, a file link appears in the two versions. However, the file is uploaded only once. This saves storage space and avoids unnecessary use of bandwidth.
+Note that, if a data file remains unchanged from one version to the next, it is linked to both versions but uploaded only once. This saves storage space and avoids unnecessary use of bandwidth.
 - Navigate to "Shared records" and click the record's title.  Furthermore, in addition to a link for each file in `data/input/upload`, you may find all of the links from the first version. This is an effect of the flag `--link-all-files-from-previous`.
 
 ### Retrieve shared records
