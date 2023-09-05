@@ -125,7 +125,7 @@ Note that, if a data file remains unchanged from one version to the next, it is 
 
 ### Retrieve shared records' metadata
 
-- To retrieve the metadata of a specific shared record, execute this command, after replacing `<record_id>` with the sought-after record's id:
+- To retrieve the metadata of a specific shared record, execute this command, after replacing `<record_id>` with the record's id:
 ```bash
 bma record get --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json --record-id=<record_id>
 ```
