@@ -61,7 +61,7 @@ For this exercise, we recommend choosing small files (file size ≤ 1 MB) contai
 - Go to "My records" and click the record’s title.
 - Click "Collaborate" and "Get a link" to generate a URL to be sent to collaborators. Equipped with this URL, they can become co-owners of the entry.
 - Ask one of them to create a third version (without sharing).
-- Visit "My records". You should be able to see and edit the draft.
+- Visit "My records". You should be able to see and edit the newly created draft.
 
 ### Search for shared records using the built-in search engine
 
