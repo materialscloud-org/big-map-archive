@@ -1,14 +1,13 @@
 {
-    "Servers": {
-      "1": {
-        "Name": "big-map-archive_db",
-        "Group": "Servers",
-        "Host": "big-map-archive_db_1",
-        "Port": 5432,
-        "MaintenanceDB": "postgres",
-        "Username": "big-map-archive",
-        "SSLMode": "prefer"
-      }
+  "Servers": {
+    "1": {
+      "Name": "big-map-archive-db",
+      "Group": "Servers",
+      "Host": "big-map-archive-db-1",
+      "Port": 5432,
+      "MaintenanceDB": "postgres",
+      "Username": "big-map-archive",
+      "SSLMode": "prefer"
     }
   }
-  
+}
