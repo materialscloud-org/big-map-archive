@@ -1,21 +1,21 @@
 subjects:
   pid-type: sub
   schemes:
-    - id: BIG-MAP
-      name: BIG-MAP Work Package
-      uri: ""
-      data-file: vocabularies/subjects_bigmap.yaml
-    - id: Techniques
-      name: Techniques
-      uri: ""
-      data-file: vocabularies/subjects_techniques.yaml
-resourcetypes:
-  pid-type: rsrct
-  data-file: vocabularies/resource_types.yaml
-licenses:
-  pid-type: lic
-  data-file: vocabularies/licenses.csv
-
+    - id: FOS
+      name: Fields of Science and Technology
+      uri: "http://www.oecd.org/science/inno/38235147.pdf"
+      data-file: vocabularies/subjects_oecd_fos.yaml
+# Minimimal example vocabularies
+# can be used for quick testing, or a basis for building your own customized vocabularies.
+#names:
+#  pid-type: names
+#  data-file: vocabularies/names.yaml
+#licenses:
+#  pid-type: lic
+#  data-file: vocabularies/cc_licences.csv
+#languages:
+#  pid-type: lng
+#  data-file: vocabularies/languages.yaml
 # TODO: Uncoment this if you want to have all affiliations with ROR identifiers.
 # affiliations:
 #   pid-type: aff
