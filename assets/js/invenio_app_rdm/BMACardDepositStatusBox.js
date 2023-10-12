@@ -4,9 +4,9 @@ import {
   SaveButton,
 } from "@js/invenio_rdm_records";
 import { Card, Grid, } from "semantic-ui-react";
-import {BMASubmitReviewOrPublishButton} from "./BMASubmitReviewOrPublishButton";
+import { BMASubmitReviewOrPublishButton } from "./BMASubmitReviewOrPublishButton";
 
-const CardDepositStatusBox = () => {
+const BMACardDepositStatusBox = () => {
     return (
         <Card>
             <Card.Content>
@@ -29,4 +29,4 @@ const CardDepositStatusBox = () => {
         </Card>);
 }
 
-export default CardDepositStatusBox;
+export default BMACardDepositStatusBox;
