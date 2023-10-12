@@ -1,7 +1,6 @@
 import React from "react";
 import {
   DepositStatusBox,
-  PreviewButton,
   SaveButton,
 } from "@js/invenio_rdm_records";
 import { Card, Grid, } from "semantic-ui-react";
@@ -16,21 +15,12 @@ const CardDepositStatusBox = () => {
             <Card.Content>
                 <Grid relaxed>
                     <Grid.Column
-                        computer={8}
+                        computer={16}
                         mobile={16}
-                        className="pb-0 left-btn-col"
+                        className="pb-0 pt-10"
                     >
                         <SaveButton fluid/>
                     </Grid.Column>
-
-                    <Grid.Column
-                        computer={8}
-                        mobile={16}
-                        className="pb-0 right-btn-col"
-                    >
-                        <PreviewButton fluid/>
-                    </Grid.Column>
-
                     <Grid.Column width={16} className="pt-10">
                         <BMASubmitReviewOrPublishButton fluid/>
                     </Grid.Column>
