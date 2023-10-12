@@ -1,11 +1,7 @@
-import { i18next } from "@translations/invenio_app_rdm/i18next";
 import React from "react";
 import PropTypes from "prop-types";
-import _truncate from "lodash/truncate";
 
 import { Image, InvenioPopup } from "react-invenio-forms";
-import { Icon } from "semantic-ui-react";
-import { CommunityTypeLabel, RestrictedLabel } from "@js/invenio_communities/community/labels";
 
 export const BMACommunityCompactItemComputer = ({
   result,

@@ -1,4 +1,3 @@
-import { i18next } from "@translations/invenio_rdm_records/i18next";
 import React, { Component } from "react";
 import { OverridableContext, parametrize } from "react-overridable";
 import {
@@ -9,9 +8,8 @@ import {
   ReactSearchKit,
   ResultsList,
   ResultsLoader,
-  SearchBar,
 } from "react-searchkit";
-import { Grid, Menu, Modal } from "semantic-ui-react";
+import { Modal } from "semantic-ui-react";
 import { BMACommunityListItem } from "./BMACommunityListItem";
 import PropTypes from "prop-types";
 

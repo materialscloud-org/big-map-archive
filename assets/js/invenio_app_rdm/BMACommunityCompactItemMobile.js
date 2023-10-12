@@ -1,10 +1,5 @@
-import { i18next } from "@translations/invenio_app_rdm/i18next";
-import { CommunityTypeLabel } from "@js/invenio_communities/community/labels";
-import { RestrictedLabel } from "@js/invenio_communities/community/labels";
-import _truncate from "lodash/truncate";
 import React from "react";
-import { Image, InvenioPopup } from "react-invenio-forms";
-import { Icon } from "semantic-ui-react";
+import { Image } from "react-invenio-forms";
 import PropTypes from "prop-types";
 
 export const BMACommunityCompactItemMobile = ({

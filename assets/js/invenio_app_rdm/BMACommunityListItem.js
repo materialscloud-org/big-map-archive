@@ -1,11 +1,9 @@
 import { i18next } from "@translations/invenio_rdm_records/i18next";
-import _capitalize from "lodash/capitalize";
 import PropTypes from "prop-types";
 import React, { useContext } from "react";
-import { Button, Icon, Label } from "semantic-ui-react";
+import { Button } from "semantic-ui-react";
 import { BMACommunityCompactItem } from "./BMACommunityCompactItem";
 import { CommunityContext } from "@js/invenio_rdm_records/src/deposit/components/CommunitySelectionModal/CommunityContext";
-import { InvenioPopup } from "react-invenio-forms";
 
 export const BMACommunityListItem = ({ result, record }) => {
   const {

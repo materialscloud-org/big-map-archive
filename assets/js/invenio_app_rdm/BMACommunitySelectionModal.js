@@ -99,10 +99,7 @@ export class BMACommunitySelectionModalComponent extends Component {
           {extraContentComponents && (
             <Modal.Content>{extraContentComponents}</Modal.Content>
           )}
-
-          <Modal.Actions>
-            <Button onClick={handleClose}>{i18next.t("Close")}</Button>
-          </Modal.Actions>
+          
         </Modal>
       </CommunityContext.Provider>
     );
