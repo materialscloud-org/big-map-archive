@@ -12,7 +12,7 @@ import { Button } from "semantic-ui-react";
 import { changeSelectedCommunity } from "@js/invenio_rdm_records/src/deposit/state/actions";
 import { CommunitySelectionModal } from "@js/invenio_rdm_records/src/deposit/components/CommunitySelectionModal";
 import { BMAPublishButton } from "./BMAPublishButton";
-import { SubmitReviewButton } from "@js/invenio_rdm_records/src/deposit/controls/PublishButton/SubmitReviewButton";
+import { BMASubmitReviewButton } from "./BMASubmitReviewButton";
 
 class BMASubmitReviewOrPublishComponent extends Component {
   constructor(props) {
@@ -36,7 +36,7 @@ class BMASubmitReviewOrPublishComponent extends Component {
 
     if (showSubmitForReviewButton) {
       result = (
-        <SubmitReviewButton
+        <BMASubmitReviewButton
           directPublish={showDirectPublishButton}
           {...ui}
           fluid

@@ -24,11 +24,14 @@ class BMAPublishButtonComponent extends Component {
 
   static contextType = DepositFormSubmitContext;
 
-  openConfirmModal = () => this.setState({ isConfirmModalOpen: true });
+  openConfirmModal = () => {
+    return this.setState({ isConfirmModalOpen: true })
+  };
 
   closeConfirmModal = () => this.setState({ isConfirmModalOpen: false });
 
   handlePublish = (event, handleSubmit, publishWithoutCommunity) => {
+    this.props.formik.values.metadata.publication_date = new Date().toISOString().slice(0, 10);
     const { setSubmitContext } = this.context;
 
     setSubmitContext(
