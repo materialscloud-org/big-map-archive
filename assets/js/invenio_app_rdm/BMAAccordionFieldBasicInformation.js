@@ -9,11 +9,11 @@ import {
     LicenseField,
     PublicationDateField,
     ResourceTypeField,
-    TitlesField,
     SubjectsField,
     RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
+import {BMATitlesField} from "./BMATitlesField";
 
 const BMAAccordionFieldBasicInformation = (props) => {
     const {record, config, vocabularies} = props;
@@ -77,19 +77,14 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 />
             </Overridable>
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.TitlesField.container"
-                vocabularies={vocabularies}
+
+            <BMATitlesField
+                options={vocabularies.metadata.titles}
                 fieldPath="metadata.title"
-                record={record}
-            >
-                <TitlesField
-                    options={vocabularies.metadata.titles}
-                    fieldPath="metadata.title"
-                    recordUI={record.ui}
-                    required
-                />
-            </Overridable>
+                recordUI={record.ui}
+                required
+            />
+
 
             <Overridable
                 id="InvenioAppRdm.Deposit.PublicationDateField.container"
