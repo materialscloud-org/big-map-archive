@@ -165,7 +165,7 @@ const BMAAccordionFieldBasicInformation = (props) => {
             <BMARelatedWorksField
                 fieldPath="metadata.related_identifiers"
                 options={vocabularies.metadata.identifiers}
-                showEmptyValue
+                showEmptyValue={false}
             />
 
         </AccordionField>);
