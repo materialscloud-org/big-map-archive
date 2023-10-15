@@ -99,7 +99,7 @@ export class BMACommunitySelectionModalComponent extends Component {
           {extraContentComponents && (
             <Modal.Content>{extraContentComponents}</Modal.Content>
           )}
-          
+
         </Modal>
       </CommunityContext.Provider>
     );
@@ -124,7 +124,7 @@ BMACommunitySelectionModalComponent.propTypes = {
 BMACommunitySelectionModalComponent.defaultProps = {
   chosenCommunity: undefined,
   extraContentComponents: undefined,
-  modalHeader: i18next.t("Select a community"),
+  modalHeader: i18next.t("Select one of your communities"),
   onModalChange: undefined,
   displaySelected: false,
   modalOpen: false,
