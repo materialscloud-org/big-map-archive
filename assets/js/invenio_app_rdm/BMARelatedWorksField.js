@@ -10,20 +10,19 @@ import {
 } from "react-invenio-forms";
 import { Button, Form, Icon } from "semantic-ui-react";
 
-import { emptyRelatedWork } from "@js/invenio_rdm_records/src/deposit/fields/RelatedWorksField/initialValues";
-import { ResourceTypeField } from "@js/invenio_rdm_records/src/deposit/fields/ResourceTypeField";
+import { BMAEmptyRelatedWork } from "./BMAEmptyRelatedWork";
 import { i18next } from "@translations/invenio_rdm_records/i18next";
 
 export class BMARelatedWorksField extends Component {
   render() {
     const { fieldPath, label, labelIcon, required, options, showEmptyValue } =
       this.props;
-    
+
     return (
       <>
         <ArrayField
           addButtonLabel={i18next.t("Add reference")}
-          defaultNewValue={emptyRelatedWork}
+          defaultNewValue={BMAEmptyRelatedWork}
           fieldPath={fieldPath}
           label={<FieldLabel htmlFor={fieldPath} icon={labelIcon} label={label} />}
           required={required}
@@ -36,28 +35,6 @@ export class BMARelatedWorksField extends Component {
               <GroupField optimized>
                 <SelectField
                   clearable
-                  fieldPath={`${fieldPathPrefix}.relation_type`}
-                  label={i18next.t("Relation")}
-                  aria-label={i18next.t("Relation")}
-                  optimized
-                  options={options.relations}
-                  placeholder={{
-                    role: "option",
-                    content: "Select relation...",
-                  }}
-                  required
-                  width={3}
-                />
-
-                <TextField
-                  fieldPath={`${fieldPathPrefix}.identifier`}
-                  label={i18next.t("Identifier")}
-                  required
-                  width={4}
-                />
-
-                <SelectField
-                  clearable
                   fieldPath={`${fieldPathPrefix}.scheme`}
                   label={i18next.t("Scheme")}
                   aria-label={i18next.t("Scheme")}
@@ -67,13 +44,11 @@ export class BMARelatedWorksField extends Component {
                   width={2}
                 />
 
-                <ResourceTypeField
-                  clearable
-                  fieldPath={`${fieldPathPrefix}.resource_type`}
-                  labelIcon="" // Otherwise breaks alignment
-                  options={options.resource_type}
-                  width={7}
-                  labelclassname="small field-label-class"
+                <TextField
+                  fieldPath={`${fieldPathPrefix}.identifier`}
+                  label={i18next.t("Identifier")}
+                  required
+                  width={4}
                 />
 
                 <Form.Field>
