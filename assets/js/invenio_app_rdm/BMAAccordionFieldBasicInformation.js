@@ -10,11 +10,13 @@ import {
     PublicationDateField,
     ResourceTypeField,
     TitlesField,
+    SubjectsField,
+    RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
 
 const BMAAccordionFieldBasicInformation = (props) => {
-    const { record, config, vocabularies } = props;
+    const {record, config, vocabularies} = props;
 
     return (
         <AccordionField
@@ -27,6 +29,8 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 "metadata.description",
                 "metadata.additional_descriptions",
                 "metadata.rights",
+                "metadata.subjects",
+                "metadata.related_identifiers",
             ]}
             active
             label={i18next.t("Metadata")}
@@ -169,6 +173,32 @@ const BMAAccordionFieldBasicInformation = (props) => {
                     })}
                 />
             </Overridable>
+
+            <Overridable
+                id="InvenioAppRdm.Deposit.SubjectsField.container"
+                vocabularies={vocabularies}
+                fieldPath="metadata.subjects"
+                record={record}
+            >
+                <SubjectsField
+                    fieldPath="metadata.subjects"
+                    initialOptions={_get(record, "ui.subjects", null)}
+                    limitToOptions={vocabularies.metadata.subjects.limit_to}
+                />
+            </Overridable>
+
+            <Overridable
+                id="InvenioAppRdm.Deposit.RelatedWorksField.container"
+                fieldPath="metadata.related_identifiers"
+                vocabularies={vocabularies}
+            >
+                <RelatedWorksField
+                    fieldPath="metadata.related_identifiers"
+                    options={vocabularies.metadata.identifiers}
+                    showEmptyValue
+                />
+            </Overridable>
+
         </AccordionField>);
 };
 
