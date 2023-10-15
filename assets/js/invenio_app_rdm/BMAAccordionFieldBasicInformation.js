@@ -3,7 +3,6 @@ import _get from "lodash/get";
 import React, {Fragment} from "react";
 import {AccordionField} from "react-invenio-forms";
 import {
-    DescriptionsField,
     CreatibutorsField,
     PIDField,
     LicenseField,
@@ -13,7 +12,8 @@ import {
     RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
-import {BMATitlesField} from "./BMATitlesField";
+import { BMATitlesField } from "./BMATitlesField";
+import { BMADescriptionsField } from "./BMADescriptionsField";
 
 const BMAAccordionFieldBasicInformation = (props) => {
     const {record, config, vocabularies} = props;
@@ -77,14 +77,12 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 />
             </Overridable>
 
-
             <BMATitlesField
                 options={vocabularies.metadata.titles}
                 fieldPath="metadata.title"
                 recordUI={record.ui}
                 required
             />
-
 
             <Overridable
                 id="InvenioAppRdm.Deposit.PublicationDateField.container"
@@ -113,32 +111,25 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 />
             </Overridable>
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.DescriptionsField.container"
-                record={record}
-                vocabularies={vocabularies}
+            <BMADescriptionsField
                 fieldPath="metadata.description"
-            >
-                <DescriptionsField
-                    fieldPath="metadata.description"
-                    options={vocabularies.metadata.descriptions}
-                    recordUI={_get(record, "ui", null)}
-                    editorConfig={{
-                        removePlugins: [
-                            "Image",
-                            "ImageCaption",
-                            "ImageStyle",
-                            "ImageToolbar",
-                            "ImageUpload",
-                            "MediaEmbed",
-                            "Table",
-                            "TableToolbar",
-                            "TableProperties",
-                            "TableCellProperties",
-                        ],
-                    }}
-                />
-            </Overridable>
+                options={vocabularies.metadata.descriptions}
+                recordUI={_get(record, "ui", null)}
+                editorConfig={{
+                    removePlugins: [
+                        "Image",
+                        "ImageCaption",
+                        "ImageStyle",
+                        "ImageToolbar",
+                        "ImageUpload",
+                        "MediaEmbed",
+                        "Table",
+                        "TableToolbar",
+                        "TableProperties",
+                        "TableCellProperties",
+                    ],
+                }}
+            />
 
             <Overridable
                 id="InvenioAppRdm.Deposit.LicenseField.container"
