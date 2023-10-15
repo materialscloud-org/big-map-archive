@@ -5,15 +5,15 @@ import {AccordionField} from "react-invenio-forms";
 import {
     CreatibutorsField,
     PIDField,
-    LicenseField,
     PublicationDateField,
     ResourceTypeField,
     SubjectsField,
     RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
-import { BMATitlesField } from "./BMATitlesField";
-import { BMADescriptionsField } from "./BMADescriptionsField";
+import {BMATitlesField} from "./BMATitlesField";
+import {BMADescriptionsField} from "./BMADescriptionsField";
+import {BMALicenseField} from "./BMALicenseField";
 
 const BMAAccordionFieldBasicInformation = (props) => {
     const {record, config, vocabularies} = props;
@@ -131,34 +131,29 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 }}
             />
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.LicenseField.container"
+            <BMALicenseField
                 fieldPath="metadata.rights"
-            >
-                <LicenseField
-                    fieldPath="metadata.rights"
-                    searchConfig={{
-                        searchApi: {
-                            axios: {
-                                headers: {
-                                    Accept: "application/vnd.inveniordm.v1+json",
-                                },
-                                url: "/api/vocabularies/licenses",
-                                withCredentials: false,
+                searchConfig={{
+                    searchApi: {
+                        axios: {
+                            headers: {
+                                Accept: "application/vnd.inveniordm.v1+json",
                             },
+                            url: "/api/vocabularies/licenses",
+                            withCredentials: false,
                         },
-                        initialQueryState: {
-                            filters: [["tags", "recommended"]],
-                        },
-                    }}
-                    serializeLicenses={(result) => ({
-                        title: result.title_l10n,
-                        description: result.description_l10n,
-                        id: result.id,
-                        link: result.props.url,
-                    })}
-                />
-            </Overridable>
+                    },
+                    initialQueryState: {
+                        filters: [["tags", "recommended"]],
+                    },
+                }}
+                serializeLicenses={(result) => ({
+                    title: result.title_l10n,
+                    description: result.description_l10n,
+                    id: result.id,
+                    link: result.props.url,
+                })}
+            />
 
             <Overridable
                 id="InvenioAppRdm.Deposit.SubjectsField.container"
