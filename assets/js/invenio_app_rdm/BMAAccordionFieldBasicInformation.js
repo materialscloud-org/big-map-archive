@@ -7,13 +7,14 @@ import {
     PIDField,
     PublicationDateField,
     ResourceTypeField,
-    SubjectsField,
     RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
 import {BMATitlesField} from "./BMATitlesField";
 import {BMADescriptionsField} from "./BMADescriptionsField";
 import {BMALicenseField} from "./BMALicenseField";
+import {BMASubjectsField} from "./BMASubjectsField";
+import {BMARelatedWorksField} from "./BMARelatedWorksField";
 
 const BMAAccordionFieldBasicInformation = (props) => {
     const {record, config, vocabularies} = props;
@@ -155,30 +156,17 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 })}
             />
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.SubjectsField.container"
-                vocabularies={vocabularies}
+            <BMASubjectsField
                 fieldPath="metadata.subjects"
-                record={record}
-            >
-                <SubjectsField
-                    fieldPath="metadata.subjects"
-                    initialOptions={_get(record, "ui.subjects", null)}
-                    limitToOptions={vocabularies.metadata.subjects.limit_to}
-                />
-            </Overridable>
+                initialOptions={_get(record, "ui.subjects", null)}
+                limitToOptions={vocabularies.metadata.subjects.limit_to}
+            />
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.RelatedWorksField.container"
+            <BMARelatedWorksField
                 fieldPath="metadata.related_identifiers"
-                vocabularies={vocabularies}
-            >
-                <RelatedWorksField
-                    fieldPath="metadata.related_identifiers"
-                    options={vocabularies.metadata.identifiers}
-                    showEmptyValue
-                />
-            </Overridable>
+                options={vocabularies.metadata.identifiers}
+                showEmptyValue
+            />
 
         </AccordionField>);
 };
