@@ -16,4 +16,6 @@ export const overriddenComponents = {
     "InvenioAppRdm.Deposit.AccordionFieldReferences.container": () => null,
     "InvenioAppRdm.Deposit.PublisherField.container": () => null,
     "InvenioAppRdm.Deposit.AccordionFieldBasicInformation.container": BMAAccordionFieldBasicInformation,
+    "InvenioAppRdm.Deposit.AccordionFieldRecommendedInformation.container": () => null,
+    "InvenioAppRdm.Deposit.AccordionFieldRelatedWorks.container": () => null,
 }
