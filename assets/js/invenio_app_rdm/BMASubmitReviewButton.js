@@ -11,7 +11,7 @@ import {
   DepositFormSubmitContext,
 } from "@js/invenio_rdm_records/src/deposit/api/DepositFormSubmitContext";
 import { DepositStatus } from "@js/invenio_rdm_records/src/deposit/state/reducers/deposit";
-import { SubmitReviewModal } from "@js/invenio_rdm_records/src/deposit/controls/PublishButton/SubmitReviewModal";
+import { BMASubmitReviewModal } from "./BMASubmitReviewModal";
 
 class BMASubmitReviewButtonComponent extends Component {
   state = { isConfirmModalOpen: false };
@@ -87,7 +87,7 @@ class BMASubmitReviewButtonComponent extends Component {
           type="button" // needed so the formik form doesn't handle it as submit button i.e enable HTML validation on required input fields
         />
         {isConfirmModalOpen && (
-          <SubmitReviewModal
+          <BMASubmitReviewModal
             isConfirmModalOpen={isConfirmModalOpen}
             initialReviewComment={actionStateExtra.reviewComment}
             onSubmit={this.handleSubmitReview}
