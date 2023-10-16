@@ -15,10 +15,6 @@ import * as Yup from "yup";
 
 export class BMASubmitReviewModal extends Component {
   componentDidMount() {
-    // A11y: Focus the first input field in the form
-    const firstFormFieldWrap = document.getElementById("accept-access-checkbox");
-    const checkboxElem = firstFormFieldWrap.querySelector("input");
-    checkboxElem?.focus();
   }
 
   ConfirmSubmitReviewSchema = Yup.object({
@@ -42,12 +38,13 @@ export class BMASubmitReviewModal extends Component {
     const communityTitle = community.metadata.title;
 
     const directPublishCase = () => {
-      headerTitle = i18next.t("Publish to community");
+      headerTitle = i18next.t("Do you want to publish this version to '{{communityTitle}}'?", { communityTitle });
       msgWarningTitle = i18next.t(
-        "Before publishing to the community, please read and check the following:"
+        "Once a version is published, changing its files is no longer permitted. However, modifying its metadata (title, authors, etc.) is still allowed. Alternatively, creating a new entry version is always an option.",
+          { communityTitle }
       );
       msgWarningText1 = i18next.t(
-        "Your upload will be <bold>immediately published</bold> in '{{communityTitle}}'. You will no longer be able to change the files in the upload! However, you will still be able to update the record's metadata later.",
+        "",
         { communityTitle }
       );
       submitBtnLbl = i18next.t("Publish record to community");
@@ -123,82 +120,11 @@ export class BMASubmitReviewModal extends Component {
                     {msgWarningTitle}
                   </p>
                 </Message>
-                <Form>
-                  <Form.Field id="accept-access-checkbox">
-                    <RadioField
-                      control={Checkbox}
-                      fieldPath="acceptAccessToRecord"
-                      label={
-                        <Trans
-                          defaults={i18next.t(
-                            "The '{{communityTitle}}' curators will have access to <bold>view</bold> and <bold>edit</bold> your upload's metadata and files.",
-                            { communityTitle }
-                          )}
-                          values={{
-                            communityTitle,
-                          }}
-                          components={{ bold: <b /> }}
-                          shouldUnescape
-                        />
-                      }
-                      checked={_get(values, "acceptAccessToRecord") === true}
-                      onChange={({ data, formikProps }) => {
-                        formikProps.form.setFieldValue(
-                          "acceptAccessToRecord",
-                          data.checked
-                        );
-                      }}
-                      optimized
-                    />
-                    <ErrorLabel
-                      role="alert"
-                      fieldPath="acceptAccessToRecord"
-                      className="mt-0 mb-5"
-                    />
-                  </Form.Field>
                   {!record && (
-                    <Form.Field>
-                      <RadioField
-                        control={Checkbox}
-                        fieldPath="acceptAfterPublishRecord"
-                        label={
-                          <Trans
-                            defaults={msgWarningText1}
-                            values={{
-                              communityTitle: communityTitle,
-                            }}
-                            components={{ bold: <b /> }}
-                          />
-                        }
-                        checked={_get(values, "acceptAfterPublishRecord") === true}
-                        onChange={({ data, formikProps }) => {
-                          formikProps.form.setFieldValue(
-                            "acceptAfterPublishRecord",
-                            data.checked
-                          );
-                        }}
-                        optimized
-                      />
-                      <ErrorLabel
-                        role="alert"
-                        fieldPath="acceptAfterPublishRecord"
-                        className="mt-0 mb-5"
-                      />
-                    </Form.Field>
+                      <p>
+                        {msgWarningText1}
+                      </p>
                   )}
-                  {!directPublish && (
-                    <TextAreaField
-                      fieldPath="reviewComment"
-                      label={i18next.t("Message to curators (optional)")}
-                    />
-                  )}
-
-                  {publishModalExtraContent && (
-                    <div
-                      dangerouslySetInnerHTML={{ __html: publishModalExtraContent }}
-                    />
-                  )}
-                </Form>
               </Modal.Content>
               <Modal.Actions>
                 <Button
