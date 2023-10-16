@@ -3,11 +3,9 @@ import _get from "lodash/get";
 import React, {Fragment} from "react";
 import {AccordionField} from "react-invenio-forms";
 import {
-    CreatibutorsField,
     PIDField,
     PublicationDateField,
     ResourceTypeField,
-    RelatedWorksField,
 } from "@js/invenio_rdm_records";
 import Overridable from "react-overridable";
 import {BMATitlesField} from "./BMATitlesField";
@@ -15,6 +13,7 @@ import {BMADescriptionsField} from "./BMADescriptionsField";
 import {BMALicenseField} from "./BMALicenseField";
 import {BMASubjectsField} from "./BMASubjectsField";
 import {BMARelatedWorksField} from "./BMARelatedWorksField";
+import {BMACreatibutorsField} from "./BMACreatibutorsField";
 
 const BMAAccordionFieldBasicInformation = (props) => {
     const {record, config, vocabularies} = props;
@@ -95,22 +94,15 @@ const BMAAccordionFieldBasicInformation = (props) => {
                 />
             </Overridable>
 
-            <Overridable
-                id="InvenioAppRdm.Deposit.CreatorsField.container"
-                vocabularies={vocabularies}
-                config={config}
+            <BMACreatibutorsField
+                label={i18next.t("Authors")}
+                labelIcon="user"
                 fieldPath="metadata.creators"
-            >
-                <CreatibutorsField
-                    label={i18next.t("Creators")}
-                    labelIcon="user"
-                    fieldPath="metadata.creators"
-                    roleOptions={vocabularies.metadata.creators.role}
-                    schema="creators"
-                    autocompleteNames={config.autocomplete_names}
-                    required
-                />
-            </Overridable>
+                roleOptions={vocabularies.metadata.creators.role}
+                schema="creators"
+                autocompleteNames={config.autocomplete_names}
+                required
+            />
 
             <BMADescriptionsField
                 fieldPath="metadata.description"
