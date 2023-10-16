@@ -7,7 +7,7 @@ import { FieldLabel } from "react-invenio-forms";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 
-import { CreatibutorsModal } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/CreatibutorsModal";
+import { BMACreatibutorsModal } from "./BMACreatibutorsModal";
 import { CreatibutorsFieldItem } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/CreatibutorsFieldItem";
 import { CREATIBUTOR_TYPE } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/type";
 import { sortOptions } from "@js/invenio_rdm_records/src/deposit/utils";
@@ -99,7 +99,7 @@ class BMACreatibutorsFieldForm extends Component {
               );
             })}
           </List>
-          <CreatibutorsModal
+          <BMACreatibutorsModal
             onCreatibutorChange={this.handleOnContributorChange}
             action="add"
             addLabel={modal.addLabel}
