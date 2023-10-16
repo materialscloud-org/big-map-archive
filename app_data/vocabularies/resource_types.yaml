@@ -1,0 +1,51 @@
+- id: dataset
+  icon: table
+  props:
+    csl: dataset
+    datacite_general: Dataset
+    datacite_type: ''
+    openaire_resourceType: '21'
+    openaire_type: dataset
+    eurepo: info:eu-repo/semantics/other
+    schema.org: https://schema.org/Dataset
+    subtype: ''
+    type: dataset
+  title:
+    en: Dataset
+  tags:
+    - depositable
+    - linkable
+- id: software
+  icon: code
+  props:
+    csl: article
+    datacite_general: Software
+    datacite_type: ''
+    openaire_resourceType: '29'
+    openaire_type: software
+    eurepo: info:eu-repo/semantics/other
+    schema.org: https://schema.org/SoftwareSourceCode
+    subtype: ''
+    type: software
+  title:
+    en: Software
+  tags:
+    - depositable
+    - linkable
+- id: other
+  icon: asterisk
+  props:
+    csl: article
+    datacite_general: Other
+    datacite_type: ''
+    openaire_resourceType: '20'
+    openaire_type: other
+    eurepo: info:eu-repo/semantics/other
+    schema.org: https://schema.org/CreativeWork
+    subtype: ''
+    type: other
+  title:
+    en: Other
+  tags:
+    - depositable
+    - linkable

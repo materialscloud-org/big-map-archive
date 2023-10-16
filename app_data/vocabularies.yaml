@@ -1,10 +1,20 @@
 subjects:
   pid-type: sub
   schemes:
-    - id: FOS
-      name: Fields of Science and Technology
-      uri: "http://www.oecd.org/science/inno/38235147.pdf"
-      data-file: vocabularies/subjects_oecd_fos.yaml
+    - id: BIG-MAP
+      name: BIG-MAP Work Package
+      uri: ""
+      data-file: vocabularies/subjects_bigmap.yaml
+    - id: Techniques
+      name: Techniques
+      uri: ""
+      data-file: vocabularies/subjects_techniques.yaml
+resourcetypes:
+  pid-type: rsrct
+  data-file: vocabularies/resource_types.yaml
+licenses:
+  pid-type: lic
+  data-file: vocabularies/licenses.csv
 # Minimimal example vocabularies
 # can be used for quick testing, or a basis for building your own customized vocabularies.
 #names:
