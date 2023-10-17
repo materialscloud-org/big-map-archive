@@ -40,7 +40,7 @@ export class BMASubmitReviewModal extends Component {
     const directPublishCase = () => {
       headerTitle = i18next.t("Do you want to publish this version to '{{communityTitle}}'?", { communityTitle });
       msgWarningTitle = i18next.t(
-        "Once a version is published, changing its files is no longer permitted. However, modifying its metadata (title, authors, etc.) is still allowed. Alternatively, creating a new entry version is always an option.",
+        "Once a version is published, changing its files is no longer permitted. However, modifying its metadata (title, authors, etc.) is still allowed.",
           { communityTitle }
       );
       msgWarningText1 = i18next.t(
