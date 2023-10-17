@@ -1,0 +1,40 @@
+- affiliations:
+  - name: Technical University of Denmark
+  family_name: VonBigMap
+  given_name: Peter
+  id: 0000-0001-7673-1000
+  identifiers:
+  - identifier: 0000-0001-7673-1000
+    scheme: orcid
+- affiliations:
+  - name: Uppsala University
+  family_name: VonBigMap
+  given_name: John
+  id: 0000-0001-8206-6000
+  identifiers:
+  - identifier: 0000-0001-8206-6000
+    scheme: orcid
+- affiliations:
+  - name: Ecole Polytechnique Fédérale de Lausanne
+  family_name: VonHidden
+  given_name: Maria
+  id: 0000-0002-4245-2000
+  identifiers:
+  - identifier: 0000-0002-4245-2000
+    scheme: orcid
+- affiliations:
+  - name: Karlsruhe Institute of Technology
+  family_name: VonHidden
+  given_name: Katia
+  id: 0000-0002-7583-6000
+  identifiers:
+  - identifier: 0000-0002-7583-6000
+    scheme: orcid
+- affiliations:
+  - name: SINTEF
+  family_name: VonInstabat
+  given_name: Jane
+  id: 0000-0001-5331-4001
+  identifiers:
+  - identifier: 0000-0001-5331-4001
+    scheme: orcid

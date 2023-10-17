@@ -15,6 +15,9 @@ resourcetypes:
 licenses:
   pid-type: lic
   data-file: vocabularies/licenses.csv
+names:
+  pid-type: names
+  data-file: vocabularies/names_orcid.yaml
 # Minimimal example vocabularies
 # can be used for quick testing, or a basis for building your own customized vocabularies.
 #names:
