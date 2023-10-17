@@ -2,3 +2,48 @@
   max-height: 75px;
   padding-bottom: 1rem;
 }
+
+.rdm-logo {
+    width: fit-content !important;
+}
+
+.logo-left {
+    margin-left: auto !important;
+}
+
+.outer-navbar-bigmap {
+    background-image: linear-gradient(12deg, #1a3156, #1a3156 15%, rgb(251 130 115 / 0%));
+    background-color: #1a3156;
+}
+
+.ui.inverted.menu {
+    background: #1a3156 !important;
+}
+
+#invenio-nav.ui.menu #user-profile-dropdown {
+    width: 20em !important;
+}
+
+.section-title {
+    color: #1a3156 !important;
+}
+
+i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
+    color: #1a3156 !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button {
+    margin: 5px !important;
+    background-color: #1a3156 !important;
+    width: 250px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button:hover {
+    background-color: #1a3156 !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button a {
+    color: #ffffff;
+}
