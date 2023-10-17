@@ -1,0 +1,4 @@
+.eu-flag {
+  max-height: 75px;
+  padding-bottom: 1rem;
+}
