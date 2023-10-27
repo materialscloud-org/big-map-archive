@@ -82,3 +82,9 @@ celerybeat-schedule
 
 # PyCharm
 .idea/
+
+# environment variables
+.env
+
+# test code
+mycode
