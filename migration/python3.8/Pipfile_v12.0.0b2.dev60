@@ -1,0 +1,24 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+check-manifest = ">=0.25"
+
+[packages]
+uwsgi = ">=2.0"
+uwsgitop = ">=0.11"
+uwsgi-tools = ">=1.1.1"
+invenio_s3 = "==1.0.5"
+importlib-metadata = "*"
+python-dotenv = "==1.0.0"
+setuptools = "==45.2.0"
+invenio-app-rdm = {extras = ["postgresql", "elasticsearch7"], version = "~=12.0.0b2.dev36"}
+
+[requires]
+python_version = "3.8"
+
+[pipenv]
+# Needed for invenio>v3.5.0a4 and invenio-communities
+allow_prereleases = true
