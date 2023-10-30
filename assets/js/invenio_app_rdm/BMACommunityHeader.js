@@ -48,13 +48,10 @@ class BMACommunityHeaderComponent extends Component {
                 </div>
               </>
             ) : (
-              <div className="page-subheader-element">
-                {i18next.t(
-                  "Community to publish your record to"
-                )}
-              </div>
+                <>
+                </>
             )}
-            <div className="community-header-element flex align-items-center rel-ml-1">
+            <div className="community-header-element flex align-items-center">
               {showCommunitySelectionButton && (
                 <>
                   <BMACommunitySelectionModal
@@ -79,7 +76,7 @@ class BMACommunityHeaderComponent extends Component {
                         content={
                           community
                             ? i18next.t("Change")
-                            : i18next.t("Select a community")
+                            : i18next.t("Select community")
                         }
                       />
                     }
