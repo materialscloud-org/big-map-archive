@@ -4,7 +4,7 @@
 # is in the branch migration.
 
 # IMPORTANT!!!: do not run the full script but proceed step by step, 
-# there are still some operation that are 'manual', follow the comments
+# there are still some operations that are 'manual', follow the comments
 PATH_TO_BIGMAP_VENV="/home/vgranata/.virtualenvs/bm_archiverdm"
 PATH_TO_BIGMAP_APP="/home/vgranata/app/archive-rdm/big-map-archive"
 cd $PATH_TO_BIGMAP_APP
@@ -12,15 +12,15 @@ cd $PATH_TO_BIGMAP_APP
 # move to master branch where v9 is installed
 git checkout master
 
-# copy migration scripts from branch migration
-git checkout migration migration
+# copy migration scripts from branch develop_v12
+git checkout develop_v12 migration
 
 ############################
 # Step 1: install version 9
-# use Pipfile_v9.0.2.lock that is in branch migration
+# use Pipfile_v9.0.2.lock that is in branch develop_v12
 ############################
 
-# use Pipfile_v9.0.2 and Pipfile_v9.0.2.lock that are in branch migration:
+# use Pipfile_v9.0.2 and Pipfile_v9.0.2.lock that are in branch develop_v12:
 cd $PATH_TO_BIGMAP_APP
 cp migration/python3.8/Pipfile_v9.0.2 Pipfile
 cp migration/python3.8/Pipfile_v9.0.2.lock Pipfile.lock
@@ -61,6 +61,7 @@ invenio-cli assets build
 ############################
 # Step 3: Upgrade to InvenioRDM v10
 ############################
+cd $PATH_TO_BIGMAP_APP
 invenio-cli packages update 10.0
 
 # assets build might not be needed to migrate, it can be skipped
@@ -78,6 +79,7 @@ pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app
 ############################
 # Step 4: Upgrade to InvenioRDM v11
 ############################
+cd $PATH_TO_BIGMAP_APP
 invenio-cli packages update 11.0
 
 # Execute the database migration
@@ -87,6 +89,7 @@ pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app
 ############################
 # Step 5: Upgrade to InvenioRDM v12
 ############################
+cd $PATH_TO_BIGMAP_APP
 invenio-cli packages update 12.0.0b2.dev36
 pipenv uninstall flask-babelex
 
@@ -149,9 +152,10 @@ docker cp $DOCKER_CONTAINER_ID:$FILE_DUMP .
 echo "END OF DATABASE MIGRATION: the migrated db dump is big_map_archive_dump_migrated.bak"
 
 ############################
-# Step 7: Go to branch migration where v12 is installed, use python 3.9
+# Step 7: Go to branch where v12 is installed, use python 3.9
 ############################
-git checkout migration
+cd $PATH_TO_BIGMAP_APP
+git checkout develop_v12
 source .env
 # this is needed to pass from elasticsearch to opensearch
 invenio-cli services stop
@@ -182,6 +186,43 @@ docker cp big_map_archive_dump_migrated.bak $DOCKER_CONTAINER_ID:/var/lib/postgr
 
 cd $PATH_TO_BIGMAP_APP/backup
 python restore_db_es.py
+
+############################
+# Step 9: create communities owner and communities,
+# and run migrate.py to: 
+# - make all records/drafts and files restrictes
+# - add bigmap community to all records/drafts
+# - add bigmap community to all users
+############################
+cd $PATH_TO_BIGMAP_APP
+
+# read default owner of communities 
+IFS=" = "
+while read var value
+do
+	if [ "$var" == "INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL" ]
+	then
+    	export "$var"="$value"
+	fi
+done < ~/app/archive-rdm/big-map-archive/.env
+
+# create owner (not active) of communities 
+invenio users create $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL --password=123456
+
+# create communities and attribute as owner INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+cd $PATH_TO_BIGMAP_APP
+invenio bmarchive communities create bigmap
+invenio bmarchive communities create instabat
+invenio bmarchive communities create sensibat
+invenio bmarchive communities create bat4ever
+invenio bmarchive communities create spartacus
+invenio bmarchive communities create hidden
+
+# make all records/drafts and files restrictes,
+# add bigmap community to all records/drafts, 
+# add bigmap community to all users.
+cd $PATH_TO_BIGMAP_APP/migration
+python3 migrate_bigmap.py
 
 # run the application
 cd $PATH_TO_BIGMAP_APP

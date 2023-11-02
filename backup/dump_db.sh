@@ -12,7 +12,7 @@ do
 	then
     	export "$var"="$value"
 	fi
-done < ~/app/archive-rdm/big-map-archive/.env
+done < ~/big-map-archive/.env
 
 DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
 FILE_DUMP="/var/lib/postgresql/data/big_map_archive_dump.bak"
