@@ -28,6 +28,19 @@ class BMACommunityHeaderComponent extends Component {
 
     return (
       showCommunityHeader && (
+      <>
+        <div className="ui container">
+          <div className="ui grid">
+            <div className="eleven wide computer sixteen wide mobile sixteen wide tablet column">
+              <ul className="pl-15">
+                <li>This is the <b>main repository</b>, intended for storing and sharing research data.</li>
+                <li>For testing purposes, use the <a href="https://big-map-archive-demo.materialscloud.org/">demo repository</a>.</li>
+                <li>Fill in the required fields (<span className="color-red">*</span>) below.</li>
+                <li>Click 'Save' to create a draft. Alternatively, click 'Select community' and then 'Share with community' to share your record with the selected community.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
         <Container
           className="page-subheader-outer compact ml-0-mobile mr-0-mobile"
           fluid
@@ -48,8 +61,7 @@ class BMACommunityHeaderComponent extends Component {
                 </div>
               </>
             ) : (
-                <>
-                </>
+              <></>
             )}
             <div className="community-header-element flex align-items-center">
               {showCommunitySelectionButton && (
@@ -98,6 +110,7 @@ class BMACommunityHeaderComponent extends Component {
             </div>
           </Container>
         </Container>
+      </>
       )
     );
   }
