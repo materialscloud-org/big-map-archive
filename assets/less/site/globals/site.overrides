@@ -54,3 +54,7 @@ div.ui.primary.button.labeled.icon.big.goto-button a {
   padding-bottom: 0px !important;
   margin-bottom: 0px !important;
 }
+
+.color-red {
+  color: #DB2828;
+}
