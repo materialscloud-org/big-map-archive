@@ -38,16 +38,16 @@ export class BMASubmitReviewModal extends Component {
     const communityTitle = community.metadata.title;
 
     const directPublishCase = () => {
-      headerTitle = i18next.t("Do you want to publish this version to '{{communityTitle}}'?", { communityTitle });
+      headerTitle = i18next.t("Do you want to share your record with the {{communityTitle}} community?", { communityTitle });
       msgWarningTitle = i18next.t(
-        "Once a version is published, changing its files is no longer permitted. However, modifying its metadata (title, authors, etc.) is still allowed.",
+        "Once the record is shared, it can no longer be made private to you. Furthermore, adding and removing files are no longer permitted.",
           { communityTitle }
       );
       msgWarningText1 = i18next.t(
         "",
         { communityTitle }
       );
-      submitBtnLbl = i18next.t("Publish record to community");
+      submitBtnLbl = i18next.t("Share");
     };
 
     let headerTitle, msgWarningTitle, msgWarningText1, submitBtnLbl;
