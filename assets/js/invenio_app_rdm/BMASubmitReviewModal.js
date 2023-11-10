@@ -38,16 +38,16 @@ export class BMASubmitReviewModal extends Component {
     const communityTitle = community.metadata.title;
 
     const directPublishCase = () => {
-      headerTitle = i18next.t("Do you want to share your record with the {{communityTitle}} community?", { communityTitle });
+      headerTitle = "";
       msgWarningTitle = i18next.t(
-        "Once the record is shared, it can no longer be made private to you. Furthermore, adding and removing files are no longer permitted.",
+        "Once your record is shared with the {{communityTitle}} community, you can no longer make it private to you or change the community that it is shared with.",
           { communityTitle }
       );
       msgWarningText1 = i18next.t(
         "",
         { communityTitle }
       );
-      submitBtnLbl = i18next.t("Share");
+      submitBtnLbl = i18next.t("Share with community");
     };
 
     let headerTitle, msgWarningTitle, msgWarningText1, submitBtnLbl;
@@ -111,7 +111,6 @@ export class BMASubmitReviewModal extends Component {
               closeIcon
               closeOnDimmerClick={false}
             >
-              <Modal.Header>{headerTitle}</Modal.Header>
               <Modal.Content>
                 {errors && <ErrorMessage errors={errors} />}
                 <Message visible warning>
