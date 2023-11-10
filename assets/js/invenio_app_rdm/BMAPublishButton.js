@@ -134,7 +134,7 @@ BMAPublishButtonComponent.propTypes = {
 };
 
 BMAPublishButtonComponent.defaultProps = {
-  buttonLabel: i18next.t("Publish"),
+  buttonLabel: i18next.t("Share with community"),
   publishWithoutCommunity: false,
   actionState: undefined,
   publishModalExtraContent: undefined,

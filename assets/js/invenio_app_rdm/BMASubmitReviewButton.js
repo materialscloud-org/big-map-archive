@@ -68,7 +68,7 @@ class BMASubmitReviewButtonComponent extends Component {
       ? i18next.t("Submitted for review")
       : i18next.t("Submit for review");
     const buttonLbl = directPublish
-      ? i18next.t("Publish to community")
+      ? i18next.t("Share with community")
       : btnLblSubmitReview;
 
     return (
