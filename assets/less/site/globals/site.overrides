@@ -47,3 +47,10 @@ div.ui.primary.button.labeled.icon.big.goto-button:hover {
 div.ui.primary.button.labeled.icon.big.goto-button a {
     color: #ffffff;
 }
+
+.ui.container.page-subheader-outer.compact {
+  background-color: #ffffff !important;
+  padding-top: 0px !important;
+  padding-bottom: 0px !important;
+  margin-bottom: 0px !important;
+}
