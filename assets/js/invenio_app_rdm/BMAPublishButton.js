@@ -88,16 +88,12 @@ class BMAPublishButtonComponent extends Component {
             closeIcon
             closeOnDimmerClick={false}
           >
-            <Modal.Header>
-              {i18next.t("Are you sure you want to publish this record?")}
-            </Modal.Header>
-            {/* the modal text should only ever come from backend configuration */}
             <Modal.Content>
               <Message visible warning>
                 <p>
                   <Icon name="warning sign" />{" "}
                   {i18next.t(
-                    "Once the record is published you will no longer be able to change the files in the upload! However, you will still be able to update the record's metadata later."
+                    "Once your record is shared, you can no longer make it private to you."
                   )}
                 </p>
               </Message>
