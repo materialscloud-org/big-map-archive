@@ -10,9 +10,6 @@ const BMACardDepositStatusBox = () => {
     return (
         <Card>
             <Card.Content>
-                <DepositStatusBox/>
-            </Card.Content>
-            <Card.Content>
                 <Grid relaxed>
                     <Grid.Column
                         computer={16}
