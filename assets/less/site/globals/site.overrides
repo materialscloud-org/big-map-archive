@@ -49,12 +49,16 @@ div.ui.primary.button.labeled.icon.big.goto-button a {
 }
 
 .ui.container.page-subheader-outer.compact {
-  background-color: #ffffff !important;
-  padding-top: 0px !important;
-  padding-bottom: 0px !important;
-  margin-bottom: 0px !important;
+    background-color: #ffffff !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    margin-bottom: 0px !important;
 }
 
 .color-red {
-  color: #DB2828;
+    color: #DB2828;
+}
+
+.files {
+    margin-bottom: 0px !important;
 }
