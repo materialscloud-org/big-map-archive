@@ -1,0 +1,77 @@
+{# -*- coding: utf-8 -*-
+
+  This file is part of Invenio.
+  Copyright (C) 2015-2018 CERN.
+
+  Invenio is free software; you can redistribute it and/or modify it
+  under the terms of the MIT License; see LICENSE file for more details.
+#}
+{%- extends config.USERPROFILES_SETTINGS_TEMPLATE %}
+
+{% from "invenio_userprofiles/settings/_macros.html" import render_field, form_errors %}
+
+{% set panel_title = _("Profile") %}
+{% set panel_icon = "user icon" %}
+
+{%- block settings_content scoped %}
+  <section aria-label="{{ _(panel_title|default('')) }}" class="ui segments">
+    <div class="ui segment secondary">
+
+      {%- block settings_content_title scoped %}
+        {%- if panel_icon %}
+
+          {%- block settings_content_title_icon scoped %}
+            <i class="{{ panel_icon }}" aria-hidden="true"></i>
+          {%- endblock %}
+
+        {%- endif %}
+        <h2 class="ui tiny header inline-block m-0">{{ panel_title|default("") }}</h2>
+      {%- endblock %}
+
+    </div>
+
+    {%- block settings_body scoped %}
+      <div class="ui segment">
+
+        {%- block settings_form %}
+          {%- if security.confirmable and not current_user.confirmed_at %}
+            <form method="POST" role="form">
+              {{ verification_form.csrf_token }}
+              <div class="ui warning message">
+                {{ _("You have not yet verified your email address.") }} {{ verification_form.send_verification_email(class_="compact ui small basic button") }}
+              </div>
+              <input type="hidden" name="submit" value="verification" />
+            </form>
+          {%- endif %}
+
+          {%- set form = profile_form %}
+          {%- set read_only = config.USERPROFILES_READ_ONLY %}
+
+          <form {% if not read_only %}method="POST"{% endif %} name="profile_form" class="ui form">
+            {%- for field in form %}
+              {%- if field.widget.input_type == 'hidden' %}
+                {{ field() }}
+              {%- elif not read_only or "repeat" not in field.id %}
+                {{ render_field(field, autofocus=True, enabled=not read_only, placeholder=field.label.text) }}
+              {%- endif %}
+            {%- endfor %}
+
+            {%- if not read_only %}
+              <div class="form-actions">
+                <a role="button" href="." class="ui labeled icon button">
+                  <i class="close icon" aria-hidden></i>
+                  {{ _('Cancel') }}
+                </a>
+
+                <button type="submit" name="submit" value="profile" class="ui primary labeled icon button">
+                  <i class="check icon" aria-hidden="true"></i>
+                  {{ _('Update profile') }}
+                </button>
+              </div>
+            {%- endif %}
+          </form>
+        {%- endblock settings_form %}
+      </div>
+    {%- endblock settings_body %}
+    </section>
+{% endblock %}
