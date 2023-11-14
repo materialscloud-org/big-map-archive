@@ -2,6 +2,7 @@ import BMACardDepositStatusBox from "../BMACardDepositStatusBox";
 import { BMACommunityHeader } from "../BMACommunityHeader";
 import BMAAccordionFieldBasicInformation from "../BMAAccordionFieldBasicInformation";
 import {BMANewVersionButton} from "../BMANewVersionButton";
+import {BMAFileUploaderToolbar} from "../BMAFileUploaderToolbar";
 
 export const overriddenComponents = {
     "InvenioAppRdm.Deposit.CardDepositStatusBox.container": BMACardDepositStatusBox,
@@ -20,4 +21,5 @@ export const overriddenComponents = {
     "InvenioAppRdm.Deposit.AccordionFieldRecommendedInformation.container": () => null,
     "InvenioAppRdm.Deposit.AccordionFieldRelatedWorks.container": () => null,
     "ReactInvenioDeposit.FileUploader.NewVersionButton.container": BMANewVersionButton,
+    "ReactInvenioDeposit.FileUploaderToolbar.layout": BMAFileUploaderToolbar,
 }
