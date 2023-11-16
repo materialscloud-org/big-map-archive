@@ -56,34 +56,14 @@ export const BMAComputerTabletUploadsItem = ({
               {statuses[result.status].title}
             </Label>
           )}
-          <Label horizontal size="tiny" color="blue">
-            {version}
-          </Label>
           {isPublished && (
-            <Label horizontal size="tiny" color="blue">
+            <Label horizontal size="tiny" color="green">
               {publicationDate}
             </Label>
           )}
-          <Button
-            compact
-            size="small"
-            floated="right"
-            onClick={() => editRecord()}
-            labelPosition="left"
-            icon="edit"
-            content={i18next.t("Edit")}
-          />
-          {isPublished && (
-            <Button
-              compact
-              size="small"
-              floated="right"
-              href={viewLink}
-              labelPosition="left"
-              icon="eye"
-              content={i18next.t("View")}
-            />
-          )}
+          <Label horizontal size="tiny" color="blue">
+            {version}
+          </Label>
         </Item.Extra>
         <Item.Header as="h2">
           <a href={viewLink} className="truncate-lines-2">
@@ -107,25 +87,7 @@ export const BMAComputerTabletUploadsItem = ({
             </Label>
           ))}
 
-          <div className="flex justify-space-between align-items-end">
-            <small>
-              {createdDate ? (
-                <>
-                  {i18next.t("Uploaded on {{uploadDate}}", { uploadDate: createdDate })}
-                </>
-              ) : (
-                i18next.t("No creation date found.")
-              )}
-              {publishingInformation && (
-                <span>
-                  {" "}
-                  |{" "}
-                  {i18next.t("Published in: {{publishInfo}}", {
-                    publishInfo: publishingInformation,
-                  })}
-                </span>
-              )}
-            </small>
+          <div className="flex justify-content-end">
             <small>
               <CompactStats
                 uniqueViews={uniqueViews}

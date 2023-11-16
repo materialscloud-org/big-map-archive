@@ -13,7 +13,7 @@ const statuses = {
   draft_with_review: { color: "red", title: i18next.t("Private") },
   draft: { color: "red", title: i18next.t("Private") },
   new_version_draft: { color: "red", title: i18next.t("Private") },
-  published: { color: "green", title: i18next.t("Privately shared") },
+  published: { color: "green", title: i18next.t("Community shared") },
 };
 
 export const BMARDMRecordResultsListItem = ({ result }) => {
