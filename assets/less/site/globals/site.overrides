@@ -62,3 +62,9 @@ div.ui.primary.button.labeled.icon.big.goto-button a {
 .files {
     margin-bottom: 0px !important;
 }
+
+.justify-content-end {
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: row;
+}
