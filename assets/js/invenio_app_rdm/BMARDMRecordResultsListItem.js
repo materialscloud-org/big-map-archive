@@ -2,7 +2,7 @@ import { i18next } from "@translations/invenio_app_rdm/i18next";
 import _get from "lodash/get";
 import React from "react";
 import { http } from "react-invenio-forms";
-import { ComputerTabletUploadsItem } from "@js/invenio_app_rdm/user_dashboard/uploads_items/ComputerTabletUploadsItem";
+import { BMAComputerTabletUploadsItem } from "./BMAComputerTabletUploadsItem";
 import { MobileUploadsItem } from "@js/invenio_app_rdm/user_dashboard/uploads_items/MobileUploadsItem";
 import PropTypes from "prop-types";
 
@@ -13,6 +13,7 @@ const statuses = {
   draft_with_review: { color: "red", title: i18next.t("Private") },
   draft: { color: "red", title: i18next.t("Private") },
   new_version_draft: { color: "red", title: i18next.t("Private") },
+  published: { color: "green", title: i18next.t("Privately shared") },
 };
 
 export const BMARDMRecordResultsListItem = ({ result }) => {
@@ -61,7 +62,7 @@ export const BMARDMRecordResultsListItem = ({ result }) => {
 
   return (
     <>
-      <ComputerTabletUploadsItem
+      <BMAComputerTabletUploadsItem
         result={result}
         editRecord={editRecord}
         statuses={statuses}
