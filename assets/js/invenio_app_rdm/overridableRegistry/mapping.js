@@ -7,6 +7,7 @@ import {BMARDMRecordResultsListItem} from "../BMARDMRecordResultsListItem";
 import {BMADashboardUploadsSearchLayout} from "../BMADashboardUploadsSearchLayout";
 import {BMADashboardResultViewResultList} from "../BMADashboardResultViewResultList";
 import {BMAContribSearchAppFacetsWithConfig} from "../BMAContribSearchAppFacetsWithConfig";
+import {BMARecordsResultsListItemLayout} from "../BMARecordsResultsListItemLayout";
 
 export const overriddenComponents = {
     "InvenioAppRdm.Deposit.CardDepositStatusBox.container": BMACardDepositStatusBox,
@@ -30,4 +31,5 @@ export const overriddenComponents = {
     "InvenioAppRdm.DashboardUploads.SearchApp.layout": BMADashboardUploadsSearchLayout,
     "InvenioAppRdm.DashboardUploads.ResultView.resultList": BMADashboardResultViewResultList,
     "InvenioAppRdm.Search.SearchApp.facets": BMAContribSearchAppFacetsWithConfig,
+    "InvenioAppRdm.Search.RecordsResultsListItem.layout": BMARecordsResultsListItemLayout,
 }

@@ -81,12 +81,6 @@ export const BMAComputerTabletUploadsItem = ({
           })}
         </Item.Description>
         <Item.Extra>
-          {subjects.map((subject) => (
-            <Label key={subject.title_l10n} size="tiny">
-              {subject.title_l10n}
-            </Label>
-          ))}
-
           <div className="flex justify-content-end">
             <small>
               <CompactStats
