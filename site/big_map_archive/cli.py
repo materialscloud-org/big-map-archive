@@ -334,7 +334,7 @@ def add_community(slug, role, user_email):
     """Add user to community with specified role.
 
     Usage: invenio bmarchive users add_community <slug> <role> <user_email>\n
-    Ex: invenio bmarchive users add_community bigmap reader user@inveniosoftware.org\n
+    Ex: invenio bmarchive users add_community bigmap reader myname@materialscloud.org\n
     @param slug: community slug, type string\n
     @param user_email: user email, type string\n
     @param role: user role, type string, options: 'reader', 'curator'\n
@@ -376,8 +376,8 @@ def role(slug, role, user_email):
     """Update user role.
 
     User should already be a member of the community.\n
-    Usage: invenio bmarchive users update <slug> <role> <user_email>
-    Ex: invenio bmarchive users update bigmap curator user@inveniosoftware.org\n
+    Usage: invenio bmarchive users role <slug> <role> <user_email>
+    Ex: invenio bmarchive users role bigmap curator myname@materialscloud.org\n
     @param role: user role, type string
     @param user_mail: user email, type string
     https://github.com/inveniosoftware/invenio-communities/blob/890e3e35f98b1a8b55c6817ebcb926b53c91b3e6/invenio_communities/config.py#LL84C1-L84C18
