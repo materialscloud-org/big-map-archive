@@ -1,0 +1,36 @@
+{#
+Copyright (C) 2020-2021 CERN.
+Copyright (C) 2020-2021 Northwestern University.
+Copyright (C) 2021 New York University.
+
+Invenio RDM Records is free software; you can redistribute it and/or modify
+it under the terms of the MIT License; see LICENSE file for more details.
+#}
+
+
+{% from "invenio_app_rdm/records/macros/detail.html" import show_related_identifiers %}
+
+{% set hasContent = namespace(value=false) %}
+{% set hasContent.value = record.ui.related_identifiers
+%}
+
+{# Check if custom field has values if no other content #}
+{% if record.ui.custom_fields and not hasContent.value %}
+{% for section_cfg in custom_fields_ui %}
+{% for field_cfg in section_cfg.fields %}
+{% if record.custom_fields.get(field_cfg.field) %}
+{% set hasContent.value = true %}
+{% endif %}
+{% endfor %}
+{% endfor %}
+{% endif %}
+
+{% if hasContent.value %}
+{% if record.ui.related_identifiers %}
+<div class="ui grid">
+    <div class="sixteen wide mobile sixteen wide tablet sixteen wide computer column">
+        {{ show_related_identifiers(record.ui.related_identifiers) }}
+    </div>
+</div>
+{% endif %}
+{% endif %}
