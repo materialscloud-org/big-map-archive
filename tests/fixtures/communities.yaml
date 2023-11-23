@@ -1,0 +1,40 @@
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: com1
+  logo: 
+  metadata:
+    title: com1
+    description: community1
+    website: https://www.materialscloud.org
+    organizations: [{"name": "community1"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: com2
+  logo: 
+  metadata:
+    title: com2
+    description: community2
+    website: https://www.materialscloud.org
+    organizations: [{"name": "community2"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: com3
+  logo: 
+  metadata:
+    title: com3
+    description: community3
+    website: https://www.materialscloud.org
+    organizations: [{"name": "community3"}]
+
+
+
+

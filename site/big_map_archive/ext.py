@@ -6,11 +6,14 @@
 # it under the terms of the MIT License; see LICENSE file for more details.
 
 """RDM Record Communities Service."""
+from invenio_accounts.models import User
 from invenio_i18n import lazy_gettext as _
 from invenio_notifications.services.uow import NotificationOp
 from invenio_pidstore.errors import PIDDoesNotExistError
+from invenio_rdm_records.fixtures.tasks import get_authenticated_identity
 from invenio_rdm_records.notifications.builders import \
     CommunityInclusionSubmittedNotificationBuilder
+from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_rdm_records.services.communities.service import \
     RecordCommunitiesService
 from invenio_rdm_records.services.errors import (CommunityAlreadyExists,
@@ -28,6 +31,24 @@ class BMArchiveRecordCommunitiesService(RecordCommunitiesService):
     because it does not work for drafts but only for records.
     This is needed in the v12 migration.
     """
+
+    def add_draft_to_community(self, user, community_id, record):
+        """Create review in parent and community-submission request in status created
+
+        This will set by default the selected community in the upload form
+        """
+        user = User.query.filter_by(email=user.email).one()
+        user_identity = get_authenticated_identity(user.id)
+        review_service = current_rdm_records_service.review
+
+        review = {
+            "receiver": {
+                "community": community_id
+            },
+            "type": "community-submission"
+        }
+
+        review_service.create(user_identity, review, record)
 
     @unit_of_work()
     def add(self, identity, record, data, uow):
@@ -81,5 +102,4 @@ class BMArchiveRecordCommunitiesService(RecordCommunitiesService):
                 errors.append(result)
 
         uow.register(IndexRefreshOp(indexer=self.indexer))
-
         return processed, errors

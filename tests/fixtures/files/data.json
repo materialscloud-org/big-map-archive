@@ -1,0 +1,18 @@
+{
+    "example": {
+        "title": "example file1",
+		"data": {
+            "title": "my data",
+			"data1": {
+                "test1": {
+                    "ID": "a",
+					"SortAs": "b",
+					"Mytest": {
+                        "para": "My json file."
+                    },
+					"test2": "markup"
+                }
+            }
+        }
+    }
+}
