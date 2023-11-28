@@ -239,12 +239,13 @@ it under the terms of the MIT License; see LICENSE file for more details.
                 {%- endblock record_details -%}
 
                 {%- block record_info -%}
-                <section id="record-info" aria-label="{{ _('Publication date and version number') }}">
-                    <div class="ui grid middle aligned">
+                <section id="record-info" class="rel-mt-2" aria-label="{{ _('Sharing date, entry version, and resource type') }}">
+                    <h2>Sharing date, entry version, and resource type</h2>
+                    <div class="ui grid middle aligned sharing">
                         <div class="two column row">
                             <div class="left floated left aligned column">
                                 <span class="ui" title="{{ _('Publication date') }}">
-                                    {{ _('Shared on ') }} {{ record.ui.publication_date_l10n_long }}
+                                    {{ record.ui.publication_date_l10n_long }}
                                 </span>
                                 <span class="label text-muted"> | {{ _('Version {version_number}').format(version_number=record.ui.version) }}</span>
                             </div>
