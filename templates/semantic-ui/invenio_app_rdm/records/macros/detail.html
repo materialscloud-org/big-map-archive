@@ -175,7 +175,6 @@
 {% macro show_related_identifiers(related_identifiers) %}
 <dl class="details-list">
     {%- for group in related_identifiers | groupby('relation_type.title_l10n')%}
-    <dt class="ui large header">{{ group.grouper }}</dt>
     {{ _identifiers_for_group(group.list) }}
     {%- endfor %}
   </dl>

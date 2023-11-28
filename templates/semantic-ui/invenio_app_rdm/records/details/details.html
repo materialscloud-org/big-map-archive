@@ -27,10 +27,7 @@ it under the terms of the MIT License; see LICENSE file for more details.
 
 {% if hasContent.value %}
 {% if record.ui.related_identifiers %}
-<div class="ui grid">
-    <div class="sixteen wide mobile sixteen wide tablet sixteen wide computer column">
-        {{ show_related_identifiers(record.ui.related_identifiers) }}
-    </div>
-</div>
+<h2>References</h2>
+{{ show_related_identifiers(record.ui.related_identifiers) }}
 {% endif %}
 {% endif %}
