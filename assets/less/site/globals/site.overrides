@@ -72,3 +72,7 @@ div.ui.primary.button.labeled.icon.big.goto-button a {
 .sharing {
     padding-top: 0px !important;
 }
+
+ul.details-list.m-0.p-0 {
+    list-style-type: none;
+}
