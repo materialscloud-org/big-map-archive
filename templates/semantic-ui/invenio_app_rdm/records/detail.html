@@ -279,6 +279,9 @@ it under the terms of the MIT License; see LICENSE file for more details.
                 </section>
                 {%- endblock record_info -%}
 
+                {# Usage statistics #}
+                {%- include "invenio_app_rdm/records/details/side_bar/metrics.html" %}
+
                 {# Record footer #}
                 {%- block record_footer -%}
                 {%- endblock record_footer -%}
