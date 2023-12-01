@@ -28,7 +28,7 @@
     color: #1a3156 !important;
 }
 
-i.upload.huge.icon, i.unlock.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
+i.upload.huge.icon, i.users.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
     color: #1a3156 !important;
 }
 
