@@ -197,20 +197,23 @@ python restore_db_es.py
 cd $PATH_TO_BIGMAP_APP
 
 # read default owner of communities 
-IFS=" = "
-while read var value
-do
-	if [ "$var" == "INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL" ]
-	then
-    	export "$var"="$value"
-	fi
-done < ~/app/archive-rdm/big-map-archive/.env
+# IFS=" = "
+# while read var value
+# do
+# 	if [ "$var" == "INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL" ]
+# 	then
+#     	export "$var"="$value"
+# 	fi
+# done < ~/app/archive-rdm/big-map-archive/.env
+
+source ~/app/archive-rdm/big-map-archive/.env
 
 # create owner (not active) of communities 
-invenio users create $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL --password=123456
+invenio users create $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL --password=$INVENIO_DEFAULT_COMMUNITY_OWNER_PASSWORD
 
 # create communities and attribute as owner INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
 cd $PATH_TO_BIGMAP_APP
+invenio bmarchive communities create battery2030
 invenio bmarchive communities create bigmap
 invenio bmarchive communities create instabat
 invenio bmarchive communities create sensibat

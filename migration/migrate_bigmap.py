@@ -27,8 +27,9 @@ def set_records_access_restricted(record_cls):
     records = get_records(record_cls)
     for record in records:
         pid_value = record.get("id", None)
-        set_record_access_restricted(pid_value, record_cls)
-        print(f"Record {pid_value}, set 'restricted' access to metadata and files.")
+        if pid_value:
+            set_record_access_restricted(pid_value, record_cls)
+            print(f"Record {pid_value} has been set with 'restricted' access to metadata and files.")
 
 
 def set_record_access_restricted(pid_value, record_cls):
@@ -59,6 +60,11 @@ def set_record_access_restricted(pid_value, record_cls):
     access = record.get("access", {})
     access['record'] = 'restricted'
     access['files'] = 'restricted'
+    access['embargo'] = {
+        "until": None,
+        "active": False,
+        "reason": None
+    }
 
     record.update({"access": access})
     record.access.refresh_from_dict(record.get("access"))
@@ -131,3 +137,4 @@ if __name__ == '__main__':
         print("Set all users to community bigmap")
         print("---------------")
         set_users_to_community(slug='bigmap')
+        set_users_to_community(slug='battery2030')
