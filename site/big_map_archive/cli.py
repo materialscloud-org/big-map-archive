@@ -20,19 +20,26 @@ from invenio_communities.members.errors import (AlreadyMemberError,
 from invenio_communities.proxies import current_communities
 from invenio_db import db
 from invenio_indexer.api import RecordIndexer
+from invenio_pidstore.errors import PIDDoesNotExistError, PIDUnregistered
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.proxies import current_record_communities_service
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
-from invenio_records_resources.services.uow import UnitOfWork
+from invenio_rdm_records.services import RDMRecordCommunitiesConfig
+from invenio_rdm_records.services.errors import (ReviewExistsError,
+                                                 ReviewStateError)
+from invenio_records_resources.services.uow import RecordCommitOp, UnitOfWork
 from invenio_requests.customizations.actions import RequestActions
 from invenio_requests.proxies import current_requests_service
 from invenio_requests.records.api import Request
 from invenio_search.engine import dsl
 # from invenio_users_resources.proxies import current_users_service
 from marshmallow.exceptions import ValidationError
+from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.local import LocalProxy
 
-from .utils import get_community_from_yaml, get_community_id
+from big_map_archive.ext import BMArchiveRecordCommunitiesService
+from big_map_archive.utils import (change_owner, get_community_from_yaml,
+                                   get_community_id, get_user_identity)
 
 _datastore = LocalProxy(lambda: current_app.extensions["security"].datastore)
 
@@ -91,7 +98,7 @@ def create_community(data):
 
         click.secho(f"SUCCESS: Created community {data['metadata'].get('title')}.", fg="green")
     except ValidationError as e:
-        click.secho(f"ERROR: the community with identifier '{data.get('slug', None)}' was not created. {e}", fg="red")
+        click.secho(f"ERROR: the community with identifier '{data.get('slug', None)}' has NOT been created. {e}", fg="red")
 
 
 # create a community
@@ -128,11 +135,16 @@ def update(slug):
 
     community = get_community_from_yaml(slug)
     if not community:
-        click.secho(f"ERROR: the community with identifier '{slug}' does not exist in file app_data/communities.yaml and it was NOT updated.", fg="red")
+        click.secho(f"ERROR: the community with identifier '{slug}' does not exist in file app_data/communities.yaml and it has NOT been updated.", fg="red")
         return
     community_service = current_communities.service
     community_service.update(identity=system_identity, id_=id, data=community)
-    click.secho(f"SUCCESS: the community with identifier '{slug}' was updated.", fg="green")
+
+    logo_path = community.get('logo', None)
+    if logo_path:
+        with open(logo_path, "rb") as filestream:
+            community_service.update_logo(system_identity, id, filestream)
+    click.secho(f"SUCCESS: the community with identifier '{slug}' has been updated.", fg="green")
 
 
 # soft delete a community
@@ -152,7 +164,7 @@ def delete(slug):
         return
     community_service = current_communities.service
     community_service.delete(identity=system_identity, id_=id)
-    click.secho(f"SUCCESS: the community with identifier '{slug}' was deleted.", fg="green")
+    click.secho(f"SUCCESS: the community with identifier '{slug}' has been deleted.", fg="green")
 
 
 # restore a deleted community
@@ -171,7 +183,7 @@ def restore_community(slug):
         return
     community_service = current_communities.service
     community_service.restore_community(identity=system_identity, id_=id)
-    click.secho(f"SUCCESS: the community with identifier '{slug}' was restored.", fg="green")
+    click.secho(f"SUCCESS: the community with identifier '{slug}' has been restored.", fg="green")
 
 
 ################
@@ -196,20 +208,29 @@ def add_to_record(slug, pid_value):
     Note: this works only if the community visibility is public
     """
     community_id = get_community_id(slug)
+    record_indexer_drafts = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
 
     if not community_id:
         click.secho(f"ERROR: the community with identifier '{slug}' does not exist.", fg="red")
         return
 
-    record = RDMRecord.pid.resolve(pid_value)
+    try:
+        record = RDMRecord.pid.resolve(pid_value)
+    except (PIDDoesNotExistError, PIDUnregistered):
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}, PID does not exist or record is not published.", fg="red")
+        return
+
+    # Get owner identity
+    owner = record.parent.access.owner.resolve()
+    identity = get_user_identity(owner)
 
     # Make a community-inclusion request
     data = {'communities': [{"id": community_id}]}
     _, errors = current_record_communities_service.add(
-        system_identity, id_=record.pid.pid_value, data=data
+        identity, id_=record.pid.pid_value, data=data
     )
     if errors:
-        click.secho(f"ERROR: the community '{slug}' was NOT added to record {pid_value}, {errors}.", fg="red")
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}, {errors}.", fg="red")
         return
 
     filter_ = dsl.Q("term", **{'topic.record': record.pid.pid_value})
@@ -222,22 +243,48 @@ def add_to_record(slug, pid_value):
 
     with UnitOfWork() as uow:
         # Accept community-inclusion request
-        RequestActions.execute(system_identity, request, "accept", uow=uow)
+        RequestActions.execute(identity, request, "accept", uow=uow)
         request.commit()
         db.session.commit()
 
+        if record.parent["communities"] == {}:
+            record.parent["communities"] = {"ids": [community_id], "default": community_id}
+        else:
+            record.parent["communities"]["ids"].add(community_id)
+
+        record.parent.commit()
         record.commit()
         db.session.commit()
-
-        # re-index record
-        # RecordIndexer().index(record, arguments={"refresh": True})
 
         # re-index record and siblings
         siblings_records = RDMRecord.get_records_by_parent(record.parent)
         for child in siblings_records:
             RecordIndexer().index(child, arguments={"refresh": True})
 
-    click.secho(f"SUCCESS: the community '{slug}' was added to record {pid_value}.", fg="green")
+        # Commit and re-index drafts siblings
+        siblings_drafts = RDMDraft.get_records_by_parent(record.parent)
+        for child in siblings_drafts:
+            if child:
+                uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
+
+    click.secho(f"SUCCESS: the community '{slug}' has been added to record {pid_value}.", fg="green")
+
+
+@records.command("owner")
+@click.argument("pid_value", type=click.STRING, required=True)
+@click.argument("email", type=click.STRING, required=True)
+@with_appcontext
+def change_record_owner(pid_value, email):
+    """ Change owner of record.
+
+    Usage: invenio bmarchive records owner <pid_value> <email>
+    @param pid_value: record id, ex: 'tqea8-ag515'
+    @param email: user email
+    """
+    if change_owner(pid_value, email, "RDMRecord"):
+        click.secho(f"SUCCESS: {email} is now owner of record {pid_value} and all versions of this record.", fg="green")
+    else:
+        click.secho(f"ERROR: an error occured, {email} has NOT been set as owner of record {pid_value} and all versions of this record.", fg="red")
 
 
 ################
@@ -261,59 +308,79 @@ def add_to_draft(slug, pid_value):
     @param pid_value: record id, ex: 'tqea8-ag515'
     Note: this works only if the community visibility is public
     """
-    from big_map_archive.ext import BMArchiveRecordCommunitiesService
-    from invenio_rdm_records.services import RDMRecordCommunitiesConfig
-    from invenio_pidstore.errors import PIDDeletedError
-    from flask import current_app
-
     community_id = get_community_id(slug)
-    record_indexer = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
+    record_indexer_drafts = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
 
     if not community_id:
         click.secho(f"ERROR: the community with identifier '{slug}' does not exist.", fg="red")
         return
 
-    pid = PersistentIdentifier.get('recid', pid_value)
+    try:
+        pid = PersistentIdentifier.get('recid', pid_value)
+    except PIDDoesNotExistError:
+        click.secho(
+            f"ERROR: the community '{slug}' has NOT been added to record {pid_value}. Draft with pid_value: {pid_value} does not exist.", fg="red"
+        )
+        return
+
     obj_id = pid.get_assigned_object(object_type='rec')
-    record = RDMDraft.get_record(obj_id)
+    try:
+        record = RDMDraft.get_record(obj_id)
+    except NoResultFound as e:
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}. {e}.", fg="red")
+        return
 
     if not record.metadata.get("title", None):
-        click.secho(f"ERROR: the community '{slug}' was NOT added to record {pid_value}. Draft has no title.", fg="red")
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}. Draft has no title.", fg="red")
         return
 
-    # Make a community-inclusion request
-    data = {'communities': [{"id": community_id}]}
+    owner = record.parent.access.owner.resolve()
 
+    # Create community submission request and add review in parent
     try:
-        _, errors = BMArchiveRecordCommunitiesService(config=RDMRecordCommunitiesConfig.build(app=current_app)).add(
-            system_identity, record=record, data=data
-        )
-        if errors:
-            click.secho(f"ERROR: the community '{slug}' was NOT added to record {pid_value}, {errors}.", fg="red")
-            return
-    except PIDDeletedError:
-        click.secho(f"ERROR: the community '{slug}' was NOT added to record {pid_value}. Draft is deleted.", fg="red")
+        BMArchiveRecordCommunitiesService(
+            config=RDMRecordCommunitiesConfig.build(app=current_app)
+        ).add_draft_to_community(owner, community_id, record)
+    except (ReviewExistsError, ReviewStateError) as e:
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}. {e}", fg="red")
         return
-
-    filter_ = dsl.Q("term", **{'topic.record': record.pid.pid_value})
-    requests = current_requests_service.scan(system_identity, extra_filter=filter_)
-
-    request_ids = [r["id"] for r in requests]
-    assert len(request_ids) == 1
-    request_id = request_ids[0]
-    request = Request.get_record(request_id)
 
     with UnitOfWork() as uow:
-        # Accept community-inclusion request
-        RequestActions.execute(system_identity, request, "accept", uow=uow)
-        request.commit()
-        db.session.commit()
-
+        record.parent.commit()
         record.commit()
         db.session.commit()
-        record_indexer.index(record, arguments={"refresh": True})
 
-    click.secho(f"SUCCESS: the community '{slug}' was added to record {pid_value}.", fg="green")
+        # re-index published siblings, if any
+        siblings_records = RDMRecord.get_records_by_parent(record.parent)
+        for child in siblings_records:
+            if child:
+                uow.register(RecordCommitOp(child, indexer=RecordIndexer()))
+                # RecordIndexer().index(child, arguments={"refresh": True})
+
+        # Commit and re-index drafts siblings, if any
+        siblings_drafts = RDMDraft.get_records_by_parent(record.parent)
+        for child in siblings_drafts:
+            if child:
+                uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
+
+    click.secho(f"SUCCESS: the community '{slug}' has been added to record {pid_value}.", fg="green")
+
+
+@drafts.command("owner")
+@click.argument("pid_value", type=click.STRING, required=True)
+@click.argument("email", type=click.STRING, required=True)
+@with_appcontext
+def change_draft_owner(pid_value, email):
+    """ Change owner of draft.
+
+    Usage: invenio bmarchive drafts owner <pid_value> <email>
+    @param pid_value: draft id, ex: 'tqea8-ag515'
+    @param email: user email
+    """
+    if change_owner(pid_value, email, "RDMDraft"):
+        click.secho(f"SUCCESS: '{email}' is now owner of draft {pid_value} and all versions of this record.", fg="green")
+    else:
+        click.secho(f"ERROR: an error occured, '{email}' has NOT been set as owner of draft {pid_value} and all versions of this record.", fg="red")
 
 
 ################
@@ -406,9 +473,9 @@ def role(slug, role, user_email):
         member_service.update(system_identity, community_id, data)
         click.secho(f'SUCCESS: Role {role} has been attributed to {user_email}.', fg="green")
     except ValidationError as e:
-        click.secho(f'ERROR: Role {role} was not assigned to {user_email}. {e}', fg="red")
+        click.secho(f'ERROR: Role {role} has NOT been assigned to {user_email}. {e}', fg="red")
     except InvalidMemberError:
-        click.secho(f'ERROR: Role {role} was not assigned to {user_email}. User is not member of the community.', fg="red")
+        click.secho(f'ERROR: Role {role} has NOT been assigned to {user_email}. User is not member of the community.', fg="red")
 
 
 # confirm user

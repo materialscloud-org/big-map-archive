@@ -1,7 +1,19 @@
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: battery2030
+  logo: ./static/images/battery2030.png
+  metadata:
+    title: BATTERY2030
+    description: BATTERY2030, records published in this community will be visible by members of BIG-MAP, HIDDEN, BAT4EVER, ISTABAT, SENSIBAT, SPARTACUS
+    website: https://battery2030.eu/
+    organizations: [{"name": "BATTERY2030"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: bigmap
   logo: ./static/images/big-map.png
@@ -11,9 +23,9 @@
     website: https://www.big-map.eu
     organizations: [{"name": "BIG-MAP"}]
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: bat4ever
   logo: ./static/images/bat4ever.png
@@ -23,9 +35,9 @@
     website: https://bat4ever.de/WordPress/
     organizations: [{"name": "BAT4EVER"}]
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: hidden
   logo: ./static/images/hidden.png
@@ -35,9 +47,9 @@
     website: https://www.hidden-project.eu/
     organizations: [{"name": "HIDDEN"}]
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: spartacus
   logo: ./static/images/spartacus.png
@@ -47,9 +59,9 @@
     website: https://www.spartacus-battery.eu/
     organizations: [{"name": "SPARTACUS"}]
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: sensibat
   logo: ./static/images/sensibat.jpg
@@ -59,9 +71,9 @@
     website: https://sensibat-project.eu/
     organizations: [{"name": "SENSIBAT"}]
 - access:
-    visibility: public
-    member_policy: open
-    record_policy: closed
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
     review_policy: open
   slug: instabat
   logo: ./static/images/instabat.png
