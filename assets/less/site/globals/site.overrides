@@ -1,3 +1,9 @@
+.footer-top {
+    background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(44,138,75, 0.69));
+    background-color: #195c61 !important;
+    padding: 2rem 0 2rem;
+}
+
 .footer-bottom {
     background-color: #414143!important;
     box-shadow: none!important;
