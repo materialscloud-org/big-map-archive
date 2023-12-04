@@ -1,3 +1,16 @@
+.footer-bottom {
+    background-color: #414143!important;
+    box-shadow: none!important;
+}
+
+.funding {
+    width: 100%;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    padding-left: 50px!important;
+    padding-right: 50px!important;
+}
+
 .eu-flag {
   max-height: 75px;
   padding-bottom: 1rem;
@@ -82,3 +95,5 @@ div.right.aligned.two.column.row.result-options.rel-mt-2 {
     padding-top: 0px;
     padding-bottom: 0px;
 }
+
+
