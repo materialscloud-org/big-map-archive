@@ -1,3 +1,78 @@
+div.item.item-left {
+    padding-left: 0px !important;
+    padding-right: 40px !important;
+}
+
+div.item.item-right {
+    padding-left: 40px !important;
+    padding-right: 0px !important;
+}
+
+.rdm-logo {
+    width: fit-content !important;
+}
+
+.logo-left{
+    padding-left: 50px!important;
+}
+
+.logo-right {
+    padding-right: 50px!important;
+}
+
+/* For web browsers with max width of 643px: */
+.outer-navbar {
+    background-size: cover;
+    background-position: center center;
+}
+
+/* For web browsers with min width of 644px: */
+@media only screen and (min-width: 644px) {
+    .outer-navbar {
+        background-size: contain; // background image will scale, will try to fit the content area, but will keep its aspect ratio
+        background-position: center center;
+    }
+}
+
+ui container invenio-header-container {
+    padding: 0px;
+}
+
+div.ui.container.invenio-header-container {
+    margin: 0px !important;
+    width: auto !important;
+}
+
+.outer-navbar #invenio-nav {
+    background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(44,138,75, 0.69));
+    background-color: #195c61 !important;
+}
+
+#frontpage-search-bar {
+    display: flex;
+    align-items: center;
+    height: 20em;
+}
+
+.section-title {
+    color: #195c61 !important;
+}
+
+i.upload.huge.icon, i.users.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
+    color: #195c61 !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button {
+    background-color: #257953 !important;
+    width: 250px !important;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+}
+
+div.ui.primary.button.labeled.icon.big.goto-button:hover {
+    background-color: #195c61 !important;
+}
+
 .footer-top {
     background-image: linear-gradient(12deg, #195c61, #195c61 15%, rgba(44,138,75, 0.69));
     background-color: #195c61 !important;
@@ -22,18 +97,9 @@
   padding-bottom: 1rem;
 }
 
-.rdm-logo {
-    width: fit-content !important;
-}
 
-.logo-left {
-    margin-left: auto !important;
-}
 
-.outer-navbar-bigmap {
-    background-image: linear-gradient(12deg, #1a3156, #1a3156 15%, rgb(251 130 115 / 0%));
-    background-color: #1a3156;
-}
+
 
 .ui.inverted.menu {
     background: #1a3156 !important;
@@ -43,25 +109,11 @@
     width: 20em !important;
 }
 
-.section-title {
-    color: #1a3156 !important;
-}
 
-i.upload.huge.icon, i.users.huge.icon, i.search.huge.icon, i.download.huge.icon, i.code.huge.icon, i.pencil.huge.icon {
-    color: #1a3156 !important;
-}
 
-div.ui.primary.button.labeled.icon.big.goto-button {
-    margin: 5px !important;
-    background-color: #1a3156 !important;
-    width: 250px !important;
-    padding-left: 0px !important;
-    padding-right: 0px !important;
-}
 
-div.ui.primary.button.labeled.icon.big.goto-button:hover {
-    background-color: #1a3156 !important;
-}
+
+
 
 div.ui.primary.button.labeled.icon.big.goto-button a {
     color: #ffffff;

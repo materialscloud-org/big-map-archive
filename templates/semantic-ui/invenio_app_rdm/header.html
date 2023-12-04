@@ -12,7 +12,7 @@ under the terms of the MIT License; see LICENSE file for more details.
     <header class="theme header">
         {%- block site_banner %}
         {%- endblock site_banner %}
-        <div class="outer-navbar-bigmap">
+        <div class="outer-navbar">
             {%- block banner %}
             {% from 'invenio_banners/banner.html' import banner %}
             {{ banner() }}
@@ -20,12 +20,12 @@ under the terms of the MIT License; see LICENSE file for more details.
             {%- block navbar %}
             <div class="ui container invenio-header-container">
                 <nav id="invenio-nav" class="ui inverted menu borderless stackable p-0">
-                    <div class="item logo p-0">
+                    <div class="item item-left">
                         {%- block navbar_header %}
                         {%- block brand %}
                         {%- if config.THEME_LOGO_LEFT %}
                         <a class="logo-link" href="/">
-                            <img class="ui image rdm-logo"
+                            <img class="ui image rdm-logo logo-left"
                                  src="{{ url_for('static', filename=config.THEME_LOGO_LEFT) }}"
                                  alt="{{ _(config.THEME_SITENAME) }}"/>
                         </a>
@@ -127,10 +127,10 @@ under the terms of the MIT License; see LICENSE file for more details.
                         {%- endblock navbar_right %}
                     </div>
 
-                    <div class="item logo p-0">
+                    <div class="item item-right">
                         {%- if config.THEME_LOGO_RIGHT %}
                         <a class="logo-link" href="/">
-                            <img class="ui image rdm-logo logo-left"
+                            <img class="ui image rdm-logo logo-right"
                                  src="{{ url_for('static', filename=config.THEME_LOGO_RIGHT) }}"
                                  alt="{{ _(config.THEME_SITENAME) }}"/>
                         </a>
