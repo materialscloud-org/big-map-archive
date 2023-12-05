@@ -1,0 +1,25 @@
+{% set options = [
+{
+"key": "records",
+"text": "Shared records",
+"value": url_for("invenio_search_ui.search")
+}]
+%}
+<div class="item p-0 search-bar">
+    <div id="header-search-bar" data-options='{{ options | tojson }}'>
+        <div class="ui fluid search">
+            <div class="ui icon input">
+                <input
+                        autocomplete="off"
+                        aria-label="{{ _('Search records') }}"
+                        placeholder="{{ _('Search records') }}..."
+                        type="text"
+                        tabindex="0"
+                        class="prompt"
+                        value=""
+                >
+                <i aria-hidden="true" class="search icon"></i>
+            </div>
+        </div>
+    </div>
+</div>

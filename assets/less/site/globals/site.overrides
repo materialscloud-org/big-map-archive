@@ -97,10 +97,6 @@ div.ui.primary.button.labeled.icon.big.goto-button:hover {
   padding-bottom: 1rem;
 }
 
-
-
-
-
 .ui.inverted.menu {
     background: #1a3156 !important;
 }
@@ -108,12 +104,6 @@ div.ui.primary.button.labeled.icon.big.goto-button:hover {
 #invenio-nav.ui.menu #user-profile-dropdown {
     width: 20em !important;
 }
-
-
-
-
-
-
 
 div.ui.primary.button.labeled.icon.big.goto-button a {
     color: #ffffff;
