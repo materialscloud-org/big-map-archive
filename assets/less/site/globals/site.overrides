@@ -162,4 +162,9 @@ div.ui.login.segment.padded span {
     background-color: #195c61 !important;
 }
 
+p.reset {
+    color: black !important;
+    text-align: left !important;
+}
+
 
