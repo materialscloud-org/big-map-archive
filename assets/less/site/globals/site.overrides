@@ -169,4 +169,14 @@ p.reset {
     text-align: left !important;
 }
 
+div.accordion.ui.inverted.invenio-accordion-field div.title {
+    background-color: #838487 !important;
+}
 
+div.ui.toggle.checkbox input:checked ~ .box:before, div.ui.toggle.checkbox input:checked ~ label:before {
+    background-color: #195c61 !important;
+}
+
+div.ui.toggle.checkbox input:focus:checked ~ .box:before, div.ui.toggle.checkbox input:focus:checked ~ label:before {
+    background-color: #195c61 !important;
+}
