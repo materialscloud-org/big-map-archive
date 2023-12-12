@@ -10,6 +10,8 @@ div.item.item-right {
 
 .rdm-logo {
     width: fit-content !important;
+    padding-top: 5px;
+    padding-bottom: 5px;
 }
 
 .logo-left{
