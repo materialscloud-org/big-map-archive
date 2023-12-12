@@ -1,6 +1,9 @@
 #!/usr/bin/env python -W ignore::DeprecationWarning
-"""Restore Prostgres database from dump and Elasticsearch indexes.
-Run this in the virtual environment (workon archive)"""
+"""Restore Prostgres database from dump and OpenSearch indexes.
+Run this in the virtual environment (workon archive)
+This script is for invenioRDM bigger than v12,
+it replaces restore_db_es.py that is used for invenioRDM v9
+"""
 
 import os
 from invenio_app.factory import create_app
@@ -42,20 +45,6 @@ def restore_db(app):
         print("\033[32m\033[1m" + "Database dump has been restored" + "\033[0m")
 
 
-def restore_es():
-    """Restore Elastisearch indexes"""
-    # destroy indexes if they exist
-    os.system('invenio index destroy --force --yes-i-know')
-
-    # create indexes
-    os.system('invenio index init')
-
-    # create documents from the database
-    # eg, one document per (published) record in rdm_records_metadata table
-    os.system('invenio rdm-records rebuild-index')
-    os.system('invenio communities rebuild-index')
-    print("\033[32m\033[1m" + "Elasticsearch indexes have been restored" + "\033[0m")
-
 def update_files_location(app):
     """Set files location to Object Store container"""
     from datetime import datetime
@@ -78,9 +67,22 @@ def update_files_location(app):
                   "\033[0m")
 
 
+def restore_indexes():
+    """Restore OpenSearch indexes from backup file"""
+
+    # destroy indexes if they exist
+    # use curl because 'invenio index destroy --force --yes-i-know' does not destroy all indexes
+    os.system('curl -X DELETE http://localhost:9200/*')
+
+    # restore indexes
+    os.system('./restore_indexes.sh')
+
+    print("\033[32m\033[1m" + "OpenSearch indexes have been restored" + "\033[0m")
+
+
 if __name__ == '__main__':
     app = create_app()
     restore_db(app)
-    restore_es()
     update_files_location(app)
-    print("\033[32m\033[1m"+"Database and elasticsearch indexes have been restored"+"\033[0m")
+    restore_indexes()
+    print("\033[32m\033[1m"+"Database and OpenSearch indexes have been restored"+"\033[0m")
