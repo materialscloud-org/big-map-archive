@@ -217,3 +217,13 @@ button.ui.medium.fluid.icon.primary.left.labeled.button {
 button.ui.medium.fluid.icon.primary.left.labeled.button:hover {
     background-color: #2ea4a5 !important;
 }
+
+div.ui.green.tiny.horizontal.label {
+    background-color: #2c8a4b !important;
+    border-color: #2c8a4b !important;
+}
+
+div.ui.blue.tiny.horizontal.label {
+    background-color: #195c61!important;
+    border-color: #195c61!important;
+}
