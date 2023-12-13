@@ -174,11 +174,11 @@ div.accordion.ui.inverted.invenio-accordion-field div.title {
 }
 
 div.ui.toggle.checkbox input:checked ~ .box:before, div.ui.toggle.checkbox input:checked ~ label:before {
-    background-color: #195c61 !important;
+    background-color: #2c8a4b !important;
 }
 
 div.ui.toggle.checkbox input:focus:checked ~ .box:before, div.ui.toggle.checkbox input:focus:checked ~ label:before {
-    background-color: #195c61 !important;
+    background-color: #2c8a4b !important;
 }
 
 .ui.search.button {
