@@ -192,3 +192,12 @@ button.ui.primary.button {
 button.ui.primary.button:hover {
     background-color: #236e3c !important;
 }
+
+p.ui.small.header {
+    font-weight: normal !important;
+}
+
+.ui.menu .brand.active.item {
+    border-color: #838487 !important;
+    background-color: #838487 !important;
+}
