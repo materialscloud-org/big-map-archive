@@ -180,3 +180,7 @@ div.ui.toggle.checkbox input:checked ~ .box:before, div.ui.toggle.checkbox input
 div.ui.toggle.checkbox input:focus:checked ~ .box:before, div.ui.toggle.checkbox input:focus:checked ~ label:before {
     background-color: #195c61 !important;
 }
+
+.ui.search.button {
+    background-color: #b20702 !important
+}
