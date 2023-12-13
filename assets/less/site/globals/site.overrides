@@ -201,3 +201,19 @@ p.ui.small.header {
     border-color: #838487 !important;
     background-color: #838487 !important;
 }
+
+.ui.warning.button {
+    background-color: #f2711c !important;
+}
+
+.ui.warning.button:hover {
+    background-color: #cc580b !important;
+}
+
+button.ui.medium.fluid.icon.primary.left.labeled.button {
+    background-color: #40c8c9 !important;
+}
+
+button.ui.medium.fluid.icon.primary.left.labeled.button:hover {
+    background-color: #2ea4a5 !important;
+}
