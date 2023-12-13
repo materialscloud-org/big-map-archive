@@ -182,5 +182,13 @@ div.ui.toggle.checkbox input:focus:checked ~ .box:before, div.ui.toggle.checkbox
 }
 
 .ui.search.button {
-    background-color: #b20702 !important
+    background-color: #b20702 !important;
+}
+
+button.ui.primary.button {
+    background-color: #2c8a4b !important;
+}
+
+button.ui.primary.button:hover {
+    background-color: #236e3c !important;
 }
