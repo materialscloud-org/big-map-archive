@@ -51,19 +51,14 @@ export const BMAComputerTabletUploadsItem = ({
               {statuses[result.status].title}
             </Label>
           )}
-          {result.status in statuses && result.status === "published" && (
-            <Label horizontal size="tiny" className={statuses[result.status].color}>
-              {statuses[result.status].title}
-            </Label>
-          )}
+          <Label horizontal size="tiny" color="green">
+            {version}
+          </Label>
           {isPublished && (
-            <Label horizontal size="tiny" color="green">
+            <Label horizontal size="tiny" color="blue">
               {publicationDate}
             </Label>
           )}
-          <Label horizontal size="tiny" color="blue">
-            {version}
-          </Label>
         </Item.Extra>
         <Item.Header as="h2">
           <a href={viewLink} className="truncate-lines-2">
