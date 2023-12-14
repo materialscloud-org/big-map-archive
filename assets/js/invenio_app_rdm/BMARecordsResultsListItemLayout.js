@@ -36,11 +36,11 @@ export const BMARecordsResultsListItemLayout = (props) => {
             <Item key={key ?? result.id}>
                 <Item.Content>
                     <Item.Extra className="labels-actions">
-                        <Label horizontal size="tiny" color="green">
-                            {publicationDate}
-                        </Label>
-                        <Label horizontal size="tiny" className="primary">
+                        <Label horizontal size="tiny" className="green">
                             {version}
+                        </Label>
+                        <Label horizontal size="tiny" color="blue">
+                            {publicationDate}
                         </Label>
                     </Item.Extra>
                     <Item.Header as="h2">
