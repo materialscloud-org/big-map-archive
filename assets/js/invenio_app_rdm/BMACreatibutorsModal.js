@@ -368,6 +368,7 @@ export class BMACreatibutorsModal extends Component {
           const identifiersFieldPath = `${personOrOrgPath}.identifiers`;
           const affiliationsFieldPath = "affiliations";
           const roleFieldPath = "role";
+
           return (
             <Modal
               centered={false}
@@ -388,32 +389,6 @@ export class BMACreatibutorsModal extends Component {
                 <Form>
                   {_get(values, typeFieldPath, "") === CREATIBUTOR_TYPE.PERSON ? (
                     <div>
-                      {autocompleteNames !== NamesAutocompleteOptions.OFF && (
-                        <RemoteSelectField
-                          selectOnBlur={false}
-                          selectOnNavigation={false}
-                          searchInput={{
-                            autoFocus: _isEmpty(initialCreatibutor),
-                          }}
-                          fieldPath="creators"
-                          clearable
-                          multiple={false}
-                          allowAdditions={false}
-                          placeholder={i18next.t(
-                            "Search for a person by name, ORCID, or affiliation"
-                          )}
-                          noQueryMessage={i18next.t(
-                            "Search for a person by name, ORCID, or affiliation"
-                          )}
-                          required={false}
-                          // Disable UI-side filtering of search results
-                          search={(options) => options}
-                          suggestionAPIUrl="/api/names"
-                          serializeSuggestions={this.serializeSuggestions}
-                          onValueChange={this.onPersonSearchChange}
-                          ref={this.namesAutocompleteRef}
-                        />
-                      )}
                       {showPersonForm && (
                         <div>
                           <Form.Group widths="equal">
