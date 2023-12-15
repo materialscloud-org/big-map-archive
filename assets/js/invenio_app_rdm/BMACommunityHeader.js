@@ -35,11 +35,14 @@ class BMACommunityHeaderComponent extends Component {
               <ul className="pl-15">
                 <li>This is the <b>main repository</b>, intended for storing and sharing research data.</li>
                 <li>For testing purposes, use the <a href="https://big-map-archive-demo.materialscloud.org/">demo repository</a>.</li>
-                <li>Upload or import at least one file.</li>
-                <li>Fill in the required metadata fields (<span className="color-red">*</span>).</li>
-                <li>Click the <b>'Save draft'</b> button to create a record that is private to you.</li>
-                <li>Alternatively, click <b>'Select community'</b> and then <b>'Share with community'</b> to share your record privately with the entire selected community.</li>
-              </ul>
+                <li>Proceed as follows to privately share a record with a community:</li>
+                  <ul className="pl-15">
+                    <li>Select one of your communities.</li>
+                    <li>Upload or import at least one file.</li>
+                    <li>Fill in the required metadata fields (<span className="color-red">*</span>).</li>
+                    <li>Click the "Share with community" button.</li>
+                  </ul>
+                </ul>
             </div>
           </div>
         </div>
