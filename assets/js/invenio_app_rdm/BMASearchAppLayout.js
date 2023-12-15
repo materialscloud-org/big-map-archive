@@ -7,7 +7,7 @@ import {
     buildUID,
 } from "react-searchkit";
 import {GridResponsiveSidebarColumn} from "react-invenio-forms";
-import {Container, Grid, Button} from "semantic-ui-react";
+import {Container, Grid, Button, Popup, Icon} from "semantic-ui-react";
 import {ResultOptions} from "@js/invenio_search_ui/components/Results";
 import {SearchBar} from "@js/invenio_search_ui/components/SearchBar";
 import {i18next} from "@translations/invenio_search_ui/i18next";
@@ -83,7 +83,13 @@ export const BMASearchAppLayout = (props) => {
                     <div className="ui grid">
                       <div className="middle aligned row pb-0">
                         <div className="left eight wide column">
-                            <h2>Shared records</h2>
+                            <div style={{"display": "flex", "align-items": "center"}}>
+                                <h2 style={{"margin": "0px"}}>Shared records</h2>
+                                <Popup
+                                    trigger={<Icon className="ml-5" name="info circle"/>}
+                                    content={"Use the search box to filter through the records that are shared with your communities. The search guide provides examples of advanced search queries."}
+                                />
+                            </div>
                         </div>
                       </div>
                     </div>
