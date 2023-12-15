@@ -28,7 +28,7 @@ export const BMACommunityCompactItemComputer = ({
         />
 
         <div>
-          <div className="flex align-items-center rel-mb-1">
+          <div className="flex align-items-center">
             <p
               className="ui small header truncate-lines-2 m-0 mr-5"
             >
