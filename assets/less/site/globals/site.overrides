@@ -224,6 +224,11 @@ div.ui.green.tiny.horizontal.label {
 }
 
 div.ui.blue.tiny.horizontal.label {
-    background-color: #195c61!important;
-    border-color: #195c61!important;
+    background-color: #195c61 !important;
+    border-color: #195c61 !important;
+}
+
+.flex-center {
+    display: flex !important;
+    align-items: center !important;
 }
