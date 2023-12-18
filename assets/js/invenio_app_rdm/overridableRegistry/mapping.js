@@ -36,4 +36,5 @@ export const overriddenComponents = {
     "InvenioAppRdm.Search.RecordsResultsListItem.layout": BMARecordsResultsListItemLayout,
     "InvenioAppRdm.Search.SearchApp.layout": BMASearchAppLayout,
     "InvenioAppRdm.Search.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
+    "InvenioAppRdm.DashboardUploads.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
 }
