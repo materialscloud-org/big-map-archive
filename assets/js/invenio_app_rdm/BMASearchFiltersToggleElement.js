@@ -35,7 +35,7 @@ export const BMASearchFiltersToggleElement = ({
                 <Card.Header as="h2" className="mb-0">{title}</Card.Header>
                 <Popup
                     trigger={<Icon className="ml-5" name="info circle flex-center"/>}
-                    content={"By default, only the latest shared version of an entry is displayed. Toggle the switch to view all shared versions."}
+                    content={"By default, only the latest version of an entry is displayed. Toggle the switch to view all versions."}
                 />
             </Card.Content>
             <Card.Content>
