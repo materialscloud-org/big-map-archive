@@ -83,10 +83,10 @@ export const BMASearchAppLayout = (props) => {
                     <div className="ui grid">
                       <div className="middle aligned row pb-0">
                         <div className="left eight wide column">
-                            <div style={{"display": "flex", "align-items": "center"}}>
-                                <h2 style={{"margin": "0px"}}>Shared records</h2>
+                            <div className="flex-center">
+                                <h2 className="m-0">Shared records</h2>
                                 <Popup
-                                    trigger={<Icon className="ml-5" name="info circle"/>}
+                                    trigger={<Icon className="ml-5" name="info circle flex-center"/>}
                                     content={"Use the search box to filter through the records that are shared with your communities. The search guide provides examples of advanced search queries."}
                                 />
                             </div>

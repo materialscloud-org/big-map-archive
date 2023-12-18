@@ -7,10 +7,10 @@ export function BMADashboardResultViewResultList(props) {
     return (
         <Grid.Row>
             <Grid.Column>
-                <div style={{"display": "flex", "align-items": "center"}}>
-                    <h2 style={{"margin": "0px"}}>My records</h2>
+                <div className="flex-center">
+                    <h2 className="m-0">My records</h2>
                     <Popup
-                        trigger={<Icon className="ml-5" name="info circle"/>}
+                        trigger={<Icon className="ml-5" name="info circle flex-center"/>}
                         content={"Use the closest search box to filter through your records. The search guide provides examples of advanced search queries."}
                     />
                 </div>
