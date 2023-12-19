@@ -1,0 +1,2 @@
+# this file is here only to avoid fixtures to be loaded in db and indexes
+# https://github.com/inveniosoftware/invenio-rdm-records/blob/master/invenio_rdm_records/fixtures/data/vocabularies/contrib/codemeta/development_status.yaml

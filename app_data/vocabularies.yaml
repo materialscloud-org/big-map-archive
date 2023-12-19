@@ -18,17 +18,20 @@ licenses:
 names:
   pid-type: names
   data-file: vocabularies/names_orcid.yaml
+languages:
+  pid-type: lng
+  data-file: vocabularies/languages.yaml
+code:developmentStatus:
+  pid-type: ds
+  data-file: vocabularies/development_status.yaml
+code:programmingLanguages:
+  pid-type: pl
+  data-file: vocabularies/programming_languages.yaml
 # Minimimal example vocabularies
 # can be used for quick testing, or a basis for building your own customized vocabularies.
 #names:
 #  pid-type: names
 #  data-file: vocabularies/names.yaml
-#licenses:
-#  pid-type: lic
-#  data-file: vocabularies/cc_licences.csv
-#languages:
-#  pid-type: lng
-#  data-file: vocabularies/languages.yaml
 # TODO: Uncoment this if you want to have all affiliations with ROR identifiers.
 # affiliations:
 #   pid-type: aff
