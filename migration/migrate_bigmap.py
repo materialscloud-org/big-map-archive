@@ -134,7 +134,7 @@ if __name__ == '__main__':
         set_drafts_to_community(slug='bigmap')
 
         print("---------------")
-        print("Set all users to community bigmap")
+        print("Set all users to community bigmap and battery2030")
         print("---------------")
         set_users_to_community(slug='bigmap')
         set_users_to_community(slug='battery2030')

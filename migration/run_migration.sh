@@ -5,16 +5,16 @@
 
 # IMPORTANT!!!: do not run the full script but proceed step by step, 
 # there are still some operations that are 'manual', follow the comments
-PATH_TO_BIGMAP_VENV="/home/vgranata/.virtualenvs/bm_archiverdm"
+PATH_TO_BIGMAP_VENV="/home/vgranata/.virtualenvs/bm_archiverdm_migration"
 PATH_TO_BIGMAP_APP="/home/vgranata/app/archive-rdm/big-map-archive"
 cd $PATH_TO_BIGMAP_APP
 
 # move to master branch where v9 is installed
 git checkout master
 
-# copy migration scripts from branch develop_v12
+# copy migration and backup scripts from branch develop_v12
 git checkout develop_v12 migration
-
+git checkout develop_v12 backup
 ############################
 # Step 1: install version 9
 # use Pipfile_v9.0.2.lock that is in branch develop_v12
@@ -27,7 +27,9 @@ cp migration/python3.8/Pipfile_v9.0.2.lock Pipfile.lock
 
 # recreate virtualenv v9
 sudo rm -rf $PATH_TO_BIGMAP_VENV
-python3.8 -m venv $PATH_TO_BIGMAP_VENV
+# python3.8 -m venv $PATH_TO_BIGMAP_VENV
+mkvirtualenv -p /usr/bin/python3.8 bm_archiverdm_migration
+
 cd $PATH_TO_BIGMAP_APP
 workon bm_archiverdm
 nvm use v14.18.1
@@ -48,12 +50,12 @@ invenio-cli services setup -f --no-demo-data
 # docker cp ~/<dump_filename> $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
 # check filepath FILE_DUMP is correct in backup/restore_db.sh 
 source .env
-cd $PATH_TO_BIGMAP_APP/backup
+cd $PATH_TO_BIGMAP_APP/backup/v9
 python restore_db_es.py
 
 # assets build might not be needed to migrate, it can be skipped
-cd $PATH_TO_BIGMAP_APP
-invenio-cli assets build
+# cd $PATH_TO_BIGMAP_APP
+# invenio-cli assets build
 # the application still gives errors, can skip at this stage "invenio-cli run":
 # problem to load vocaulbalries and problem to see record
 # AttributeError: 'UIJSONSerializer' object has no attribute 'serialize_object_to_dict'
@@ -65,7 +67,7 @@ cd $PATH_TO_BIGMAP_APP
 invenio-cli packages update 10.0
 
 # assets build might not be needed to migrate, it can be skipped
-invenio-cli assets build
+# invenio-cli assets build
 
 # Execute the database migration
 # set depends_on = None:
@@ -89,106 +91,84 @@ pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app
 ############################
 # Step 5: Upgrade to InvenioRDM v12
 ############################
-cd $PATH_TO_BIGMAP_APP
-invenio-cli packages update 12.0.0b2.dev36
-pipenv uninstall flask-babelex
-
-# Re-build assets
-# This gives problem, skip it:
-# <venv>/var/instance/assets/templates/custom_fields doesn't exist
-# assets build might not be needed to migrate, it can be skipped
-# invenio-cli assets build
+# Move to the branch develop_v12
+# You will need to remove the copied folders of migration and backup to 
+# be able to change branch
+git checkout develop_v12
+nvm use v14.18.1
 
 # Execute the database migration
 # set depends_on = None:
 # depends_on = "eb9743315a9d"  # invenio-accounts: add_userprofile
 # depends_on = None
 # in here:
-# <venv>/lib/python3.8/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
+# <venv>/lib/python3.9/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
 invenio alembic upgrade
 
-# this is to start the stats indexes it can be skipped for now
-# it should be done once we install the migrated dump to v12 in the python 3.9 virtualenv
-# invenio queues declare
-
-# Not able to do update:
-# invenio index update communities-communities-v1.0.0
-# invenio index update rdmrecords-drafts-draft-v6.0.0
-# invenio index update rdmrecords-records-record-v6.0.0
-
-# Instead destroyed and recreated indexes:
-invenio index destroy --force --yes-i-know
-invenio index init
-invenio rdm-records rebuild-index
-invenio communities rebuild-index
-
-# The migration file in the virtualenv did not work:
-# pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_11_0_to_12_0.py)
-# I had to make few changes, run this instead:
-pipenv run invenio shell migration/migrate_11_0_to_12_0.py
-
-# re-update the indexes after data migration
-invenio index destroy --force --yes-i-know
-invenio index init
-invenio rdm-records rebuild-index
-invenio communities rebuild-index
+# delete all indexes
+curl -X DELETE http://localhost:9200/*
 
 ############################
-# Step 6: Make a dump of the migrated database
+# Step 6: Make a dump of the migrated database v11
 ############################
 cd $PATH_TO_BIGMAP_APP
 
 DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
-FILE_DUMP="/var/lib/postgresql/data/big_map_archive_dump_migrated.bak"
+FILE_DUMP="/var/lib/postgresql/data/big_map_archive_dump_migrated_v11.bak"
 
+# Make dump of database
 echo "Dump of database started ..."
 docker exec $DOCKER_CONTAINER_ID sh -c "pg_dump -U big-map-archive -F t big-map-archive  >  ${FILE_DUMP}"
 echo "Dump of database completed"
 docker cp $DOCKER_CONTAINER_ID:$FILE_DUMP .
 
 ############################
-# END OF DATABASE MIGRATION
+# Step 7: Destroy and restart services
 ############################
-echo "END OF DATABASE MIGRATION: the migrated db dump is big_map_archive_dump_migrated.bak"
-
-############################
-# Step 7: Go to branch where v12 is installed, use python 3.9
-############################
-cd $PATH_TO_BIGMAP_APP
-git checkout develop_v12
-source .env
-# this is needed to pass from elasticsearch to opensearch
 invenio-cli services stop
 invenio-cli services destroy
 
-# recreate virtualenv v12
-sudo rm -rf $PATH_TO_BIGMAP_VENV
-python3.9 -m venv $PATH_TO_BIGMAP_VENV
-cd $PATH_TO_BIGMAP_APP
-workon bm_archiverdm
+# check every container is indeed removed, even docker.elastic.co
+docker ps
+# if docker.elastic.co are present remove them by hand
+docker stop <container_id>
+docker rm <container_id>
+
+# rebuild the assets
 nvm use v14.18.1
-pip install invenio-cli
+invenio-cli assets build
 
-# install packages in virtualenv
-# Note: need to comment the blueprint in mc_archive_inveniordm views to install the packages
-invenio-cli install
-
-# recreate containers (including db)
+# setup the services
 invenio-cli services setup -f --no-demo-data
 
 ############################
-# Step 8: restore the migrated database and indexes from db dump
+# Step 8: Restore database from v11
 ############################
 # copy last db dump to the docker container:
 DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
-docker cp big_map_archive_dump_migrated.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
+docker cp big_map_archive_dump_migrated_v11.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
 # check filepath FILE_DUMP is correct in backup/restore_db.sh 
 
-cd $PATH_TO_BIGMAP_APP/backup
+cd $PATH_TO_BIGMAP_APP/backup/v9
 python restore_db_es.py
 
 ############################
-# Step 9: create communities owner and communities,
+# Step 9: Run migration script to v12 and recreate indexes
+############################
+# pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_11_0_to_12_0.py)
+# I had to make few changes, run this instead:
+pipenv run invenio shell migration/migrate_11_0_to_12_0.py
+
+# re-update the indexes after data migration
+# IMPORTANT: comment restore_db and update_files_location in file restore_db_es.py
+cd $PATH_TO_BIGMAP_APP/backup/v9
+python restore_db_es.py
+
+# create statistics indexes
+invenio queues declare
+
+############################
+# Step 10: create communities owner and communities,
 # and run migrate.py to: 
 # - make all records/drafts and files restrictes
 # - add bigmap community to all records/drafts

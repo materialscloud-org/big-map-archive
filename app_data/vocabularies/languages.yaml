@@ -1,0 +1,8 @@
+- id: eng
+  props:
+    alpha_2: en
+  tags:
+  - individual
+  - living
+  title:
+    en: English

@@ -9,7 +9,6 @@ from invenio_app.factory import create_app
 from sqlalchemy import create_engine
 from invenio_db import db
 from sqlalchemy import text
-# from invenio_users_resources.services.users.tasks import reindex_users
 from invenio_users_resources.proxies import current_users_service
 from invenio_access.permissions import system_identity
 
@@ -47,22 +46,31 @@ def restore_db(app):
         print("\033[32m\033[1m" + "Database dump has been restored" + "\033[0m")
 
 
-def restore_es():
-    """Restore Elastisearch indexes"""
-    # destroy indexes if they exist
+def restore_es(app):
+    """Restore Elastisearch indexes
+
+    Note: for the indexes to be filled in one needs to run 'invenio-cli run'
+    """
+    # destroy indexes if they exist (this does not remove statistics indexes)
     os.system('invenio index destroy --force --yes-i-know')
+
+    # this will remove all indexes including statistics
+    # os.system('curl -X DELETE http://localhost:9200/*')
 
     # create indexes
     os.system('invenio index init')
 
-    # create documents from the database
+    # re-index indexes from the database
     # eg, one document per (published) record in rdm_records_metadata table
     os.system('invenio rdm-records rebuild-index')
     os.system('invenio communities rebuild-index')
 
-    # create index users from the database
-    # TODO: this does not work
-    # current_users_service.rebuild_index(system_identity)
+    # re-index users from the database
+    with app.app_context():
+        current_users_service.rebuild_index(system_identity)
+
+    # statistics indexes
+    # os.system('invenio queues declare')
 
     print("\033[32m\033[1m" + "Elasticsearch indexes have been restored" + "\033[0m")
 
@@ -91,6 +99,6 @@ def update_files_location(app):
 if __name__ == '__main__':
     app = create_app()
     restore_db(app)
-    restore_es()
+    restore_es(app)
     update_files_location(app)
     print("\033[32m\033[1m"+"Database and elasticsearch indexes have been restored"+"\033[0m")
