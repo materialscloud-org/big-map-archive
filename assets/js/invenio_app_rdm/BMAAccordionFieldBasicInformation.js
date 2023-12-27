@@ -122,6 +122,7 @@ const BMAAccordionFieldBasicInformation = (props) => {
                         "TableCellProperties",
                     ],
                 }}
+                required
             />
 
             <BMALicenseField

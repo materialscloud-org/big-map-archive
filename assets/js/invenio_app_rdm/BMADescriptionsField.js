@@ -5,7 +5,7 @@ import { i18next } from "@translations/invenio_rdm_records/i18next";
 
 export class BMADescriptionsField extends Component {
   render() {
-    const { fieldPath, label, labelIcon, options, editorConfig, recordUI } = this.props;
+    const { fieldPath, label, labelIcon, options, editorConfig, recordUI, required } = this.props;
     return (
       <>
         <RichInputField
@@ -14,6 +14,7 @@ export class BMADescriptionsField extends Component {
           editorConfig={editorConfig}
           label={<FieldLabel htmlFor={fieldPath} icon={labelIcon} label={label} />}
           optimized
+          required={required}
         />
       </>
     );
