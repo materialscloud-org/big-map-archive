@@ -1,49 +1,34 @@
 # BIG-MAP Archive
 
-Welcome to your InvenioRDM instance.
+## Requirements
 
-## Getting started
+BIG-MAP Archive offers "community" features. 
+This version is expected to fulfill community-related requirements 
+and record-related requirements, including:
+- Users are not allowed to create communities.
+- Sharing a record outside one of the user’s communities is not permitted.
 
-Run the following commands in order to start your new InvenioRDM instance:
+More details can be found below.
 
-```console
-invenio-cli containers start --lock --build --setup
-```
+## Community-related requirements
 
-The above command first builds the application docker image and afterwards
-starts the application and related services (database, Elasticsearch, Redis
-and RabbitMQ). The build and boot process will take some time to complete,
-especially the first time as docker images have to be downloaded during the
-process.
+Users are not allowed to manage communities and community membership.
+More precisely, users who try to perform the following actions should get permission denied (status code: 403): 
+- creating a community (POST, /api/communities)
+- updating a community (PUT, /api/communities/<community_slug>)
+- deleting a community (DELETE, /api/communities/<community_slug>)
+- renaming a community (POST, /api/communities/<community_id>/rename)
+- updating a community logo (PUT, api/communities/<community_id>/logo)
+- deleting a community logo (DELETE, api/communities/<community_id>/logo)
+- creating a featured community entry (POST, /api/communities/<community_id>/featured)
+- updating a featured community entry (PUT, /api/communities/<community_id>/featured/<featured_entry_id>)
+- deleting a featured community entry (DELETE, /api/communities/<community_id>/featured/<featured_entry_id>).
 
-Once running, visit https://127.0.0.1 in your browser.
-
-**Note**: The server is using a self-signed SSL certificate, so your browser
-will issue a warning that you will have to by-pass.
-
-## Overview
-
-Following is an overview of the generated files and folders:
-
-| Name | Description |
-|---|---|
-| ``Dockerfile`` | Dockerfile used to build your application image. |
-| ``Pipfile`` | Python requirements installed via [pipenv](https://pipenv.pypa.io) |
-| ``Pipfile.lock`` | Locked requirements (generated on first install). |
-| ``app_data`` | Application data such as vocabularies. |
-| ``assets`` | Web assets (CSS, JavaScript, LESS, JSX templates) used in the Webpack build. |
-| ``docker`` | Example configuration for NGINX and uWSGI. |
-| ``docker-compose.full.yml`` | Example of a full infrastructure stack. |
-| ``docker-compose.yml`` | Backend services needed for local development. |
-| ``docker-services.yml`` | Common services for the Docker Compose files. |
-| ``invenio.cfg`` | The Invenio application configuration. |
-| ``logs`` | Log files. |
-| ``static`` | Static files that need to be served as-is (e.g. images). |
-| ``templates`` | Folder for your Jinja templates. |
-| ``.invenio`` | Common file used by Invenio-CLI to be version controlled. |
-| ``.invenio.private`` | Private file used by Invenio-CLI *not* to be version controlled. |
-
-## Documentation
-
-To learn how to configure, customize, deploy and much more, visit
-the [InvenioRDM Documentation](https://inveniordm.docs.cern.ch/).
+In addition, users who attempt to perform the following actions should get permission denied (status code: 403), 
+unless they are authenticated and belong to the community:
+- retrieving a community's metadata (GET, /api/communities/<community_id>)
+- retrieving a community's logo (GET, api/communities/<community_id>/logo)
+- searching communities (GET, /api/communities)
+- searching the user's communities (GET, /api/user/communities)
+- searching the featured communities (GET, /api/communities/featured)
+- retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
