@@ -19,7 +19,7 @@ More precisely, users who try to perform the following actions should get permis
 - deleting a community (DELETE, /api/communities/<community_slug>)
 - renaming a community (POST, /api/communities/<community_id>/rename)
 - updating a community logo (PUT, /api/communities/<community_id>/logo)
-- deleting a community logo (DELETE, api/communities/<community_id>/logo)
+- deleting a community logo (DELETE, /api/communities/<community_id>/logo)
 - creating a featured community entry (POST, /api/communities/<community_id>/featured)
 - updating a featured community entry (PUT, /api/communities/<community_id>/featured/<featured_entry_id>)
 - deleting a featured community entry (DELETE, /api/communities/<community_id>/featured/<featured_entry_id>).
