@@ -18,7 +18,7 @@ More precisely, users who try to perform the following actions should get permis
 - updating a community (PUT, /api/communities/<community_slug>)
 - deleting a community (DELETE, /api/communities/<community_slug>)
 - renaming a community (POST, /api/communities/<community_id>/rename)
-- updating a community logo (PUT, api/communities/<community_id>/logo)
+- updating a community logo (PUT, /api/communities/<community_id>/logo)
 - deleting a community logo (DELETE, api/communities/<community_id>/logo)
 - creating a featured community entry (POST, /api/communities/<community_id>/featured)
 - updating a featured community entry (PUT, /api/communities/<community_id>/featured/<featured_entry_id>)
@@ -27,7 +27,7 @@ More precisely, users who try to perform the following actions should get permis
 In addition, users who attempt to perform the following actions should get permission denied (status code: 403), 
 unless they are authenticated and belong to the community:
 - retrieving a community's metadata (GET, /api/communities/<community_id>)
-- retrieving a community's logo (GET, api/communities/<community_id>/logo)
+- retrieving a community's logo (GET, /api/communities/<community_id>/logo)
 - searching communities (GET, /api/communities)
 - searching the user's communities (GET, /api/user/communities)
 - searching the featured communities (GET, /api/communities/featured)
