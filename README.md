@@ -22,11 +22,16 @@ More precisely, any users who try to perform the following actions should get pe
 - deleting a community logo (DELETE, /api/communities/<community_id>/logo)
 - creating a featured community entry (POST, /api/communities/<community_id>/featured).
 
-In addition, any users who do not belong to the specified community should get permission denied (status code: 403) 
+In addition, 
+- Users who do not belong to the specified community should get permission denied (status code: 403) 
 when attempting to do the following:
-- retrieving a community's metadata (GET, /api/communities/<community_id>)
-- retrieving a community's logo (GET, /api/communities/<community_id>/logo)
-- searching communities (GET, /api/communities)
-- searching the user's communities (GET, /api/user/communities)
-- searching the featured communities (GET, /api/communities/featured)
-- retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
+  - retrieving a community's metadata (GET, /api/communities/<community_id>)
+  - retrieving a community's logo (GET, /api/communities/<community_id>/logo).
+
+- Users should only see the communities that they belong to, when searching communities (GET, /api/communities), 
+since all communities are expected to have hidden visibility.
+
+- Unauthenticated users should get permission denied (status code: 403) when trying to do the following:
+  - searching communities (GET, /api/communities)
+  - searching the featured communities (GET, /api/communities/featured)
+  - retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
