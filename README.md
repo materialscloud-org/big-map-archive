@@ -6,9 +6,9 @@ BIG-MAP Archive offers a "community" feature,
 where community members can privately share records (datasets) with entire communities. 
 
 This version of BIG-MAP Archive should fulfill numerous requirements, including:
-- Users are not allowed to join or leave a community by themselves. Administrators are in charge of community membership.
-- Users can only share their records with the communities that they belong to.
-- Shared records are only accessible to the communities that they were shared with.
+- Users are not allowed to join or leave a community by themselves. Administrators of BIG-MAP Archive are in charge of community membership.
+- Users are allowed to privately share a record with one of their communities.
+- A shared record is accessible to all members of the community and only to those users.
 
 More details can be found below.
 
