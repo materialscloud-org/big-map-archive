@@ -10,7 +10,7 @@ and record-related requirements, including:
 
 More details can be found below.
 
-## Community-related requirements
+## Community-related requirements (ALL TESTS PASSED ON DEC. 29, 2023)
 
 Users are not allowed to manage communities and community membership.
 More precisely, any users who try to perform the following actions should get permission denied (status code: 403): 
@@ -20,7 +20,8 @@ More precisely, any users who try to perform the following actions should get pe
 - renaming a community (POST, /api/communities/<community_id>/rename)
 - updating a community logo (PUT, /api/communities/<community_id>/logo)
 - deleting a community logo (DELETE, /api/communities/<community_id>/logo)
-- creating a featured community entry (POST, /api/communities/<community_id>/featured).
+- creating a featured community entry (POST, /api/communities/<community_id>/featured)
+- retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
 
 In addition, 
 - Users who do not belong to the specified community should get permission denied (status code: 403) 
@@ -31,7 +32,9 @@ when attempting to do the following:
 - Users should only see the communities that they belong to, when searching communities (GET, /api/communities), 
 since all communities are expected to have hidden visibility.
 
-- Unauthenticated users should get permission denied (status code: 403) when trying to do the following:
+- Anonymous users should get permission denied (status code: 403) when:
   - searching communities (GET, /api/communities)
-  - searching the featured communities (GET, /api/communities/featured)
-  - retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
+  - searching a user's communities (GET, /api/user/communities)
+  - searching the featured communities (GET, /api/communities/featured).
+  
+
