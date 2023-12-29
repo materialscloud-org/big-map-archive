@@ -37,7 +37,7 @@ Anonymous users should get permission denied (status code: 403) when:
 - searching a user's communities (GET, /api/user/communities)
 - searching the featured communities (GET, /api/communities/featured).
   
-## Community-membership-related requirements
+## Community-membership-related requirements (ALL TESTS PASSED ON DEC. 29, 2023)
 
 Users are not allowed to manage community membership. 
 
