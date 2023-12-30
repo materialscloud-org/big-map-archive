@@ -53,5 +53,9 @@ Any users who attempt the following should get permission denied:
 
 Anonymous users should get permission denied when trying to search records (GET, /api/records).
 
-When attempting to get any records (GET, /api/records/<record_id>) that are shared with a given community, 
-users should get permission denied if they do not belong to that community.
+For any record that is shared with a given community, 
+if users do not belong to that community, they should get permission denied when attempting to do the following:
+- getting the metadata of the record (GET, /api/records/<record_id>) 
+- getting the list of record files (GET, /api/records/<record_id>/files)
+- retrieving the metadata of a record file (GET, /api/records/<record_id>/files/<filename>)
+- downloading a record file (GET, /api/records/<record_id>/files/<filename>/content).
