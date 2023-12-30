@@ -24,15 +24,14 @@ Users are not allowed to manage communities. More precisely, any users who try t
 - creating a featured community entry (POST, /api/communities/<community_id>/featured)
 - retrieving the featured community entries (GET, /api/communities/<community_id>/featured).
 
-In addition, users who do not belong to the specified community should get permission denied (status code: 403) 
-when attempting to do the following:
+In addition, users who do not belong to the specified community should get permission denied when attempting to do the following:
 - retrieving a community's metadata (GET, /api/communities/<community_id>)
 - retrieving a community's logo (GET, /api/communities/<community_id>/logo).
 
 Users should only see the communities that they belong to, when searching communities (GET, /api/communities), 
 since all communities are expected to have hidden visibility.
 
-Anonymous users should get permission denied (status code: 403) when:
+Anonymous users should get permission denied when:
 - searching communities (GET, /api/communities)
 - searching a user's communities (GET, /api/user/communities)
 - searching the featured communities (GET, /api/communities/featured).
@@ -41,7 +40,7 @@ Anonymous users should get permission denied (status code: 403) when:
 
 Users are not allowed to manage community membership. 
 
-Any users who attempt the following should get permission denied (status code: 403):
+Any users who attempt the following should get permission denied:
 - adding a group as a community member (POST, /api/communities/<community_id>/members)
 - inviting users to join a community (POST, /api/communities/<community_id>/invitations)
 - removing members from a community (DELETE, /api/communities/<community_id>/members)
@@ -50,3 +49,9 @@ Any users who attempt the following should get permission denied (status code: 4
 - searching public members of a community (GET, /api/communities/<community_id>/members/public)
 - searching invitations to join a community (GET, /api/communities/<community_id>/invitations).
 
+## Shared-records-related requirements (ALL TESTS PASSED ON DEC. 30, 2023)
+
+Anonymous users should get permission denied when trying to search records (GET, /api/records).
+
+When attempting to get any records (GET, /api/records/<record_id>) that are shared with a given community, 
+users should get permission denied if they do not belong to that community.
