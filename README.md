@@ -57,5 +57,5 @@ For any record that is shared with a given community,
 if users do not belong to that community, they should get permission denied when attempting to do the following:
 - getting the metadata of the record (GET, /api/records/<record_id>) 
 - getting the list of record files (GET, /api/records/<record_id>/files)
-- retrieving the metadata of a record file (GET, /api/records/<record_id>/files/<filename>)
-- downloading a record file (GET, /api/records/<record_id>/files/<filename>/content).
+- retrieving the metadata of a record file (GET, /api/records/<record_id>/files/<file_name>)
+- downloading a record file (GET, /api/records/<record_id>/files/<file_name>/content).
