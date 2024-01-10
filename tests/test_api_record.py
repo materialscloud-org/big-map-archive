@@ -37,94 +37,298 @@ fh = {
 }
 
 
-def test_create_draft1(token_com1_reader, minimal_record):
+def test_create_draft_minimal(token_com1_reader, minimal_record):
     """
-    Test 1: create minimal draft: missing publication date and access is public, DENY
-    at list publication date should be in the metadata and access should be set to restricted
-    this metadata cannot be changed in the upload form
+    Test 1: create minimal draft: missing publication date and access is public,
+    test access is set to restricted, embargo to false and publication_date is set to today.
+    At list publication date and access should be in the metadata and access should be set to restricted,
+    this metadata cannot be changed from the upload form
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
     record = deepcopy(minimal_record)
 
     record["metadata"]["title"] = "Test draft: missing publication date and access is public"
     r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
-    assert r.status_code == 403
+
+    assert r.json()['access']['record'] == "restricted"
+    assert r.json()['access']['files'] == "restricted"
+    assert r.json()['access']['embargo']['active'] == False
+    assert r.json()['access']['embargo']['reason'] == None
+
+    assert r.json()['metadata']['publication_date'] == datetime.now().strftime("%Y-%m-%d")
+
+    assert r.status_code == 201
 
     id = r.json()['id']
     delete_draft(api, h, id)
 
 
-def test_create_draft2(token_com1_reader, minimal_record):
+def test_create_draft_access(token_com1_reader, minimal_record):
     """
-    Test 2: create draft: access is public, DENY
-    if access is public and community is restricted: cannot select community in upload form
-    """
-    h["Authorization"] = f"Bearer {token_com1_reader}"
-    record = deepcopy(minimal_record)
-
-    record["metadata"]["title"] = "Test draft: access is public"
-    record["metadata"]["publication_date"] = datetime.utcnow().strftime("%Y-%m-%d")
-    record["metadata"]["resource_type"] = {"id": "dataset"}
-    record["metadata"]["creators"] = [
-        {
-            "person_or_org": {
-                "family_name": "Granata",
-                "given_name": "Valeria",
-                "type": "personal"
-            }
-        }
-    ]
-    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
-    assert r.status_code == 403
-
-    id = r.json()['id']
-    delete_draft(api, h, id)
-
-
-def test_create_draft3(token_com1_reader, minimal_record):
-    """
-    Test 3: create draft: access is restricted and embargo is active, DENY
+    Test 2: create draft: with access public and embargo,
+    test access is reset to restricted and embargo is set to False
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
     record = deepcopy(minimal_record)
-    record["metadata"]["title"] = "Test draft: access is restricted, embargo is active"
-    record["access"] = {
-        "files": "restricted",
-        "record": "restricted",
+
+    record["metadata"]["title"] = "Test draft: reset access and embargo"
+    record["metadata"]["access"] = {
+        "files": "public",
+        "record": "public",
         "embargo": {
-            "until": None,
+            "until": "2124-01-10",
             "active": True,
-            "reason": None
+            "reason": "Test"
         }
     }
+
     r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
-    assert r.status_code == 403
+    assert r.json()['access']['record'] == "restricted"
+    assert r.json()['access']['files'] == "restricted"
+    assert r.json()['access']['embargo']['active'] == False
+    assert r.json()['access']['embargo']['reason'] == None
+
+    assert r.status_code == 201
 
     id = r.json()['id']
     delete_draft(api, h, id)
 
 
-def test_create_draft4(token_com1_reader, minimal_record):
+def test_create_draft_resource_type(token_com1_reader, minimal_record):
     """
-    Test 4: create draft: access is restricted and embargo is not active, ALLOW
+    Test 3: create draft: test resource_type is dataset, software or other
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # invalid resource_type
     record = deepcopy(minimal_record)
-    record["metadata"]["title"] = "Test draft: access is restricted, embargo is not active"
-    record["access"] = {
-        "files": "restricted",
-        "record": "restricted",
-        "embargo": {
-            "until": None,
-            "active": False,
-            "reason": None
-        }
+    record["metadata"]["title"] = "Test draft: resource_type"
+    record["metadata"]["resource_type"] = {
+        "id": "image-photo"
     }
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+    assert r.json()["message"] == 'Invalid value image-photo.'
+
+    # valid resource_type
+    record = deepcopy(minimal_record)
+    record["metadata"]["resource_type"] = {
+        "id": "dataset"
+    }
+
     r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
     assert r.status_code == 201
 
     id = r.json()['id']
     delete_draft(api, h, id)
+
+    # valid resource_type
+    record = deepcopy(minimal_record)
+    record["metadata"]["resource_type"] = {
+        "id": "software"
+    }
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+    # valid resource_type
+    record = deepcopy(minimal_record)
+    record["metadata"]["resource_type"] = {
+        "id": "other"
+    }
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+
+def test_create_draft_license(token_com1_reader, minimal_record):
+    """
+    Test 4: create draft: test license
+    """
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+    record = deepcopy(minimal_record)
+    record["metadata"]["title"] = "Test draft: license"
+    record["metadata"]["rights"] = [
+        {
+            "id": "cc-by-sa-5.0"
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+    assert r.json()["message"] == 'Invalid value cc-by-sa-5.0.'
+
+    record["metadata"]["rights"] = [
+        {
+            "id": "mit"
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+
+def test_create_draft_references(token_com1_reader, minimal_record):
+    """
+    Test 4: create draft: test references (related_identifiers)
+    """
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+    record = deepcopy(minimal_record)
+    record["metadata"]["title"] = "Test draft: references (related_identifiers)"
+
+    # valid reference
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "https://archive.big-map.eu/",
+            "scheme": "url",
+            "relation_type": {
+                "id": "references",
+                "title": {
+                    "en": "References"
+                }
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+    # not valid scheme
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "10.24435/materialscloud:h2-x6",
+            "scheme": "invalid",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+    assert r.json()["message"] == 'Invalid scheme.'
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "10.24435/materialscloud:h2-x6",
+            "scheme": "",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    r.json()["metadata"]["related_identifiers"][0]["scheme"] == "doi"
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "10.24435/materialscloud:h2-x6",
+            "scheme": " ",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+    assert r.json()["message"] == 'Invalid scheme.'
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "10.24435/materialscloud:h2-x6",
+            "scheme": None,
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    r.json()["metadata"]["related_identifiers"][0]["scheme"] == "doi"
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+    # None is valid scheme
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "123",
+            "scheme": None,
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    assert "scheme" not in r.json()["metadata"]["related_identifiers"][0]
+    id = r.json()['id']
+    delete_draft(api, h, id)
+
+    # not valid identifier
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "123",
+            "scheme": "doi",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "123",
+            "scheme": "arxiv",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "123",
+            "scheme": "isbn",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
+
+    record["metadata"]["related_identifiers"] = [
+        {
+            "identifier": "123",
+            "scheme": "url",
+            "relation_type": {
+                "id": "references"
+            }
+        }
+    ]
+
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 400
 
 
 def test_create_draft5(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
@@ -399,5 +603,3 @@ def test_update_published_record2(com1_reader, token_com1_reader, minimal_allowe
 def test_update_published_record3():
     """Test 2: create new version of published record and set access to public, DENY"""
     pass
-
-
