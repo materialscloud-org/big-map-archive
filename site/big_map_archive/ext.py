@@ -11,6 +11,12 @@ from invenio_rdm_records.fixtures.tasks import get_authenticated_identity
 from invenio_rdm_records.proxies import current_rdm_records_service
 from invenio_rdm_records.services.communities.service import \
     RecordCommunitiesService
+from invenio_rdm_records.services.schemas.metadata import (
+    RelatedIdentifierSchema, record_identifiers_schemes)
+from invenio_records.systemfields.relations.errors import InvalidRelationValue
+from invenio_vocabularies.services.schema import \
+    VocabularyRelationSchema as VocabularySchema
+from marshmallow import ValidationError, fields, validates_schema
 
 
 class BMArchiveRecordCommunitiesService(RecordCommunitiesService):
@@ -39,3 +45,37 @@ class BMArchiveRecordCommunitiesService(RecordCommunitiesService):
         }
 
         review_service.create(user_identity, review, record)
+
+
+# Validate related_identifiers (references)
+class BMARelatedIdentifierSchema(RelatedIdentifierSchema):
+    """Related identifier schema."""
+
+    relation_type = fields.Nested(VocabularySchema)
+    resource_type = fields.Nested(VocabularySchema)
+
+    @validates_schema
+    def validate_related_identifier(self, data, **kwargs):
+        """Validate the related identifiers."""
+        relation_type = data.get("relation_type")
+        errors = dict()
+
+        if not relation_type:
+            errors["relation_type"] = self.error_messages["required"]
+
+        if errors:
+            raise ValidationError(errors)
+
+        scheme = data.get('scheme', None)
+        identifier = data.get('identifier', None)
+
+        if scheme and scheme not in record_identifiers_schemes.keys():
+            raise InvalidRelationValue(self.error_messages["invalid_scheme"])
+
+        if identifier and scheme.strip() == "":
+            raise InvalidRelationValue(self.error_messages["invalid_scheme"])
+
+        if scheme and identifier:
+            validator = record_identifiers_schemes[scheme]["validator"]
+            if not validator(identifier):
+                raise InvalidRelationValue(f'Invalid {scheme} identifier.')
