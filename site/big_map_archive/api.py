@@ -7,7 +7,6 @@
 
 """BM Archive Record API."""
 
-from invenio_rdm_records.records.api import RDMDraft
 from invenio_rdm_records.records.systemfields.access.embargo import Embargo
 from invenio_rdm_records.records.systemfields.access.field.record import (
     RecordAccess, RecordAccessField)
@@ -16,9 +15,11 @@ from invenio_rdm_records.records.systemfields.access.protection import \
 
 
 class BMAEmbargo(Embargo):
-    def __init__(self):
+    def __init__(self, until=None, reason=None, active=None):
         """Replace class Embargo to set embargo to False."""
-        self.until = None
+        self.until = until
+        if isinstance(until, str):
+            self.until = None
         self.reason = None
         self._active = False
 
@@ -44,7 +45,7 @@ class BMARecordAccess(RecordAccess):
 
         restricted = Protection("restricted", "restricted")
         self.protection = restricted
-        self.embargo = BMAEmbargo()
+        self.embargo = BMAEmbargo(until=None, reason=None, active=None)
         self.has_files = has_files
         self.errors = []
 
@@ -54,8 +55,3 @@ class BMARecordAccessField(RecordAccessField):
         """Replace class RecordAccessField to set access as restricted."""
         self._access_obj_class = access_obj_class
         super().__init__(key=key, access_obj_class=BMARecordAccess)
-
-
-class BMARDMDraft(RDMDraft):
-    """BMA RDMDraft API class."""
-    access = BMARecordAccessField()
