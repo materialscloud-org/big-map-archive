@@ -36,10 +36,12 @@ fh = {
     "Authorization": "Bearer <token>"
 }
 
+# Drafts
+
 
 def test_create_draft_minimal(token_com1_reader, minimal_record):
     """
-    Test 1: create minimal draft: missing publication date and access is public,
+    Test: create minimal draft: missing publication date and access is public,
     test access is set to restricted, embargo to false and publication_date is set to today.
     At list publication date and access should be in the metadata and access should be set to restricted,
     this metadata cannot be changed from the upload form
@@ -65,7 +67,7 @@ def test_create_draft_minimal(token_com1_reader, minimal_record):
 
 def test_create_draft_access(token_com1_reader, minimal_record):
     """
-    Test 2: create draft: with access public and embargo,
+    Test: create draft: with access public and embargo,
     test access is reset to restricted and embargo is set to False
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -96,7 +98,7 @@ def test_create_draft_access(token_com1_reader, minimal_record):
 
 def test_create_draft_resource_type(token_com1_reader, minimal_record):
     """
-    Test 3: create draft: test resource_type is dataset, software or other
+    Test: create draft: test resource_type is dataset, software or other
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
 
@@ -150,7 +152,7 @@ def test_create_draft_resource_type(token_com1_reader, minimal_record):
 
 def test_create_draft_license(token_com1_reader, minimal_record):
     """
-    Test 4: create draft: test license
+    Test: create draft: test license
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
     record = deepcopy(minimal_record)
@@ -180,7 +182,7 @@ def test_create_draft_license(token_com1_reader, minimal_record):
 
 def test_create_draft_references(token_com1_reader, minimal_record):
     """
-    Test 4: create draft: test references (related_identifiers)
+    Test: create draft: test references (related_identifiers)
     """
     h["Authorization"] = f"Bearer {token_com1_reader}"
     record = deepcopy(minimal_record)
@@ -331,8 +333,8 @@ def test_create_draft_references(token_com1_reader, minimal_record):
     assert r.status_code == 400
 
 
-def test_create_draft5(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
-    """Test 4: create draft: no file and community com1."""
+def test_create_draft_with_community(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test: create draft: with community com1."""
 
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -375,8 +377,10 @@ def test_create_draft5(com1_reader, token_com1_reader, minimal_allowed_draft, co
     # add_community_to_draft(com1_reader, community2_id, id)
 
 
+# Records
+# Publish record with no files and no community
 def test_publish_record1(com1_reader, token_com1_reader, minimal_allowed_draft):
-    """Test 1: publish record with no files and no community, DENY"""
+    """Test: publish record with no files and no community, DENY"""
 
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -396,6 +400,7 @@ def test_publish_record1(com1_reader, token_com1_reader, minimal_allowed_draft):
     delete_draft(api, h, id)
 
 
+# Publish record with no files
 def test_publish_record2(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
     """Test 2: publish record with no file and with community, DENY"""
 
@@ -431,6 +436,7 @@ def test_publish_record2(com1_reader, token_com1_reader, minimal_allowed_draft, 
     delete_draft(api, h, id)
 
 
+# Publish record with files and community
 def test_publish_record3(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
     """Test 3: publish record with file and community, ALLOW"""
 
@@ -468,8 +474,11 @@ def test_publish_record3(com1_reader, token_com1_reader, minimal_allowed_draft, 
     assert r.status_code == 202
 
 
-def test_update_published_record1(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
-    """Test 1: edit published record and set access to public, DENY"""
+# Published record: update access, set access to public
+def test_published_record_update_access(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test: edit published record and set access to public and embargo to True.
+    Check access is reset to restricted and embargo to false.
+    """
 
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -517,25 +526,38 @@ def test_update_published_record1(com1_reader, token_com1_reader, minimal_allowe
 
     # Change access and save the draft
     record["metadata"]["title"] = f'{record["metadata"]["title"]} updated!'
+    embargo_date = datetime.utcnow() + timedelta(days=1)
     record["access"] = {
         "files": "public",
         "record": "public",
         "embargo": {
-            "until": None,
-            "active": False,
-            "reason": None
+            "until": embargo_date.strftime("%Y-%m-%d"),
+            "active": True,
+            "reason": "Test embargo"
         }
     }
     r = requests.put(links["draft"], data=json.dumps(record), headers=h, verify=False)
-    assert r.status_code == 403
+    assert r.status_code == 200
+    # check access is reset to restricted
+    assert r.json()['access']['record'] == "restricted"
+    assert r.json()['access']['files'] == "restricted"
+    assert r.json()['access']['embargo']['active'] == False
+    assert r.json()['access']['embargo']['reason'] == None
 
-    # Publish the draft: this will never be executed
+    # Publish the draft
     r = requests.post(f"{api}/api/records/{id}/draft/actions/publish", headers=h, verify=False)
-    assert r.status_code == 403
+    assert r.status_code == 202
+    assert r.json()['access']['record'] == "restricted"
+    assert r.json()['access']['files'] == "restricted"
+    assert r.json()['access']['embargo']['active'] == False
+    assert r.json()['access']['embargo']['reason'] == None
 
 
-def test_update_published_record2(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
-    """Test 2: edit published record and set embargo, DENY"""
+# Published record: remove community
+def test_published_record_update_remove_community(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test: edit published record and remove community.
+    Check it is not possible to remove community.
+    """
 
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -551,7 +573,7 @@ def test_update_published_record2(com1_reader, token_com1_reader, minimal_allowe
     community1_id = list(community1.hits)[0]["id"]
     assert community1_id
 
-    record["metadata"]["title"] = "Test update published record: set embargo"
+    record["metadata"]["title"] = "Test update published record: remove community"
 
     # Create draft
     r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
@@ -562,7 +584,7 @@ def test_update_published_record2(com1_reader, token_com1_reader, minimal_allowe
     # Add draft to community: create community-submission request
     add_community_to_draft(com1_reader, community1_id, id)
 
-    # Add file to draft
+    # Add file
     add_file(h, fh, links, filepath)
 
     # Accept review and publish to community
@@ -576,30 +598,27 @@ def test_update_published_record2(com1_reader, token_com1_reader, minimal_allowe
     record = r.json()
     links = record["links"]
 
+    # Update published record and remove community
     # Create draft from published record
     r = requests.post(links["draft"], headers=h, verify=False)
     assert r.status_code == 201
 
-    # Update published record and change access to public, save the draft
-    embargo_date = datetime.utcnow() + timedelta(days=1)
-    record["metadata"]["title"] = f'{record["metadata"]["title"]} updated!'
-    record["access"] = {
-        "files": "restricted",
-        "record": "restricted",
-        "embargo": {
-            "until": embargo_date.strftime("%Y-%m-%d"),
-            "active": True,
-            "reason": "Test embargo"
-        }
-    }
+    # Remove community
+    record["metadata"]["title"] = f'{record["metadata"]["title"]} updated3!'
+    record["parent"]["communities"] = {}
+
     r = requests.put(links["draft"], data=json.dumps(record), headers=h, verify=False)
-    assert r.status_code == 403
-
-    # Publish the draft: this will never be executed
-    r = requests.post(f"{api}/api/records/{id}/draft/actions/publish", headers=h, verify=False)
-    assert r.status_code == 403
+    assert r.status_code == 200
+    assert r.json()["parent"]["communities"]["ids"][0] == community1_id
+    delete_draft(api, h, id)
 
 
-def test_update_published_record3():
-    """Test 2: create new version of published record and set access to public, DENY"""
-    pass
+# Versions
+# New versions of record
+# def test_update_published_record3():
+#     """Test 2: create new version of published record and set access to public, DENY"""
+#     pass
+
+# Access links
+
+# User Records

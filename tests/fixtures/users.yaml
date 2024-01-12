@@ -2,6 +2,10 @@
   active: True
   password: $ecurep4ssw0rd
   confirmed: True
+- email: com1_reader2@materialscloud.com
+  active: True
+  password: $ecurep4ssw0rd
+  confirmed: True
 - email: com2_reader@materialscloud.com
   active: True
   password: $ecurep4ssw0rd

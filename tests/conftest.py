@@ -62,6 +62,31 @@ def communities():
 
 
 @pytest.fixture
+def com3():
+    return {
+        "access": {
+            "visibility": "restricted",
+            "member_policy": "closed",
+            "record_policy": "open",
+            "review_policy": "open"
+        },
+        "slug": "com3",
+        "metadata": {
+            "title": "Community3",
+            "description": "This is an example Community.",
+            "type": {
+                "id": "event"
+            },
+            "curation_policy": "This is the kind of records we accept.",
+            "page": "Information for my community.",
+            "website": "https://mysite.com",
+            "organizations": [{
+                    "name": "My Org"
+            }]
+        }
+    }
+
+@pytest.fixture
 def com_public_open():
     return {
         "access": {
@@ -112,6 +137,33 @@ def com1_reader(users, communities):
     except AlreadyMemberError:
         pass
     return com1_reader
+
+
+@pytest.fixture()
+def com1_reader2(users, communities):
+    """Create user fixture
+
+    community: com1
+    role: reader
+    """
+    assert communities
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1.total == 1
+    community1_id = list(community1.hits)[0]["id"]
+
+    # reader, community1
+    com1_reader2 = current_datastore.find_user(email="com1_reader2@materialscloud.com")
+    assert com1_reader2
+
+    data = {
+        "members": [{"type": "user", "id": str(com1_reader2.id)}],
+        "role": "reader",
+    }
+    try:
+        current_communities.service.members.add(system_identity, community1_id, data)
+    except AlreadyMemberError:
+        pass
+    return com1_reader2
 
 
 @pytest.fixture()
@@ -274,6 +326,28 @@ def oauth2_client_com1_reader(com1_reader):
 
 
 @pytest.fixture()
+def oauth2_client_com1_curator(com1_curator):
+    try:
+        client = Client.query.filter(Client.client_id == "client_test_com1_curator").one()
+    except NoResultFound:
+        with db.session.begin_nested():
+            client = Client(
+                client_id="client_test_com1_curator",
+                client_secret="client_test_com1_curator",
+                name="client_test_com1_curator",
+                description="",
+                is_confidential=False,
+                user_id=com1_curator.id,
+                _redirect_uris="",
+                _default_scopes="",
+            )
+            db.session.add(client)
+        db.session.commit()
+    return client.client_id
+
+
+
+@pytest.fixture()
 def oauth2_client_com2_reader(com2_reader):
     try:
         client = Client.query.filter(Client.client_id == "client_test_com2_reader").one()
@@ -300,6 +374,17 @@ def token_com1_reader(com1_reader, oauth2_client_com1_reader):
         token = Token.query.filter(Token.client_id == "client_test_com1_reader").one()
     except NoResultFound:
         token = generate_pat_token(db, com1_reader, oauth2_client_com1_reader, "rat_token_com1_reader", scope="user:email")["token"]
+    assert token
+    return token.access_token
+
+
+
+@pytest.fixture()
+def token_com1_curator(com1_curator, oauth2_client_com1_curator):
+    try:
+        token = Token.query.filter(Token.client_id == "client_test_com1_curator").one()
+    except NoResultFound:
+        token = generate_pat_token(db, com1_curator, oauth2_client_com1_curator, "rat_token_com1_curator", scope="user:email")["token"]
     assert token
     return token.access_token
 
