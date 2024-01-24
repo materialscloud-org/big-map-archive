@@ -82,5 +82,76 @@
     description: INSTABAT
     website: https://www.instabat.eu/
     organizations: [{"name": "INSTABAT"}]
-
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: healingbat
+  logo: ./static/images/healingbat.png
+  metadata:
+    title: HEALING BAT
+    description: HEALING BAT
+    website: https://www.healingbat.eu/
+    organizations: [{"name": "HEALING BAT"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: opera
+  logo: ./static/images/opera.png
+  metadata:
+    title: OPERA
+    description: OPERA
+    website: https://battery2030.eu/battery2030/projects/opera/
+    organizations: [{"name": "OPERA"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: opincharge
+  logo: ./static/images/opincharge.png
+  metadata:
+    title: OPINCHARGE
+    description: OPINCHARGE
+    website: https://www.opincharge.eu/
+    organizations: [{"name": "OPINCHARGE"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: phoenix
+  logo: ./static/images/phoenix.png
+  metadata:
+    title: PHOENIX
+    description: PHOENIX
+    website: https://phoenix-smartbatteries.eu/
+    organizations: [{"name": "PHOENIX"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: salamander
+  logo: ./static/images/salamander.png
+  metadata:
+    title: SALAMANDER
+    description: SALAMANDER
+    website: https://www.salamander-eu.com/
+    organizations: [{"name": "SALAMANDER"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: ultrabat
+  logo: ./static/images/ultrabat.png
+  metadata:
+    title: ULTRABAT
+    description: ULTRABAT
+    website: https://ultrabat.dtu.dk/
+    organizations: [{"name": "ULTRABAT"}]
 
