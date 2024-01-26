@@ -4,10 +4,10 @@
     record_policy: open
     review_policy: open
   slug: battery2030
-  logo: ./static/images/battery2030.png
+  logo: ./static/images/battery2030_green.png
   metadata:
     title: BATTERY2030
-    description: BATTERY2030, records published in this community will be visible by members of BIG-MAP, HIDDEN, BAT4EVER, ISTABAT, SENSIBAT, SPARTACUS
+    description: BATTERY2030
     website: https://battery2030.eu/
     organizations: [{"name": "BATTERY2030"}]
 - access:
@@ -154,4 +154,3 @@
     description: ULTRABAT
     website: https://ultrabat.dtu.dk/
     organizations: [{"name": "ULTRABAT"}]
-

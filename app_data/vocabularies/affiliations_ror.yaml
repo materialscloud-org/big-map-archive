@@ -1,0 +1,35 @@
+- acronym: EPFL
+  id: 02s376052
+  identifiers:
+  - identifier: 02s376052
+    scheme: ror
+  name: "\xC9cole Polytechnique F\xE9d\xE9rale de Lausanne"
+  title:
+    en: Swiss Federal Institute of Technology in Lausanne
+- acronym: PSI
+  id: 03eh3y714
+  identifiers:
+  - identifier: 03eh3y714
+    scheme: ror
+  name: Paul Scherrer Institute
+  title:
+    en: Paul Scherrer Institute
+    fr: Institut Paul Scherrer
+- id: 05290cv24
+  identifiers:
+  - identifier: 05290cv24
+    scheme: ror
+  name: University of Naples Federico II
+  title:
+    ca: "Universitat de N\xE0pols Frederic II"
+    de: "Universit\xE4t Neapel Federico II"
+    en: University of Naples Federico II
+    fr: "Universit\xE9 de naples - fr\xE9d\xE9ric-ii"
+    it: "Universit\xE0 degli Studi di Napoli Federico II"
+- id: 00dn4t376
+  identifiers:
+  - identifier: 00dn4t376
+    scheme: ror
+  name: Brunel University London
+  title:
+    en: Brunel University London
