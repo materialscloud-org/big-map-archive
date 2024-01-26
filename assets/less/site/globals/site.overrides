@@ -16,10 +16,26 @@ div.item.item-right {
 
 .logo-left{
     padding-left: 50px!important;
+    max-width: 150px !important;
 }
 
 .logo-right {
     padding-right: 50px!important;
+    max-width: 130px !important;
+}
+
+@media only screen and (max-width: 792px) {
+    .rdm-logo {
+        width: 140px !important;
+    }
+}
+
+#rdm-burger-menu-icon .navicon:before, #rdm-burger-menu-icon .navicon, #rdm-close-burger-menu-icon .navicon, #rdm-burger-menu-icon .navicon:after {
+    background: white !important;
+}
+
+div#rdm-burger-toggle {
+    margin-right: 40px !important;
 }
 
 /* For web browsers with max width of 643px: */
