@@ -12,6 +12,7 @@ import {
 } from "@js/invenio_rdm_records/src/deposit/api/DepositFormSubmitContext";
 import { DepositStatus } from "@js/invenio_rdm_records/src/deposit/state/reducers/deposit";
 import { BMASubmitReviewModal } from "./BMASubmitReviewModal";
+import { getInputFromDOM } from "@js/invenio_rdm_records/";
 
 class BMASubmitReviewButtonComponent extends Component {
   state = { isConfirmModalOpen: false };
@@ -38,10 +39,17 @@ class BMASubmitReviewButtonComponent extends Component {
   isDisabled = (numberOfFiles, disableSubmitForReviewButton) => {
     const { formik } = this.props;
     const { values, isSubmitting } = formik;
-
     const filesEnabled = _get(values, "files.enabled", false);
     const filesMissing = filesEnabled && !numberOfFiles;
-    return isSubmitting || filesMissing || disableSubmitForReviewButton;
+    const record = getInputFromDOM("deposits-record");
+    const permissions = getInputFromDOM("deposits-record-permissions");
+
+    var disabled;
+    record["id"]
+    ? disabled = isSubmitting || filesMissing || disableSubmitForReviewButton || !permissions?.can_publish
+    : disabled = isSubmitting || filesMissing || disableSubmitForReviewButton
+
+    return disabled;
   };
 
   render() {
@@ -65,8 +73,8 @@ class BMASubmitReviewButtonComponent extends Component {
     const { isConfirmModalOpen } = this.state;
 
     const btnLblSubmitReview = isRecordSubmittedForReview
-      ? i18next.t("Submitted for review")
-      : i18next.t("Submit for review");
+      ? i18next.t("Share with community")
+      : i18next.t("Share with community");
     const buttonLbl = directPublish
       ? i18next.t("Share with community")
       : btnLblSubmitReview;

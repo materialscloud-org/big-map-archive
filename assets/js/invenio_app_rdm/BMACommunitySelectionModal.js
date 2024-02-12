@@ -63,7 +63,7 @@ export class BMACommunitySelectionModalComponent extends Component {
       onModalChange,
       modalOpen,
       apiConfigs,
-      handleClose,
+      // handleClose,
       record,
     } = this.props;
 
@@ -117,7 +117,7 @@ BMACommunitySelectionModalComponent.propTypes = {
   displaySelected: PropTypes.bool,
   modalOpen: PropTypes.bool,
   apiConfigs: PropTypes.object,
-  handleClose: PropTypes.func.isRequired,
+  // handleClose: PropTypes.func.isRequired,
   record: PropTypes.object.isRequired,
 };
 

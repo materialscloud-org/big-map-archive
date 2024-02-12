@@ -36,9 +36,18 @@ def test_get_community(token_com1_reader, communities):
     r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
     assert r.status_code == 200
 
+    # can read also info of communities not belonging to because
+    # CommunityPermissionPolicy.can_read is set to AnyUser()
     slug = 'com2'
     r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
-    assert r.status_code == 403
+    assert r.status_code == 200
+
+    # anuthorised user
+    # can read info of community because
+    # CommunityPermissionPolicy.can_read is set to AnyUser()
+    h["Authorization"] = ""
+    r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
+    assert r.status_code == 200
 
 
 def test_add_community(token_com1_reader, com3):
@@ -135,7 +144,7 @@ def test_rename_slug_community(token_com1_reader):
 def test_get_communities(token_com1_reader):
     """Get communities.
 
-    Check user can see only the user communities because all communities are restricted.
+    CommunityPermissionPolicy.can_read is set to AnyUser() therefore anyone can see communities infos.
     """
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
@@ -146,6 +155,8 @@ def test_get_communities(token_com1_reader):
     assert r.json()["hits"]["hits"][0]["slug"] == "com1"
 
     # anuthorised user
+    # can not read info of communities even if
+    # CommunityPermissionPolicy.can_read is set to AnyUser()
     h["Authorization"] = ""
     r = requests.get(f"{api}/api/communities", headers=h, verify=False)
     assert r.status_code == 403
@@ -198,6 +209,9 @@ def test_update_community_logo(token_com1_reader, token_com2_reader):
     h["Authorization"] = ""
     r = requests.put(f"{api}/api/communities/{community1_id}/logo", headers=h, verify=False)
     assert r.status_code == 400
+
+    # reset content-type for next tests
+    h["Content-Type"] = "application/json"
 
 
 # def test_get_community_logo(token_com1_reader, token_com2_reader):
@@ -289,7 +303,6 @@ def test_remove_records_community1(token_com1_reader):
     """Test 1: remove records from community1, DENY"""
     # record header Authorisation
     h["Authorization"] = f"Bearer {token_com1_reader}"
-
     r = requests.delete(f"{api}/api/communities/com1/records", headers=h, verify=False)
     assert r.status_code == 403
 
