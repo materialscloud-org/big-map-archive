@@ -18,6 +18,7 @@ import {
   DepositFormSubmitContext,
 } from "@js/invenio_rdm_records/src/deposit/api/DepositFormSubmitContext";
 import { DRAFT_PUBLISH_STARTED } from "@js/invenio_rdm_records/src/deposit/state/types";
+import { getInputFromDOM } from "@js/invenio_rdm_records/";
 
 class BMAPublishButtonComponent extends Component {
   state = { isConfirmModalOpen: false };
@@ -47,8 +48,16 @@ class BMAPublishButtonComponent extends Component {
     const filesEnabled = _get(values, "files.enabled", false);
     const filesMissing = filesEnabled && !numberOfFiles;
     const communityIds = _get(values, "parent.communities.ids", []);
-    const communityMissing = communityIds.length === 0
-    return isSubmitting || filesMissing || communityMissing;
+    const communityMissing = communityIds.length === 0;
+    const record = getInputFromDOM("deposits-record");
+    const permissions = getInputFromDOM("deposits-record-permissions");
+
+    var disabled;
+    record["id"]
+    ? disabled = isSubmitting || filesMissing || communityMissing || !permissions?.can_publish
+    : disabled = isSubmitting || filesMissing || communityMissing
+
+    return disabled;
   };
 
   render() {

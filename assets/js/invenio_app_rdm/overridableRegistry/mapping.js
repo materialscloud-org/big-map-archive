@@ -10,6 +10,7 @@ import {BMAContribSearchAppFacetsWithConfig} from "../BMAContribSearchAppFacetsW
 import {BMARecordsResultsListItemLayout} from "../BMARecordsResultsListItemLayout";
 import {BMASearchAppLayout} from "../BMASearchAppLayout";
 import {BMASearchFiltersToggleElement} from "../BMASearchFiltersToggleElement";
+import { BMAShareModal } from "../BMAShareModal";
 
 export const overriddenComponents = {
     "InvenioAppRdm.Deposit.CardDepositStatusBox.container": BMACardDepositStatusBox,
@@ -37,4 +38,5 @@ export const overriddenComponents = {
     "InvenioAppRdm.Search.SearchApp.layout": BMASearchAppLayout,
     "InvenioAppRdm.Search.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
     "InvenioAppRdm.DashboardUploads.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
+    "InvenioAppRdm.RecordLandingPage.RecordManagement.ShareButton.ShareModal.component": BMAShareModal,
 }
