@@ -10,6 +10,7 @@ import {BMAContribSearchAppFacetsWithConfig} from "../BMAContribSearchAppFacetsW
 import {BMARecordsResultsListItemLayout} from "../BMARecordsResultsListItemLayout";
 import {BMASearchAppLayout} from "../BMASearchAppLayout";
 import {BMASearchFiltersToggleElement} from "../BMASearchFiltersToggleElement";
+import { BMAFormFeedback } from "../BMAFormFeedback";
 import { BMAShareModal } from "../BMAShareModal";
 
 export const overriddenComponents = {
@@ -38,5 +39,6 @@ export const overriddenComponents = {
     "InvenioAppRdm.Search.SearchApp.layout": BMASearchAppLayout,
     "InvenioAppRdm.Search.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
     "InvenioAppRdm.DashboardUploads.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
+    "InvenioAppRdm.Deposit.FormFeedback.container": BMAFormFeedback,
     "InvenioAppRdm.RecordLandingPage.RecordManagement.ShareButton.ShareModal.component": BMAShareModal,
 }
