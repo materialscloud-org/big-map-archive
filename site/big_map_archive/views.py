@@ -23,9 +23,9 @@ def bma_search():
     return render_template(current_app.config["SEARCH_UI_SEARCH_TEMPLATE"])
 
 
-def bma_register():
-    """Register view function: /signup"""
-    return redirect(url_for_security('login'))
+# def bma_register():
+#     """Register view function: /signup"""
+#     return redirect(url_for_security('login'))
 
 
 def bma_send_confirmation():
@@ -49,7 +49,7 @@ def create_blueprint(app):
         app.view_functions["invenio_search_ui.search"] = bma_search
 
         # prevent users from creating accounts by redirecting to login page
-        app.view_functions["security.register"] = bma_register
+        # app.view_functions["security.register"] = bma_register
 
         # prevent users from asking for new confirmation email
         app.view_functions["security.send_confirmation"] = bma_send_confirmation
@@ -115,6 +115,7 @@ def invenio_app_rdm_requests_ui_create_ui_blueprint(app):
     return blueprint
 
 
+# Override all ui blueprint invenio_notifications_settings
 def invenio_notifications_create_blueprint_settings(app):
     """Override all ui blueprint invenio_notifications_settings routes in invenio_notifications.
 
