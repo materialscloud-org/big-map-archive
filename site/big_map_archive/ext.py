@@ -5,15 +5,13 @@
 # BIG MAP Archive is free software; you can redistribute it and/or modify
 # it under the terms of the MIT License; see LICENSE file for more details.
 
-"""RDM Record Communities Service."""
+"""BIG-MAP Archive extensions."""
 import warnings
 from datetime import datetime
-from functools import partial
 
 from flask import current_app
 from invenio_accounts.models import User
 from invenio_app_rdm.records_ui.utils import set_default_value
-from invenio_drafts_resources.services.records.schema import RecordSchema
 from invenio_drafts_resources.services.records.uow import ParentRecordCommitOp
 from invenio_i18n import lazy_gettext as _
 from invenio_rdm_records.fixtures.tasks import get_authenticated_identity
@@ -24,37 +22,17 @@ from invenio_rdm_records.services.communities.service import \
     RecordCommunitiesService
 from invenio_rdm_records.services.errors import ReviewNotFoundError
 from invenio_rdm_records.services.schemas import RDMRecordSchema
-from invenio_rdm_records.services.schemas.access import AccessSchema
-from invenio_rdm_records.services.schemas.files import FilesSchema
 from invenio_rdm_records.services.schemas.metadata import (
-    ContributorSchema, CreatorSchema, DateSchema, DescriptionSchema,
-    FeatureSchema, FundingSchema, ReferenceSchema, RelatedIdentifierSchema,
-    RightsSchema, TitleSchema, _not_blank, record_identifiers_schemes)
-from invenio_rdm_records.services.schemas.parent import RDMParentSchema
-from invenio_rdm_records.services.schemas.pids import PIDSchema
-from invenio_rdm_records.services.schemas.record import validate_scheme
-from invenio_rdm_records.services.schemas.stats import StatsSchema
-from invenio_rdm_records.services.schemas.tombstone import (
-    DeletionStatusSchema, TombstoneSchema)
+    RelatedIdentifierSchema, record_identifiers_schemes)
 from invenio_rdm_records.services.schemas.utils import dump_empty
-from invenio_rdm_records.services.schemas.versions import VersionsSchema
 from invenio_records.systemfields.relations.errors import InvalidRelationValue
-from invenio_records_resources.services.custom_fields import CustomFieldsSchema
 from invenio_records_resources.services.uow import (RecordCommitOp,
                                                     RecordDeleteOp,
                                                     RecordIndexOp,
                                                     unit_of_work)
-from invenio_vocabularies.contrib.subjects.schema import SubjectRelationSchema
 from invenio_vocabularies.services.schema import \
     VocabularyRelationSchema as VocabularySchema
-from marshmallow import (EXCLUDE, Schema, ValidationError, fields, post_dump,
-                         validate, validates_schema)
-from marshmallow_utils.fields import (EDTFDateString, IdentifierSet,
-                                      NestedAttribute, SanitizedHTML,
-                                      SanitizedUnicode)
-from marshmallow_utils.permissions import FieldPermissionsMixin
-from marshmallow_utils.schemas import \
-    IdentifierSchema as marshmallow_utils_IdentifierSchema
+from marshmallow import ValidationError, fields, validates_schema
 from werkzeug.utils import cached_property
 
 
@@ -188,81 +166,9 @@ def submit(self, identity, id_, data=None, require_review=False, uow=None):
     return request_item
 
 
-# Make upload form's description required
-class MetadataSchema(Schema):
-    """Schema for the record metadata."""
-    # Metadata fields
-    resource_type = fields.Nested(VocabularySchema, required=True)
-    creators = fields.List(
-        fields.Nested(CreatorSchema),
-        required=True,
-        validate=validate.Length(min=1, error=_("Missing data for required field.")),
-    )
-    title = SanitizedUnicode(required=True, validate=validate.Length(min=3))
-    additional_titles = fields.List(fields.Nested(TitleSchema))
-    publisher = SanitizedUnicode()
-    publication_date = EDTFDateString(required=True)
-    subjects = fields.List(fields.Nested(SubjectRelationSchema))
-    contributors = fields.List(fields.Nested(ContributorSchema))
-    dates = fields.List(fields.Nested(DateSchema))
-    languages = fields.List(fields.Nested(VocabularySchema))
-    # alternate identifiers
-    identifiers = IdentifierSet(
-        fields.Nested(
-            partial(marshmallow_utils_IdentifierSchema, allowed_schemes=record_identifiers_schemes)
-        )
-    )
-    related_identifiers = fields.List(fields.Nested(RelatedIdentifierSchema))
-    sizes = fields.List(
-        SanitizedUnicode(validate=_not_blank(_("Size cannot be a blank string.")))
-    )
-    formats = fields.List(
-        SanitizedUnicode(validate=_not_blank(_("Format cannot be a blank string.")))
-    )
-    version = SanitizedUnicode()
-    rights = fields.List(fields.Nested(RightsSchema))
-    description = SanitizedHTML(required=True, validate=validate.Length(min=3))
-    additional_descriptions = fields.List(fields.Nested(DescriptionSchema))
-    locations = fields.Nested(FeatureSchema)
-    funding = fields.List(fields.Nested(FundingSchema))
-    references = fields.List(fields.Nested(ReferenceSchema))
-
-
-class BMA_RDMRecordSchema(RecordSchema, FieldPermissionsMixin):
-    """Record schema."""
-    class Meta:
-        """Meta attributes for the schema."""
-
-        unknown = EXCLUDE
-
-    # ATTENTION: In this schema you should be using the ``NestedAttribute``
-    # instead  of Marshmallow's ``fields.Nested``. Using NestedAttribute
-    # ensures that the nested schema will receive the system field instead of
-    # the record dict (i.e. record.myattr instead of record['myattr']).
-    pids = fields.Dict(
-        keys=SanitizedUnicode(validate=validate_scheme),
-        values=fields.Nested(PIDSchema),
-    )
-    metadata = NestedAttribute(MetadataSchema)
-    custom_fields = NestedAttribute(
-        partial(CustomFieldsSchema, fields_var="RDM_CUSTOM_FIELDS")
-    )
-    # provenance
-    access = NestedAttribute(AccessSchema)
-    files = NestedAttribute(FilesSchema)
-    media_files = NestedAttribute(FilesSchema)
-    # notes = fields.List(fields.Nested(InternalNoteSchema))
-    revision = fields.Integer(dump_only=True)
-    versions = NestedAttribute(VersionsSchema, dump_only=True)
-    parent = NestedAttribute(RDMParentSchema)
-    is_published = fields.Boolean(dump_only=True)
-    status = fields.String(dump_only=True)
-
-    tombstone = fields.Nested(TombstoneSchema, dump_only=True)
-    deletion_status = fields.Nested(DeletionStatusSchema, dump_only=True)
-
-    stats = NestedAttribute(StatsSchema, dump_only=True)
-    # schema_version = fields.Integer(dump_only=True)
+# Override function default_nested in RDMRecordSchema to add publication_date
+class BMARecordSchema(RDMRecordSchema):
+    """Override function default_nested in RDMRecordSchema to add publication_date"""
 
     def default_nested(self, data):
         """Serialize fields as empty dict for partial drafts.
@@ -281,23 +187,6 @@ class BMA_RDMRecordSchema(RecordSchema, FieldPermissionsMixin):
             data["pids"] = {}
         if not data.get("custom_fields"):
             data["custom_fields"] = {}
-        return data
-
-    def hide_tombstone(self, data):
-        """Hide tombstone info if the record isn't deleted and metadata if it is."""
-        is_deleted = (data.get("deletion_status") or {}).get("is_deleted", False)
-        tombstone_visible = (data.get("tombstone") or {}).get("is_visible", True)
-
-        if not is_deleted or not tombstone_visible:
-            data.pop("tombstone", None)
-
-        return data
-
-    @post_dump
-    def post_dump(self, data, many, **kwargs):
-        """Perform some updates on the dumped data."""
-        data = self.default_nested(data)
-        data = self.hide_tombstone(data)
         return data
 
 
