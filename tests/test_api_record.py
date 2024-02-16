@@ -474,6 +474,49 @@ def test_publish_record3(com1_reader, token_com1_reader, minimal_allowed_draft, 
     assert r.status_code == 202
 
 
+# Publish record with files and community but not description
+def test_publish_record4(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test 4: publish record with file and community without description, DENY.
+
+    Check it is not possible to create record with no description.
+    """
+
+    # record header Authorisation
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # file header Authorisation
+    fh["Authorization"] = f"Bearer {token_com1_reader}"
+
+    record = deepcopy(minimal_allowed_draft)
+
+    assert communities
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1
+    community1_id = list(community1.hits)[0]["id"]
+    assert community1_id
+
+    record["metadata"]["description"] = ""
+
+    # Create draft
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    links = r.json()['links']
+    id = r.json()['id']
+
+    # Add draft to community: create community-submission request
+    add_community_to_draft(com1_reader, community1_id, id)
+
+    # Add file
+    add_file(h, fh, links, filepath)
+
+    # Accept review and publish to community
+    links["submit-review"] = f"{links['publish'].rstrip('publish')}submit-review"
+    r = requests.post(links["submit-review"], headers=h, verify=False)
+    assert r.text == '{"status": 400, "message": "A validation error occurred.", "errors": [{"field": "metadata.description", "messages": ["Missing data for required field."]}]}'
+    assert r.status_code == 400
+    delete_draft(api, h, id)
+
+
 # Published record: update access, set access to public
 def test_published_record_update_access(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
     """Test: edit published record and set access to public and embargo to True.
