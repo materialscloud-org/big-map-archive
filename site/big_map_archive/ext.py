@@ -9,7 +9,8 @@
 import warnings
 from datetime import datetime
 
-from flask import current_app
+from flask import current_app, g
+from flask_resources import resource_requestctx
 from invenio_accounts.models import User
 from invenio_app_rdm.records_ui.utils import set_default_value
 from invenio_drafts_resources.services.records.uow import ParentRecordCommitOp
@@ -26,10 +27,13 @@ from invenio_rdm_records.services.schemas.metadata import (
     RelatedIdentifierSchema, record_identifiers_schemes)
 from invenio_rdm_records.services.schemas.utils import dump_empty
 from invenio_records.systemfields.relations.errors import InvalidRelationValue
+from invenio_records_resources.resources.files.resource import (
+    FileResource, request_view_args)
 from invenio_records_resources.services.uow import (RecordCommitOp,
                                                     RecordDeleteOp,
                                                     RecordIndexOp,
                                                     unit_of_work)
+from invenio_stats.proxies import current_stats
 from invenio_vocabularies.services.schema import \
     VocabularyRelationSchema as VocabularySchema
 from marshmallow import ValidationError, fields, validates_schema
@@ -241,6 +245,29 @@ def init_s3fs_info(self):
         info['client_kwargs']['region_name'] = region_name
 
     return info
+
+
+# Always download files as attachment
+class BMA_RDMFileResource(FileResource):
+    @request_view_args
+    def read_content(self):
+        """Read file content.
+
+        Override function in RDMFileResource to always download
+        file as attachment and avoid showing the Object Store url.
+        """
+        item = self.service.get_file_content(
+            g.identity,
+            resource_requestctx.view_args["pid_value"],
+            resource_requestctx.view_args["key"],
+        )
+
+        # emit file download stats event
+        obj = item._file.object_version
+        emitter = current_stats.get_event_emitter("file-download")
+        if obj is not None and emitter is not None:
+            emitter(current_app, record=item._record, obj=obj, via_api=True)
+        return item.send_file(as_attachment=True)
 
 
 # When trying to publish a draft, raise an exception if no community has been selected for the draft
