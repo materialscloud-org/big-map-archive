@@ -36,18 +36,14 @@ def test_get_community(token_com1_reader, communities):
     r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
     assert r.status_code == 200
 
-    # can read also info of communities not belonging to because
-    # CommunityPermissionPolicy.can_read is set to AnyUser()
     slug = 'com2'
     r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
-    assert r.status_code == 200
+    assert r.status_code == 403
 
     # anuthorised user
-    # can read info of community because
-    # CommunityPermissionPolicy.can_read is set to AnyUser()
     h["Authorization"] = ""
     r = requests.get(f"{api}/api/communities/{slug}", headers=h, verify=False)
-    assert r.status_code == 200
+    assert r.status_code == 403
 
 
 def test_add_community(token_com1_reader, com3):
