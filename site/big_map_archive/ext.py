@@ -13,6 +13,7 @@ from flask import current_app, g
 from flask_resources import resource_requestctx
 from invenio_accounts.models import User
 from invenio_app_rdm.records_ui.utils import set_default_value
+from invenio_drafts_resources.services.records.service import RecordService
 from invenio_drafts_resources.services.records.uow import ParentRecordCommitOp
 from invenio_i18n import lazy_gettext as _
 from invenio_rdm_records.fixtures.tasks import get_authenticated_identity
@@ -22,6 +23,7 @@ from invenio_rdm_records.requests.decorators import request_next_link
 from invenio_rdm_records.services.communities.service import \
     RecordCommunitiesService
 from invenio_rdm_records.services.errors import ReviewNotFoundError
+from invenio_rdm_records.services.review.service import ReviewService
 from invenio_rdm_records.services.schemas import RDMRecordSchema
 from invenio_rdm_records.services.schemas.metadata import (
     RelatedIdentifierSchema, record_identifiers_schemes)
@@ -29,6 +31,7 @@ from invenio_rdm_records.services.schemas.utils import dump_empty
 from invenio_records.systemfields.relations.errors import InvalidRelationValue
 from invenio_records_resources.resources.files.resource import (
     FileResource, request_view_args)
+from invenio_records_resources.services.errors import PermissionDeniedError
 from invenio_records_resources.services.uow import (RecordCommitOp,
                                                     RecordDeleteOp,
                                                     RecordIndexOp,
@@ -124,50 +127,62 @@ def new_record():
 
 # Override function submit in invenio_rdm_records.services.review.service
 # Do not send an email to the community owner(s) when a record is directly published to that community
-@request_next_link()
-@unit_of_work()
-def submit(self, identity, id_, data=None, require_review=False, uow=None):
-    """Submit record for review or direct publish to the community."""
+class BMAReviewService(ReviewService):
 
-    if not isinstance(require_review, bool):
-        raise ValidationError(
-            _("Must be a boolean, true or false"),
-            field_name="require_review",
+    @request_next_link()
+    @unit_of_work()
+    def submit(self, identity, id_, data=None, require_review=False, uow=None):
+        """Submit record for review or direct publish to the community."""
+
+        if not isinstance(require_review, bool):
+            raise ValidationError(
+                _("Must be a boolean, true or false"),
+                field_name="require_review",
+            )
+
+        draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+        # Preconditions
+        if draft.parent.review is None:
+            raise ReviewNotFoundError()
+
+        request_type = draft.parent.review.get_object()["type"]
+        self._validate_request_type(request_type)
+
+        # since it is submit review action, assume the receiver is community
+        community = draft.parent.review.receiver.resolve()
+
+        # Check permission
+        self.require_permission(identity, "update_draft", record=draft)
+
+        # Check identity is member of community or is system_process.
+        # To prevent a user with a secretlink for a record in a community to which the user does not belong
+        # to create a new record in that community using the link upload/new?community=slug
+        identity_role = [n.value for n in identity.provides if n.method == "system_role"]
+        if "system_process" not in identity_role:
+            identity_communities_ids = [n.value for n in identity.provides if n.method == "community"]
+            identity_community_id = [_id for _id in identity_communities_ids if _id == str(community.id)]
+            if not identity_community_id:
+                raise PermissionDeniedError('You are not allowed to share with the selected community.')
+
+        # create review request
+        request_item = current_rdm_records.community_inclusion_service.submit(
+            identity, draft, community, draft.parent.review, data, uow
         )
+        request = request_item._request
 
-    draft = self.draft_cls.pid.resolve(id_, registered_only=False)
-    # Preconditions
-    if draft.parent.review is None:
-        raise ReviewNotFoundError()
+        # This shouldn't be required BUT because of the caching mechanism
+        # in the review systemfield, the review should be set with the updated
+        # request object
+        draft.parent.review = request
+        uow.register(ParentRecordCommitOp(draft.parent))
 
-    request_type = draft.parent.review.get_object()["type"]
-    self._validate_request_type(request_type)
+        if not require_review:
+            request_item = current_rdm_records.community_inclusion_service.include(
+                identity, community, request, uow
+            )
 
-    # since it is submit review action, assume the receiver is community
-    community = draft.parent.review.receiver.resolve()
-
-    # Check permission
-    self.require_permission(identity, "update_draft", record=draft)
-
-    # create review request
-    request_item = current_rdm_records.community_inclusion_service.submit(
-        identity, draft, community, draft.parent.review, data, uow
-    )
-    request = request_item._request
-
-    # This shouldn't be required BUT because of the caching mechanism
-    # in the review systemfield, the review should be set with the updated
-    # request object
-    draft.parent.review = request
-    uow.register(ParentRecordCommitOp(draft.parent))
-
-    if not require_review:
-        request_item = current_rdm_records.community_inclusion_service.include(
-            identity, community, request, uow
-        )
-
-    uow.register(RecordIndexOp(draft, indexer=self.indexer))
-    return request_item
+        uow.register(RecordIndexOp(draft, indexer=self.indexer))
+        return request_item
 
 
 # Override function default_nested in RDMRecordSchema to add publication_date
@@ -271,49 +286,51 @@ class BMA_RDMFileResource(FileResource):
 
 
 # When trying to publish a draft, raise an exception if no community has been selected for the draft
-@unit_of_work()
-def publish(self, identity, id_, uow=None, expand=False):
-    """Publish a draft.
+class BMARecordService(RecordService):
 
-    Idea:
-        - Get the draft from the data layer (draft is not passed in)
-        - Validate it more strictly than when it was originally saved
-          (drafts can be incomplete but only complete drafts can be turned
-          into records)
-        - Create or update associated (published) record with data
-    """
-    # Get the draft
-    draft = self.draft_cls.pid.resolve(id_, registered_only=False)
-    self.require_permission(identity, "publish", record=draft)
+    @unit_of_work()
+    def publish(self, identity, id_, uow=None, expand=False):
+        """Publish a draft.
 
-    # Validate the draft strictly - since a draft can be saved with errors
-    # we do a strict validation here to make sure only valid drafts can be
-    # published.
-    self._validate_draft(identity, draft)
+        Idea:
+            - Get the draft from the data layer (draft is not passed in)
+            - Validate it more strictly than when it was originally saved
+            (drafts can be incomplete but only complete drafts can be turned
+            into records)
+            - Create or update associated (published) record with data
+        """
+        # Get the draft
+        draft = self.draft_cls.pid.resolve(id_, registered_only=False)
+        self.require_permission(identity, "publish", record=draft)
 
-    # Raise an exception if no community has been selected for the draft
-    if not bool(draft.parent.communities.ids):
-        raise Exception('Please select a community.')
+        # Validate the draft strictly - since a draft can be saved with errors
+        # we do a strict validation here to make sure only valid drafts can be
+        # published.
+        self._validate_draft(identity, draft)
 
-    # Create the record from the draft
-    latest_id = draft.versions.latest_id
-    record = self.record_cls.publish(draft)
+        # Raise an exception if no community has been selected for the draft
+        if not bool(draft.parent.communities.ids):
+            raise Exception('Please select a community.')
 
-    # Run components
-    self.run_components("publish", identity, draft=draft, record=record, uow=uow)
+        # Create the record from the draft
+        latest_id = draft.versions.latest_id
+        record = self.record_cls.publish(draft)
 
-    # Commit and index
-    uow.register(RecordCommitOp(record, indexer=self.indexer))
-    uow.register(RecordDeleteOp(draft, force=False, indexer=self.indexer))
+        # Run components
+        self.run_components("publish", identity, draft=draft, record=record, uow=uow)
 
-    if latest_id:
-        self._reindex_latest(latest_id, uow=uow)
+        # Commit and index
+        uow.register(RecordCommitOp(record, indexer=self.indexer))
+        uow.register(RecordDeleteOp(draft, force=False, indexer=self.indexer))
 
-    return self.result_item(
-        self,
-        identity,
-        record,
-        links_tpl=self.links_item_tpl,
-        expandable_fields=self.expandable_fields,
-        expand=expand,
-    )
+        if latest_id:
+            self._reindex_latest(latest_id, uow=uow)
+
+        return self.result_item(
+            self,
+            identity,
+            record,
+            links_tpl=self.links_item_tpl,
+            expandable_fields=self.expandable_fields,
+            expand=expand,
+        )
