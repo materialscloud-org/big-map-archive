@@ -5,6 +5,7 @@ from flask_principal import AnonymousIdentity
 from flask_security.utils import url_for_security
 
 from .deposits import deposit_edit
+from .infos import faqs
 
 #
 # BIG-MAP Archive blueprint
@@ -36,6 +37,8 @@ def bma_send_confirmation():
 def create_blueprint(app):
     """Register BIG-MAP Archive blueprint routes on app."""
 
+    routes_bmarchive = app.config.get("BM_ARCHIVE_ROUTES")
+
     # override views functions
     @app.before_first_request
     def override_view_functions():
@@ -58,6 +61,12 @@ def create_blueprint(app):
         "big_map_archive",
         __name__,
         template_folder="./templates",
+    )
+
+    # "/help/faqs",
+    blueprint.add_url_rule(
+        routes_bmarchive["faqs"],
+        view_func=faqs,
     )
 
     # Add URL rules
