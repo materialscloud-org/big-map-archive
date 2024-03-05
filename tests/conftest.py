@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 from flask import current_app
+from flask_principal import Identity, Need, UserNeed
 from invenio_access.permissions import system_identity
 from invenio_accounts.proxies import current_datastore
 from invenio_communities import current_communities
@@ -86,6 +87,7 @@ def com3():
         }
     }
 
+
 @pytest.fixture
 def com_public_open():
     return {
@@ -140,6 +142,23 @@ def com1_reader(users, communities):
 
 
 @pytest.fixture()
+def identity_com1(com1_reader, communities):
+    """Identity fixture for com1_reader."""
+    user = com1_reader
+    i = Identity(user.id)
+    assert communities
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1.total == 1
+    community1_id = list(community1.hits)[0]["id"]
+
+    i.provides.add(UserNeed(user.id))
+    i.provides.add(Need(method="system_role", value="any_user"))
+    i.provides.add(Need(method="system_role", value="authenticated_user"))
+    i.provides.add(Need(method="community", value=community1_id))
+    return i
+
+
+@pytest.fixture()
 def com1_reader2(users, communities):
     """Create user fixture
 
@@ -164,6 +183,23 @@ def com1_reader2(users, communities):
     except AlreadyMemberError:
         pass
     return com1_reader2
+
+
+@pytest.fixture()
+def identity2_com1(com1_reader2, communities):
+    """Identity fixture for com1_reader2."""
+    user = com1_reader2
+    i = Identity(user.id)
+    assert communities
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1.total == 1
+    community1_id = list(community1.hits)[0]["id"]
+
+    i.provides.add(UserNeed(user.id))
+    i.provides.add(Need(method="system_role", value="any_user"))
+    i.provides.add(Need(method="system_role", value="authenticated_user"))
+    i.provides.add(Need(method="community", value=community1_id))
+    return i
 
 
 @pytest.fixture()
@@ -244,6 +280,23 @@ def com2_reader(users, communities):
     except AlreadyMemberError:
         pass
     return com2_reader
+
+
+@pytest.fixture()
+def identity_com2(com2_reader, communities):
+    """Identity fixture for com1_reader."""
+    user = com2_reader
+    i = Identity(user.id)
+    assert communities
+    community2 = current_communities.service.search(system_identity, q="slug:com2")
+    assert community2.total == 1
+    community2_id = list(community2.hits)[0]["id"]
+
+    i.provides.add(UserNeed(user.id))
+    i.provides.add(Need(method="system_role", value="any_user"))
+    i.provides.add(Need(method="system_role", value="authenticated_user"))
+    i.provides.add(Need(method="community", value=community2_id))
+    return i
 
 
 @pytest.fixture()
@@ -346,7 +399,6 @@ def oauth2_client_com1_curator(com1_curator):
     return client.client_id
 
 
-
 @pytest.fixture()
 def oauth2_client_com2_reader(com2_reader):
     try:
@@ -369,6 +421,27 @@ def oauth2_client_com2_reader(com2_reader):
 
 
 @pytest.fixture()
+def oauth2_client_com1_reader2(com1_reader2):
+    try:
+        client = Client.query.filter(Client.client_id == "client_test_com1_reader2").one()
+    except NoResultFound:
+        with db.session.begin_nested():
+            client = Client(
+                client_id="client_test_com1_reader2",
+                client_secret="client_test_com1_reader2",
+                name="client_test_com1_reader2",
+                description="",
+                is_confidential=False,
+                user_id=com1_reader2.id,
+                _redirect_uris="",
+                _default_scopes="",
+            )
+            db.session.add(client)
+        db.session.commit()
+    return client.client_id
+
+
+@pytest.fixture()
 def token_com1_reader(com1_reader, oauth2_client_com1_reader):
     try:
         token = Token.query.filter(Token.client_id == "client_test_com1_reader").one()
@@ -376,7 +449,6 @@ def token_com1_reader(com1_reader, oauth2_client_com1_reader):
         token = generate_pat_token(db, com1_reader, oauth2_client_com1_reader, "rat_token_com1_reader", scope="user:email")["token"]
     assert token
     return token.access_token
-
 
 
 @pytest.fixture()
@@ -396,6 +468,16 @@ def token_com2_reader(com2_reader, oauth2_client_com2_reader):
     except NoResultFound:
         token = generate_pat_token(db, com2_reader, oauth2_client_com2_reader, "rat_token_com2_reader", scope="user:email")["token"]
         assert token
+    return token.access_token
+
+
+@pytest.fixture()
+def token_com1_reader2(com1_reader2, oauth2_client_com1_reader2):
+    try:
+        token = Token.query.filter(Token.client_id == "client_test_com1_reader2").one()
+    except NoResultFound:
+        token = generate_pat_token(db, com1_reader2, oauth2_client_com1_reader2, "rat_token_com1_reader2", scope="user:email")["token"]
+    assert token
     return token.access_token
 
 

@@ -11,6 +11,8 @@ import json
 
 import requests
 from flask import current_app
+from invenio_access.permissions import system_identity
+from invenio_communities import current_communities
 from invenio_oauth2server.models import Token
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.records.api import RDMDraft
@@ -93,3 +95,17 @@ def add_community_to_draft(member, community_id, record_id):
     BMArchiveRecordCommunitiesService(
         config=RDMRecordCommunitiesConfig.build(app=current_app)
     ).add_draft_to_community(member, community_id, record)
+
+
+def get_community_id(slug):
+    """ Get community id from slug.
+
+    @param slug: slug of community
+    returns: community id
+    """
+
+    community = current_communities.service.search(system_identity, q=f"slug:{slug}")
+    assert community
+    community_id = list(community.hits)[0]["id"]
+    assert community_id
+    return community_id
