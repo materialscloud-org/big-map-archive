@@ -15,10 +15,13 @@ from invenio_indexer.api import RecordIndexer
 from invenio_pidstore.errors import PIDDoesNotExistError, PIDUnregistered
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
+from invenio_rdm_records.secret_links import SecretLink
+from invenio_rdm_records.services.generators import SecretLinks
 from invenio_records_resources.services.uow import RecordCommitOp, unit_of_work
 from invenio_requests.proxies import current_requests_service
 from invenio_requests.records.api import Request
 from invenio_search.engine import dsl
+from itsdangerous import SignatureExpired
 from sqlalchemy.exc import NoResultFound
 
 
@@ -85,6 +88,55 @@ def get_user_identity(user):
     identity = get_identity(user)
     identity.provides.add(authenticated_user)
     return identity
+
+
+def get_secret_link_permission(token):
+    """ Get permission level of token
+
+    @param token: token
+    @returns: permission level
+    """
+    try:
+        secretlink = SecretLink.get_by_token(token)
+    except SignatureExpired:
+        return
+    return secretlink.permission_level
+
+
+def record_identity_token_match(record, identity):
+    """ Check if any of the identity edit secret links is equal to one of the record.
+
+    @param record: record
+    @param identity: identity
+    @returns: ids of secret links of identity that match those of the record
+    """
+    secret_link_need = SecretLinks("edit").needs(record=record)
+    secret_links_ids = [n.value for n in secret_link_need if n.method == "link"]
+    identity_secret_links_ids = [n.value for n in identity.provides if n.method == "link"]
+    return [id_ for id_ in identity_secret_links_ids if id_ in secret_links_ids]
+
+
+def record_identity_communities_match(record, identity):
+    """ Check if any of the identity communities is equal to one of the record communities.
+
+    @param record: record
+    @param identity: identity
+    @returns: ids of communities of identity that match those of the record
+    """
+    identity_roles = [n.value for n in identity.provides if n.method == "system_role"]
+    if "authenticated_user" not in identity_roles:
+        return []
+
+    identity_communities = [n.value for n in identity.provides if n.method == "community"]
+
+    if getattr(record.parent.communities, "ids", None):
+        record_communities = record.parent.communities.ids
+    else:
+        # draft (deny access when review is not set, this is the case of draft with not yet a community selected)
+        record_communities = [] if "review" not in record.parent else [str(record.parent.review.receiver.resolve().id)]
+
+    return [identity_community for identity_community in identity_communities
+            if identity_community in record_communities]
 
 
 @unit_of_work()

@@ -36,7 +36,37 @@ fh = {
     "Authorization": "Bearer <token>"
 }
 
+
 # Drafts
+def test_get_draft_minimal(token_com1_reader, token_com1_reader2, token_com2_reader, minimal_record):
+    """
+    Test: get minimal draft from different identites
+    """
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+    record = deepcopy(minimal_record)
+
+    record["metadata"]["title"] = "Test draft"
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 200
+
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 403
+
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 403
+
+    h["Authorization"] = ""
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 403
+
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+    delete_draft(api, h, id)
 
 
 def test_create_draft_minimal(token_com1_reader, minimal_record):
@@ -60,8 +90,12 @@ def test_create_draft_minimal(token_com1_reader, minimal_record):
     assert r.json()['metadata']['publication_date'] == datetime.now().strftime("%Y-%m-%d")
 
     assert r.status_code == 201
-
     id = r.json()['id']
+
+    # owner can read the draft
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 200
+
     delete_draft(api, h, id)
 
 
@@ -437,7 +471,8 @@ def test_publish_record2(com1_reader, token_com1_reader, minimal_allowed_draft, 
 
 
 # Publish record with files and community
-def test_publish_record3(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+def test_publish_record3(com1_reader, token_com1_reader, token_com1_reader2,
+                         token_com2_reader, minimal_allowed_draft, communities):
     """Test 3: publish record with file and community, ALLOW"""
 
     # record header Authorisation
@@ -472,6 +507,16 @@ def test_publish_record3(com1_reader, token_com1_reader, minimal_allowed_draft, 
     links["submit-review"] = f"{links['publish'].rstrip('publish')}submit-review"
     r = requests.post(links["submit-review"], headers=h, verify=False)
     assert r.status_code == 202
+
+    # Member of community can read record
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.get(f"{api}/api/records/{id}", headers=h, verify=False)
+    assert r.status_code == 200
+
+    # Member not of the same community can not read record
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.get(f"{api}/api/records/{id}", headers=h, verify=False)
+    assert r.status_code == 403
 
 
 # Publish record with files and community but not description
