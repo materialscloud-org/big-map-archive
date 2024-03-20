@@ -32,17 +32,18 @@ class BMACommunityHeaderComponent extends Component {
         <div className="ui container">
           <div className="ui grid">
             <div className="eleven wide computer sixteen wide mobile sixteen wide tablet column">
-              <ul className="pl-15">
-                <li>This is the <b>main repository</b>, intended for storing and sharing research data.</li>
-                <li>For testing purposes, use the <a href="https://big-map-archive-demo.materialscloud.org/">demo repository</a>.</li>
-                <li>Proceed as follows to privately share a record with a community:</li>
-                  <ul className="pl-15">
-                    <li>Select one of your communities.</li>
-                    <li>Upload or import at least one file.</li>
-                    <li>Fill in the required metadata fields (<span className="color-red">*</span>).</li>
-                    <li>Click the "Share with community" button.</li>
-                  </ul>
+              <div className="pl-15 pt-20">
+                <p>This is the <b>main repository</b>, intended for storing and sharing research data.
+                For testing purposes use the <a href="https://big-map-archive-demo.materialscloud.org/">demo repository</a>.</p>
+                <p className="mb-0">Proceed as follows to share a record with a community:</p>
+                <ul className="mt-0 pl-30">
+                  <li>Select the community you want to share the record with.</li>
+                  <li>Upload or import at least one file.</li>
+                  <li>Fill in the required metadata fields (<span className="color-red">*</span>).</li>
+                  <li>Save the record as draft or click the "Share with community" button to share the record with the members of the community.</li>
                 </ul>
+                <p class="pb-20">Note: only the owner of the record can share the record with the selected community.</p>
+              </div>
             </div>
           </div>
         </div>
