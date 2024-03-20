@@ -249,7 +249,9 @@ it under the terms of the MIT License; see LICENSE file for more details.
                 {%- endblock record_details -%}
 
                 {# Community #}
-                {%- include "invenio_app_rdm/records/details/community.html" %}
+                {%- if community %}
+                    {%- include "invenio_app_rdm/records/details/community.html" %}
+                {%- endif %}
 
                 {%- block record_info -%}
                 <section id="record-info" class="rel-mt-2"

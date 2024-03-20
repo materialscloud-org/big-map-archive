@@ -249,6 +249,14 @@ div.ui.blue.tiny.horizontal.label {
     align-items: center !important;
 }
 
+.mb-0 {
+    margin-bottom: 0px !important;
+}
+
+.mt-0 {
+    margin-top: 0px !important;
+}
+
 /* Banners */
 
 .bma_banner {

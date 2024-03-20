@@ -1,17 +1,25 @@
-import React from "react";
+import React, { useEffect, useRef} from "react";
 import {
     DepositStatusBox,
     SaveButton,
 } from "@js/invenio_rdm_records";
 import {Card, Grid, Icon, Popup} from "semantic-ui-react";
 import {BMASubmitReviewOrPublishButton} from "./BMASubmitReviewOrPublishButton";
-import {BMAShareButtonDraft} from "./AccessLinksDrafts/BMAShareButtonDraft";
+import {ShareButton} from "@js/invenio_app_rdm/landing_page/ShareOptions/ShareButton";
 import { getInputFromDOM } from "@js/invenio_rdm_records/";
 
 const BMACardDepositStatusBox = () => {
     const record = getInputFromDOM("deposits-record");
     const permissions = getInputFromDOM("deposits-record-permissions");
     const id = record["id"];
+
+    // override text in Share button
+    const share_button = useRef(null);
+    useEffect(() => {
+        if (share_button.current) {
+            share_button.current.children[0].innerText = "Share links";
+        }
+    });
 
     return (
         <>
@@ -26,7 +34,14 @@ const BMACardDepositStatusBox = () => {
                             >
                                 <Popup
                                     trigger={<Icon className="ml-10" name="info circle"/>}
-                                    content='Click "Save draft" to create or update a private record. Click "Share with community" to privately share your record with the selected community.'
+                                    content={
+                                    <>
+                                    <p>Click "Save draft" to create or update a private record.</p>
+                                    <p>Click "Share with community" to share your record with the members of the selected community.</p>
+                                    <p>Click "Share links" to manage access links. <i>If this button is not visible save the record as draft and reload the page.
+                                    Only the owner of the record can share the record with the selected community.</i></p>
+                                    <p>Click "Delete" to delete the draft. <i>If this button is not visible save the record as draft and reload the page.</i></p>
+                                    </>}
                                 />
                             </Grid.Column>
                         </Grid.Row>
@@ -46,12 +61,14 @@ const BMACardDepositStatusBox = () => {
                         </Grid.Column>
                         {permissions?.can_manage_record_access &&
                             (<Grid.Column width={16} className="pt-10">
-                                <BMAShareButtonDraft
-                                    disabled={false}
-                                    record={record}
-                                    permissions={permissions}
-                                    fluid
-                                />
+                                <div ref={share_button}>
+                                    <ShareButton
+                                        disabled={false}
+                                        record={record}
+                                        permissions={permissions}
+                                        fluid
+                                    />
+                                </div>
                             </Grid.Column>)
                         }
                     </Grid>

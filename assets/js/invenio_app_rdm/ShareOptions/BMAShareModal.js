@@ -58,10 +58,10 @@ export class BMAShareModal extends Component {
         closeOnDimmerClick={false}
       >
         <Modal.Header as="h2" id="access-link-modal-header">
-          <Icon name="share square" /> {i18next.t("Share access")}
+          <Icon name="share square" /> {i18next.t("Share links")}
           <div class="ui mini message">
             <i aria-hidden="true" class="warning sign icon"/>
-            Access 'Can preview' is equivalent to 'Can view'.
+            Before creating and sharing links with your colleagues read on the different types of access permissions <a href="help/share_links" target="_blank">here</a>.
           </div>
         </Modal.Header>
 

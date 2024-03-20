@@ -11,7 +11,8 @@ import {BMARecordsResultsListItemLayout} from "../BMARecordsResultsListItemLayou
 import {BMASearchAppLayout} from "../BMASearchAppLayout";
 import {BMASearchFiltersToggleElement} from "../BMASearchFiltersToggleElement";
 import { BMAFormFeedback } from "../BMAFormFeedback";
-import { BMAShareModal } from "../BMAShareModal";
+import { BMARecordManagement } from "../BMARecordManagement";
+import { BMAShareModal } from "../ShareOptions/BMAShareModal";
 
 export const overriddenComponents = {
     "InvenioAppRdm.Deposit.CardDepositStatusBox.container": BMACardDepositStatusBox,
@@ -29,16 +30,17 @@ export const overriddenComponents = {
     "InvenioAppRdm.Deposit.AccordionFieldBasicInformation.container": BMAAccordionFieldBasicInformation,
     "InvenioAppRdm.Deposit.AccordionFieldRecommendedInformation.container": () => null,
     "InvenioAppRdm.Deposit.AccordionFieldRelatedWorks.container": () => null,
+    "InvenioAppRdm.Deposit.FormFeedback.container": BMAFormFeedback,
     "ReactInvenioDeposit.FileUploader.NewVersionButton.container": BMANewVersionButton,
     "ReactInvenioDeposit.FileUploaderToolbar.layout": BMAFileUploaderToolbar,
     "InvenioAppRdm.DashboardUploads.ResultsList.item": BMARDMRecordResultsListItem,
     "InvenioAppRdm.DashboardUploads.SearchApp.layout": BMADashboardUploadsSearchLayout,
     "InvenioAppRdm.DashboardUploads.ResultView.resultList": BMADashboardResultViewResultList,
+    "InvenioAppRdm.DashboardUploads.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
     "InvenioAppRdm.Search.SearchApp.facets": BMAContribSearchAppFacetsWithConfig,
     "InvenioAppRdm.Search.RecordsResultsListItem.layout": BMARecordsResultsListItemLayout,
     "InvenioAppRdm.Search.SearchApp.layout": BMASearchAppLayout,
     "InvenioAppRdm.Search.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
-    "InvenioAppRdm.DashboardUploads.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
-    "InvenioAppRdm.Deposit.FormFeedback.container": BMAFormFeedback,
+    "InvenioAppRdm.RecordLandingPage.RecordManagement.container": BMARecordManagement,
     "InvenioAppRdm.RecordLandingPage.RecordManagement.ShareButton.ShareModal.component": BMAShareModal,
 }
