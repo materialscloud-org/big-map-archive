@@ -1,11 +1,11 @@
 import React, { useEffect, useRef} from "react";
 import {
-    DepositStatusBox,
+    PreviewButton,
     SaveButton,
 } from "@js/invenio_rdm_records";
-import {Card, Grid, Icon, Popup} from "semantic-ui-react";
-import {BMASubmitReviewOrPublishButton} from "./BMASubmitReviewOrPublishButton";
-import {ShareButton} from "@js/invenio_app_rdm/landing_page/ShareOptions/ShareButton";
+import { Card, Grid, Icon, Popup } from "semantic-ui-react";
+import { BMASubmitReviewOrPublishButton } from "./BMASubmitReviewOrPublishButton";
+import { ShareButton } from "@js/invenio_app_rdm/landing_page/ShareOptions/ShareButton";
 import { getInputFromDOM } from "@js/invenio_rdm_records/";
 
 const BMACardDepositStatusBox = () => {
@@ -37,11 +37,18 @@ const BMACardDepositStatusBox = () => {
                                     content={
                                     <>
                                     <p>Click "Save draft" to create or update a private record.</p>
-                                    <p>Click "Share with community" to share your record with the members of the selected community.</p>
-                                    <p>Click "Share links" to manage access links. <i>If this button is not visible save the record as draft and reload the page.
-                                    Only the owner of the record can share the record with the selected community.</i></p>
+                                    <p>Click "Preview" to have a preview of the record before it is shared with the community.</p>
+                                    <p>Click "Share with community" to share your record with the members of the selected community.
+                                       <i>Only the owner of the record can share the record with the selected community.</i>
+                                    </p>
+                                    <p>Click "Share links" to manage access links.
+                                       <i>This button is only visible to the owner of the record after the draft has been saved and the page reloaded.</i>
+                                    </p>
                                     <p>Click "Delete" to delete the draft. <i>If this button is not visible save the record as draft and reload the page.</i></p>
-                                    </>}
+                                    </>
+                                    }
+                                    position='top center'
+                                    wide
                                 />
                             </Grid.Column>
                         </Grid.Row>
@@ -50,13 +57,20 @@ const BMACardDepositStatusBox = () => {
                 <Card.Content>
                     <Grid relaxed>
                         <Grid.Column
-                            computer={16}
+                            computer={8}
                             mobile={16}
                             className="pb-0 pt-10"
                         >
                             <SaveButton fluid/>
                         </Grid.Column>
-                        <Grid.Column width={16} className="pt-10">
+                        <Grid.Column
+                            computer={8}
+                            mobile={16}
+                            className="pb-0 pt-10"
+                          >
+                            <PreviewButton fluid />
+                        </Grid.Column>
+                        <Grid.Column width={16} className="pt-20">
                             <BMASubmitReviewOrPublishButton fluid/>
                         </Grid.Column>
                         {permissions?.can_manage_record_access &&
