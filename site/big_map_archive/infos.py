@@ -14,3 +14,9 @@ def faqs():
     return render_template(
         "big_map_archive/faqs.html",
     )
+
+def share_links():
+    """FAQs page."""
+    return render_template(
+        "big_map_archive/share_links.html",
+    )
