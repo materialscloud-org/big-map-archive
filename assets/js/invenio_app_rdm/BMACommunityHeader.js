@@ -42,7 +42,7 @@ class BMACommunityHeaderComponent extends Component {
                   <li>Fill in the required metadata fields (<span className="color-red">*</span>).</li>
                   <li>Save the record as draft or click the "Share with community" button to share the record with the members of the community.</li>
                 </ul>
-                <p class="pb-20">Note: only the owner of the record can share the record with the selected community.</p>
+                <p className="pb-20">Note: only the owner of the record can share the record with the selected community.</p>
               </div>
             </div>
           </div>

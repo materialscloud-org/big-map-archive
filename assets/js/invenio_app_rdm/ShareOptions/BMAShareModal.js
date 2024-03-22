@@ -8,7 +8,7 @@ import React, { Component } from "react";
 import { Icon, Modal, Tab, Container } from "semantic-ui-react";
 import { i18next } from "@translations/invenio_app_rdm/i18next";
 import PropTypes from "prop-types";
-import { LinksTab } from "@js/invenio_app_rdm/landing_page/ShareOptions/AccessLinks/LinksTab.js";
+import { BMALinksTab } from "./AccessLinks/BMALinksTab.js";
 
 export class BMAShareModal extends Component {
   constructor(props) {
@@ -30,7 +30,7 @@ export class BMAShareModal extends Component {
         menuItem: { icon: "linkify", content: "Links" },
         pane: (
           <Tab.Pane key="accessLinks" as={Container}>
-            <LinksTab
+            <BMALinksTab
               record={record}
               accessLinksSearchConfig={accessLinksSearchConfig}
               handleClose={handleClose}
@@ -59,9 +59,9 @@ export class BMAShareModal extends Component {
       >
         <Modal.Header as="h2" id="access-link-modal-header">
           <Icon name="share square" /> {i18next.t("Share links")}
-          <div class="ui mini message">
-            <i aria-hidden="true" class="warning sign icon"/>
-            Before creating and sharing links with your colleagues read on the different types of access permissions <a href="help/share_links" target="_blank">here</a>.
+          <div className="ui mini message">
+            <i aria-hidden="true" className="warning sign icon"/>
+            Before creating and sharing links with your colleagues read on the different types of access permissions <a href="/help/share_links" target="_blank">here</a>.
           </div>
         </Modal.Header>
 
