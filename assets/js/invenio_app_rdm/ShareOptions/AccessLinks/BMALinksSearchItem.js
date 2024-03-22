@@ -8,14 +8,14 @@
 
 // Added override for copyAccessLink.
 // When accessing the modal from the upload form: 
-// reset self_html to records/<id>
-// and redirected link when permission is preview to ?preview=1 
+// - reset self_html to records/<id>
+// - and redirected link when permission is preview to ?preview=1
+// Removed possibility to change access permission to a link (removed AccessDropdown)
 import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import { Table, Popup, Icon, Button } from "semantic-ui-react";
 import { i18next } from "@translations/invenio_app_rdm/i18next";
 import { timestampToRelativeTime } from "@js/invenio_app_rdm/utils";
-import { AccessDropdown } from "@js/invenio_app_rdm/landing_page/ShareOptions/AccessLinks/AccessDropdown";
 import _truncate from "lodash/truncate";
 import { isEmpty } from "lodash";
 import { withCancel, http } from "react-invenio-forms";
@@ -94,7 +94,7 @@ export const BMALinksSearchItem = ({ result, record, fetchData }) => {
           : `${timestampToRelativeTime(result.expires_at)} (${result.expires_at})`}
       </Table.Cell>
       <Table.Cell width={3} data-label="Access">
-        <AccessDropdown record={record} result={result} />
+        {result?.permission}
       </Table.Cell>
       <Table.Cell width={4}>
         <Button

@@ -9,5 +9,6 @@
 
 BM_ARCHIVE_ROUTES = {
     "faqs": "/help/faqs",
+    "share_links": "/help/share_links",
 }
 
