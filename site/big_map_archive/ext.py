@@ -175,13 +175,13 @@ class BMAReviewService(ReviewService):
         # request object
         draft.parent.review = request
         uow.register(ParentRecordCommitOp(draft.parent))
+        uow.register(RecordIndexOp(draft, indexer=self.indexer))
 
         if not require_review:
             request_item = current_rdm_records.community_inclusion_service.include(
                 identity, community, request, uow
             )
 
-        uow.register(RecordIndexOp(draft, indexer=self.indexer))
         return request_item
 
 
@@ -287,7 +287,6 @@ class BMA_RDMFileResource(FileResource):
 
 # When trying to publish a draft, raise an exception if no community has been selected for the draft
 class BMARecordService(RecordService):
-
     @unit_of_work()
     def publish(self, identity, id_, uow=None, expand=False):
         """Publish a draft.
