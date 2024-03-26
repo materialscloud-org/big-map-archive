@@ -24,11 +24,6 @@ def bma_search():
     return render_template(current_app.config["SEARCH_UI_SEARCH_TEMPLATE"])
 
 
-# def bma_register():
-#     """Register view function: /signup"""
-#     return redirect(url_for_security('login'))
-
-
 def bma_send_confirmation():
     """Send confirmation view function: /confirm"""
     return redirect(url_for_security('login'))
@@ -52,10 +47,17 @@ def create_blueprint(app):
         app.view_functions["invenio_search_ui.search"] = bma_search
 
         # prevent users from creating accounts by redirecting to login page
+        # Not needed as set SECURITY_REGISTERABLE to False in invenio.cfg
         # app.view_functions["security.register"] = bma_register
 
         # prevent users from asking for new confirmation email
         app.view_functions["security.send_confirmation"] = bma_send_confirmation
+
+        # override view help/versioning
+        app.view_functions["invenio_app_rdm.help_versioning"] = not_found_template
+
+        # override view /me/communities
+        app.view_functions["invenio_app_rdm_users.communities"] = not_found_template
 
     blueprint = Blueprint(
         "big_map_archive",
