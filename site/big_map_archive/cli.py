@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Copyright (C) 2023 BIG MAP Archive.
+# Copyright (C) 2023 - 2024 BIG MAP Archive.
 #
 # BIG MAP Archive is free software; you can redistribute it and/or modify
 # it under the terms of the MIT License; see LICENSE file for more details.
@@ -22,8 +22,10 @@ from invenio_db import db
 from invenio_indexer.api import RecordIndexer
 from invenio_pidstore.errors import PIDDoesNotExistError, PIDUnregistered
 from invenio_pidstore.models import PersistentIdentifier
-from invenio_rdm_records.proxies import current_record_communities_service
+from invenio_rdm_records.proxies import (current_rdm_records,
+                                         current_record_communities_service)
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
+from invenio_rdm_records.requests.community_inclusion import CommunityInclusion
 from invenio_rdm_records.services import RDMRecordCommunitiesConfig
 from invenio_rdm_records.services.errors import (ReviewExistsError,
                                                  ReviewStateError)
@@ -194,6 +196,39 @@ def records():
     """Invenio BIG-MAP Archive records commands."""
 
 
+def _request(record, community_id):
+    """ Get requests of type community-submission or community-inclusion
+
+    @param record: record
+    @param community_id: id of community
+    returns: requests, type list
+    """
+    filters = []
+    filters.append(dsl.Q("term", **{'topic.record': record.pid.pid_value}))
+    filters.append(dsl.Q("term", **{'receiver.community': community_id}))
+    filters.append(dsl.Q("terms", **{'type': ["community-submission", "community-inclusion"]}))
+    filter_ = dsl.Q("bool", minimum_should_match=1, must=filters)
+    requests = current_requests_service.scan(system_identity, extra_filter=filter_)
+    return [r for r in requests]
+
+
+def _commit_reindex_record_and_siblings(record, uow):
+    """ Commit and reindex record and siblings (including drafts) """
+
+    record_indexer_drafts = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
+
+    # Commit and re-index record siblings (including the record itself)
+    siblings_records = RDMRecord.get_records_by_parent(record.parent)
+    for child in siblings_records:
+        uow.register(RecordCommitOp(child, indexer=RecordIndexer()))
+
+    # Commit and re-index drafts siblings
+    siblings_drafts = RDMDraft.get_records_by_parent(record.parent)
+    for child in siblings_drafts:
+        if child:
+            uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
+
+
 # add community to record
 @records.command("add_community")
 @click.argument("slug", type=click.STRING, required=True)
@@ -205,10 +240,95 @@ def add_to_record(slug, pid_value):
     Usage: invenio bmarchive records add_community <slug> <record_pid_value>
     @param slug: community's slug
     @param pid_value: record id, ex: 'tqea8-ag515'
-    Note: this works only if the community visibility is public
+    Note: this works only if the community visibility is public.
+    Note that the default community is the one that define the permission access to the record ui.
+    For the BIG-MAP archive there should be only one community per record and it should be set to default.
     """
     community_id = get_community_id(slug)
-    record_indexer_drafts = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
+
+    if not community_id:
+        click.secho(f"ERROR: the community with identifier '{slug}' does not exist.", fg="red")
+        return
+
+    try:
+        record = RDMRecord.pid.resolve(pid_value)
+    except (PIDDoesNotExistError, PIDUnregistered):
+        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}, PID does not exist or record is not published.", fg="red")
+        return
+
+    # Check if community is already added
+    if record.parent["communities"]:
+        if community_id in record.parent["communities"]["ids"]:
+            click.secho(f"WARNING: the community '{slug}' is already added to record {pid_value}.", fg="yellow")
+            return
+
+    # Get owner identity
+    owner = record.parent.access.owner.resolve()
+    identity = get_user_identity(owner)
+
+    # Check a request exists
+    requests = _request(record, community_id)
+
+    if not requests:
+        click.secho("There is no request")
+        # Make a community-inclusion request
+        data = {'communities': [{"id": community_id}]}
+        _, errors = current_record_communities_service.add(
+            identity, id_=record.pid.pid_value, data=data
+        )
+        if errors:
+            click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}, {errors}.", fg="red")
+            return
+
+        requests = _request(record, community_id)
+
+    with UnitOfWork() as uow:
+        # Accept community-inclusion request
+        for req in requests:
+            request = Request.get_record(req["id"])
+            # Transform request to community_inclusion otherwise cannot add the community
+            # because the record is already published
+            if str(request.type) == "community-submission":
+                request.type = CommunityInclusion
+                request.commit()
+                db.session.commit()
+                request = Request.get_record(req["id"])
+
+            RequestActions.execute(identity, request, "accept", uow=uow)
+            request.commit()
+            db.session.commit()
+
+        if record.parent["communities"] == {}:
+            record.parent["communities"] = {"ids": [community_id], "default": community_id}
+        else:
+            record.parent["communities"]["ids"].append(community_id)
+            # set default community to community_id only if it is not yet set
+            record.parent["communities"].setdefault("default", community_id)
+
+        record.parent.commit()
+        db.session.commit()
+        uow.register(RecordCommitOp(record, indexer=RecordIndexer()))
+        _commit_reindex_record_and_siblings(record, uow)
+
+    click.secho(f"SUCCESS: the community '{slug}' has been added to record {pid_value} and all versions of this record, including drafts.", fg="green")
+
+
+# remove community from record
+@records.command("remove_community")
+@click.argument("slug", type=click.STRING, required=True)
+@click.argument("pid_value", type=click.STRING, required=True)
+@with_appcontext
+def remove_from_record(slug, pid_value):
+    """ Remove community from record.
+
+    Usage: invenio bmarchive records remove_community <slug> <record_pid_value>
+    @param slug: community's slug
+    @param pid_value: record id, ex: 'tqea8-ag515'
+    Note: this works only if the community visibility is public
+    Note that the default community is the one that define the permission access to the record ui.
+    For the BIG-MAP archive there should be only one community per record and it should be set to default.
+    """
+    community_id = get_community_id(slug)
 
     if not community_id:
         click.secho(f"ERROR: the community with identifier '{slug}' does not exist.", fg="red")
@@ -224,50 +344,87 @@ def add_to_record(slug, pid_value):
     owner = record.parent.access.owner.resolve()
     identity = get_user_identity(owner)
 
-    # Make a community-inclusion request
+    if not record.parent["communities"]:
+        click.secho(f"WARNING: The record {pid_value} has no communities.", fg="yellow")
+        return
+
+    if community_id not in record.parent["communities"]["ids"]:
+        click.secho(f"WARNING: The record {pid_value} has no community {slug}.", fg="yellow")
+        return
+
+    # Check there is a request for the community
+    requests = _request(record, community_id)
+    if not requests:
+        click.secho(f"WARNING: Cannot remove community '{slug}', the record {pid_value} has no request for this community.", fg="yellow")
+        return
+
+    # Remove community from record
     data = {'communities': [{"id": community_id}]}
-    _, errors = current_record_communities_service.add(
+    _, errors = current_record_communities_service.remove(
         identity, id_=record.pid.pid_value, data=data
     )
     if errors:
-        click.secho(f"ERROR: the community '{slug}' has NOT been added to record {pid_value}, {errors}.", fg="red")
+        click.secho(f"ERROR: the community '{slug}' has NOT been removed from record {pid_value}, {errors}.", fg="red")
         return
 
-    filter_ = dsl.Q("term", **{'topic.record': record.pid.pid_value})
-    requests = current_requests_service.scan(system_identity, extra_filter=filter_)
-
-    request_ids = [r["id"] for r in requests]
-    assert len(request_ids) == 1
-    request_id = request_ids[0]
-    request = Request.get_record(request_id)
-
     with UnitOfWork() as uow:
-        # Accept community-inclusion request
-        RequestActions.execute(identity, request, "accept", uow=uow)
-        request.commit()
-        db.session.commit()
+        # Set status delete for community-inclusion requests
+        for req in requests:
+            request = Request.get_record(req["id"])
+            RequestActions.execute(identity, request, "delete", uow=uow)
+            request.commit()
+            db.session.commit()
 
-        if record.parent["communities"] == {}:
-            record.parent["communities"] = {"ids": [community_id], "default": community_id}
+        # remove community from parent
+        record.parent["communities"]["ids"].remove(community_id)
+
+        # remove/update default community in parent
+        if not record.parent["communities"]["ids"]:
+            record.parent["communities"] = {}
         else:
-            record.parent["communities"]["ids"].add(community_id)
+            # set default to first community of the list
+            if record.parent["communities"]["default"] == community_id:
+                record.parent["communities"]["default"] = record.parent["communities"]["ids"][0]
 
         record.parent.commit()
-        record.commit()
         db.session.commit()
+        uow.register(RecordCommitOp(record, indexer=RecordIndexer()))
+        _commit_reindex_record_and_siblings(record, uow)
 
-        # re-index record and siblings
-        siblings_records = RDMRecord.get_records_by_parent(record.parent)
-        for child in siblings_records:
-            RecordIndexer().index(child, arguments={"refresh": True})
+    click.secho(f"SUCCESS: the community '{slug}' has been removed from record {pid_value} and all versions of this record, including drafts.", fg="green")
 
-        # Commit and re-index drafts siblings
-        siblings_drafts = RDMDraft.get_records_by_parent(record.parent)
-        for child in siblings_drafts:
-            if child:
-                uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
 
-    click.secho(f"SUCCESS: the community '{slug}' has been added to record {pid_value}.", fg="green")
+@records.command("delete")
+@click.argument("pid_value", type=click.STRING, required=True)
+@click.argument("removal_reason", type=click.STRING, required=False)
+@click.argument("removal_note", type=click.STRING, required=False)
+@click.argument("is_visible", type=click.BOOL, required=False)
+@with_appcontext
+def delete_record(pid_value, removal_reason, removal_note, is_visible):
+    """ Delete published record, put the tumbstone
+
+    REMOVAL_REASON is by default equal to rectracted\n
+    IS_VISIBLE is by default equal to True\n
+    Usage: invenio bmarchive records delete <record_pid_value> <removal_reason> <removal_note> is_visible\n
+    Example: invenio bmarchive records delete vcvw6-yhy88 "retracted" "my note" True\n
+    List of removal reasons is here:
+    https://github.com/inveniosoftware/invenio-rdm-records/blob/23e3023adde565f53734f61dc1de03234e2e4ff1/invenio_rdm_records/fixtures/data/vocabularies/removal_reasons.yaml#L1
+    """
+    service = current_rdm_records.records_service
+    data = {}
+    data["removal_reason"] = {"id": "retracted"}
+    if removal_reason:
+        data["removal_reason"] = {"id": removal_reason}
+    if removal_note:
+        data["note"] = removal_note
+    if is_visible and isinstance(is_visible, bool):
+        data["is_visible"] = is_visible
+    try:
+        service.delete_record(system_identity, pid_value, data)
+    except (PIDDoesNotExistError, PIDUnregistered):
+        click.secho(f"ERROR: Cannot delete record '{pid_value}', it is a draft or it does not exist.", fg="red")
+        return
+    click.secho(f"SUCCESS: the record '{pid_value}' has been deleted.", fg="green")
 
 
 @records.command("owner")
@@ -431,6 +588,45 @@ def add_community(slug, role, user_email):
         click.secho(f'SUCCESS: {user_email} has been attributed to community {slug} with role {role}.', fg="green")
     except AlreadyMemberError:
         click.secho(f'WARNING: {user_email} is already a member of the community {slug}.', fg="yellow")
+
+
+# remove user from community
+@users.command("remove_community")
+@click.argument("slug", type=click.STRING, required=True)
+@click.argument("user_email", type=click.STRING, required=True)
+@with_appcontext
+def remove_from_user(slug, user_email):
+    """Remove user from community.
+
+    Usage: invenio bmarchive users add_community <slug> <role> <user_email>\n
+    Ex: invenio bmarchive users remove_community bigmap myname@materialscloud.org\n
+    @param slug: community slug, type string\n
+    @param user_email: user email, type string\n
+    """
+    community_service = current_communities.service
+    member_service = community_service.members
+
+    user = _datastore.get_user(user_email)
+    try:
+        user.id
+    except AttributeError:
+        click.secho(f'ERROR: user {user_email} does not exist.', fg="red")
+        return
+
+    community_id = get_community_id(slug)
+    if not community_id:
+        click.secho(f'ERROR: community {slug} does not exist.', fg="red")
+        return
+
+    data = {
+        "members": [{"type": "user", "id": f"{user.id}"}],
+    }
+
+    try:
+        member_service.delete(system_identity, community_id, data)
+        click.secho(f'SUCCESS: {user_email} has been removed from community {slug}.', fg="green")
+    except InvalidMemberError:
+        click.secho(f'WARNING: {user_email} is already not a member of the community {slug}.', fg="yellow")
 
 
 # update role of a user
