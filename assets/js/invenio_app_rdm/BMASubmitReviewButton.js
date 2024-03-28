@@ -23,7 +23,11 @@ class BMASubmitReviewButtonComponent extends Component {
   closeConfirmModal = () => this.setState({ isConfirmModalOpen: false });
 
   handleSubmitReview = ({ reviewComment }) => {
-    this.props.formik.values.metadata.publication_date = new Date().toISOString().slice(0, 10);
+    let publication_date = this.props.formik.values.metadata.publication_date;
+    // this should never happen because publication date is already set
+    if (publication_date === undefined || publication_date === null) {
+      this.props.formik.values.metadata.publication_date = new Date().toISOString().slice(0, 10);
+    }
     const { formik, directPublish } = this.props;
     const { handleSubmit } = formik;
     const { setSubmitContext } = this.context;

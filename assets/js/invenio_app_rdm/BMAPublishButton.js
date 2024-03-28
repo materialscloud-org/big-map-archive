@@ -32,7 +32,11 @@ class BMAPublishButtonComponent extends Component {
   closeConfirmModal = () => this.setState({ isConfirmModalOpen: false });
 
   handlePublish = (event, handleSubmit, publishWithoutCommunity) => {
-    this.props.formik.values.metadata.publication_date = new Date().toISOString().slice(0, 10);
+    let publication_date = this.props.formik.values.metadata.publication_date;
+    // this should never happen because publication date is already set
+    if (publication_date === undefined || publication_date === null) {
+      this.props.formik.values.metadata.publication_date = new Date().toISOString().slice(0, 10);
+    }
     const { setSubmitContext } = this.context;
 
     setSubmitContext(

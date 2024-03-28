@@ -1,5 +1,8 @@
 """Additional views."""
 
+from datetime import datetime
+
+import babel
 from flask import Blueprint, current_app, g, redirect, render_template
 from flask_principal import AnonymousIdentity
 from flask_security.utils import url_for_security
@@ -58,6 +61,15 @@ def create_blueprint(app):
 
         # override view /me/communities
         app.view_functions["invenio_app_rdm_users.communities"] = not_found_template
+
+    @app.template_filter()
+    def format_datetime(value, format='basic'):
+        if isinstance(value, str):
+            date_format = "%Y-%m-%dT%H:%M:%S.%f%z"
+            value = datetime.strptime(value, date_format)
+        if format == 'basic':
+            format = "MMMM d, YYYY"
+        return babel.dates.format_datetime(value, format)
 
     blueprint = Blueprint(
         "big_map_archive",
