@@ -259,22 +259,33 @@ it under the terms of the MIT License; see LICENSE file for more details.
                     <h2>Sharing date, entry version, and resource type</h2>
                     <div class="ui grid middle aligned sharing">
                         <div class="two column row">
-                            <div class="left floated left aligned column">
-                                <span class="ui" title="{{ _('Publication date') }}">
-                                    {{ record.ui.publication_date_l10n_long }}
-                                </span>
-                                <span class="label text-muted"> | {{ _('Version {version_number}').format(version_number=record.ui.version) }}</span>
-                            </div>
-                            <div class="right floated right aligned column">
-
-                                {% if record.ui.resource_type %}
-                                <span role="note"
-                                      class="ui label horizontal small neutral mb-5"
-                                      aria-label="{{ _('Resource type') }}"
-                                >
-                          {{ record.ui.resource_type.title_l10n }}
-                        </span>
-                                {% endif %}
+                            <div>
+                                <ul class="no-style">
+                                    <li>
+                                        <span class="ui" title="{{ _('Publication date') }}">
+                                            Sharing date: {{ record.ui.publication_date_l10n_long }}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="ui" title="{{ _('Updated date') }}">
+                                            Last update: {{ record.updated | format_datetime()}}
+                                        </span>
+                                    </li>
+                                    <li>
+                                        <span class="label">{{ _('Version: {version_number}').format(version_number=record.ui.version) }}</span>
+                                    </li>
+                                    <li>
+                                        {% if record.ui.resource_type %}
+                                        Resource type:
+                                        <span role="note"
+                                            class="ui label horizontal small neutral mb-5"
+                                            aria-label="{{ _('Resource type') }}"
+                                        >
+                                        {{ record.ui.resource_type.title_l10n }}
+                                        </span>
+                                        {% endif %}
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
