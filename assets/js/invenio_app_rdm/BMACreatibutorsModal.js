@@ -1,24 +1,33 @@
-import React, { Component, createRef } from "react";
-import PropTypes from "prop-types";
-import { Button, Form, Grid, Header, Modal } from "semantic-ui-react";
+// This file is part of Invenio-RDM-Records
+// Copyright (C) 2020-2023 CERN.
+// Copyright (C) 2020-2022 Northwestern University.
+// Copyright (C) 2021 Graz University of Technology.
+// Copyright (C) 2022 data-futures.org.
+//
+// Invenio-RDM-Records is free software; you can redistribute it and/or modify it
+// under the terms of the MIT License; see LICENSE file for more details.
+
+import { i18next } from "@translations/invenio_rdm_records/i18next";
 import { Formik } from "formik";
-import {
-  Image,
-  SelectField,
-  TextField,
-  RadioField,
-  RemoteSelectField,
-} from "react-invenio-forms";
-import * as Yup from "yup";
-import _get from "lodash/get";
 import _find from "lodash/find";
+import _get from "lodash/get";
 import _isEmpty from "lodash/isEmpty";
 import _map from "lodash/map";
-import { AffiliationsField } from "@js/invenio_rdm_records/src/deposit/fields/AffiliationsField";
-import { BMACreatibutorsIdentifiers } from "./BMACreatibutorsIdentifiers";
-import { CREATIBUTOR_TYPE } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/type";
-import { i18next } from "@translations/invenio_rdm_records/i18next";
+import PropTypes from "prop-types";
+import React, { Component, createRef } from "react";
 import { Trans } from "react-i18next";
+import {
+  Image,
+  RadioField,
+  RemoteSelectField,
+  SelectField,
+  TextField,
+} from "react-invenio-forms";
+import { Button, Form, Header, Modal } from "semantic-ui-react";
+import * as Yup from "yup";
+import { AffiliationsField } from "@js/invenio_rdm_records/src/deposit/fields/AffiliationsField";
+import { CreatibutorsIdentifiers } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/CreatibutorsIdentifiers";
+import { CREATIBUTOR_TYPE } from "@js/invenio_rdm_records/src/deposit/fields/CreatibutorsField/type";
 
 const ModalActions = {
   ADD: "add",
@@ -41,11 +50,32 @@ export class BMACreatibutorsModal extends Component {
       showPersonForm:
         props.autocompleteNames !== NamesAutocompleteOptions.SEARCH_ONLY ||
         !_isEmpty(props.initialCreatibutor),
+      isOrganization:
+        !_isEmpty(props.initialCreatibutor) &&
+        props.initialCreatibutor.person_or_org.type === CREATIBUTOR_TYPE.ORGANIZATION,
+      personIdentifiers: [],
+      personAffiliations: [],
+      organizationIdentifiers: [],
+      organizationAffiliations: [],
     };
     this.inputRef = createRef();
     this.identifiersRef = createRef();
     this.affiliationsRef = createRef();
     this.namesAutocompleteRef = createRef();
+  }
+
+  initStatesFromInitialCreatibutor(initialCreatibutor) {
+    const { affiliations = [] } = initialCreatibutor;
+    const { isOrganization } = this.state;
+    const identifiers = initialCreatibutor.person_or_org.identifiers?.map(
+      (identifier) => identifier.identifier
+    );
+    this.setState({
+      personIdentifiers: isOrganization ? [] : identifiers,
+      personAffiliations: isOrganization ? [] : affiliations,
+      organizationIdentifiers: isOrganization ? identifiers : [],
+      organizationAffiliations: isOrganization ? affiliations : [],
+    });
   }
 
   CreatorSchema = Yup.object({
@@ -69,14 +99,35 @@ export class BMACreatibutorsModal extends Component {
     }),
   });
 
-  focusInput = () => this.inputRef.current.focus();
-
   openModal = () => {
-    this.setState({ open: true, action: null }, () => {});
+    this.setState({ open: true, action: null }, () => {
+      const { initialCreatibutor } = this.props;
+      if (!_isEmpty(initialCreatibutor)) {
+        const { isOrganization } = this.state;
+
+        if (isOrganization) {
+          // Set family and given name to empty for organizations
+          initialCreatibutor.person_or_org.family_name = "";
+          initialCreatibutor.person_or_org.given_name = "";
+        } else {
+          // Set name to empty for persons
+          initialCreatibutor.person_or_org.name = "";
+        }
+
+        this.initStatesFromInitialCreatibutor(initialCreatibutor);
+      }
+    });
   };
 
   closeModal = () => {
-    this.setState({ open: false, action: null });
+    this.setState({
+      personAffiliations: [],
+      personIdentifiers: [],
+      organizationAffiliations: [],
+      organizationIdentifiers: [],
+      open: false,
+      action: null,
+    });
   };
 
   changeContent = () => {
@@ -197,10 +248,12 @@ export class BMACreatibutorsModal extends Component {
     } else if (identifier.scheme === "ror") {
       icon = "/static/images/ror-icon.svg";
       link = "https://ror.org/" + identifier.identifier;
+    } else if (identifier.scheme === "isni" || identifier.scheme === "grid") {
+      return null;
     } else {
       return (
         <>
-          {identifier.scehme}: {identifier.identifier}
+          {identifier.scheme}: {identifier.identifier}
         </>
       );
     }
@@ -213,27 +266,33 @@ export class BMACreatibutorsModal extends Component {
             className="inline-id-icon ml-5 mr-5"
             verticalAlign="middle"
           />
-          {identifier.identifier}
+          {identifier.scheme === "orcid" ? identifier.identifier : null}
         </a>
-        ;
       </span>
     );
   };
 
   serializeSuggestions = (creatibutors) => {
-    let results = creatibutors.map((creatibutor) => {
-      let affNames = "";
-      creatibutor.affiliations.forEach((affiliation, idx) => {
-        affNames += affiliation.name;
-        if (idx < creatibutor.affiliations.length - 1) {
-          affNames += ", ";
-        }
-      });
+    const results = creatibutors.map((creatibutor) => {
+      // ensure `affiliations` and `identifiers` are present
+      creatibutor.affiliations = creatibutor.affiliations || [];
+      creatibutor.identifiers = creatibutor.identifiers || [];
 
-      let idString = [];
-      creatibutor.identifiers.forEach((i) => {
+      let affNames = "";
+      if ("affiliations" in creatibutor) {
+        creatibutor.affiliations.forEach((affiliation, idx) => {
+          affNames += affiliation.name;
+          if (idx < creatibutor.affiliations.length - 1) {
+            affNames += ", ";
+          }
+        });
+      }
+
+      const idString = [];
+      creatibutor.identifiers?.forEach((i) => {
         idString.push(this.makeIdEntry(i));
       });
+      const { isOrganization } = this.state;
 
       return {
         text: creatibutor.name,
@@ -243,7 +302,9 @@ export class BMACreatibutorsModal extends Component {
         content: (
           <Header>
             {creatibutor.name} {idString.length ? <>({idString})</> : null}
-            <Header.Subheader>{affNames}</Header.Subheader>
+            <Header.Subheader>
+              {isOrganization ? creatibutor.acronym : affNames}
+            </Header.Subheader>
           </Header>
         ),
       };
@@ -278,6 +339,72 @@ export class BMACreatibutorsModal extends Component {
     return results;
   };
 
+  updateIdentifiersAndAffiliations(
+    formikProps,
+    identifiers,
+    affiliations,
+    identifiersRef,
+    affiliationsRef
+  ) {
+    const personOrOrgPath = `person_or_org`;
+    const identifiersFieldPath = `${personOrOrgPath}.identifiers`;
+    const affiliationsFieldPath = "affiliations";
+
+    let chosen = {
+      [identifiersFieldPath]: identifiers,
+      [affiliationsFieldPath]: affiliations,
+    };
+
+    Object.entries(chosen).forEach(([path, value]) => {
+      formikProps.form.setFieldValue(path, value);
+    });
+
+    // Update identifiers render
+    identifiersRef.current.setState({
+      selectedOptions: identifiersRef.current.valuesToOptions(identifiers),
+    });
+
+    // Update affiliations render
+    const affiliationsState = affiliations.map(({ name }) => ({
+      text: name,
+      value: name,
+      key: name,
+      name,
+    }));
+    affiliationsRef.current.setState({
+      suggestions: affiliationsState,
+      selectedSuggestions: affiliationsState,
+      searchQuery: null,
+      error: false,
+      open: false,
+    });
+  }
+
+  onOrganizationSearchChange = ({ formikProps }, selectedSuggestions) => {
+    const selectedSuggestion = selectedSuggestions[0].extra;
+    this.setState(
+      {
+        organizationIdentifiers: selectedSuggestion.identifiers.map(
+          (identifier) => identifier.identifier
+        ),
+        organizationAffiliations: [],
+      },
+      () => {
+        const { organizationIdentifiers, organizationAffiliations } = this.state;
+
+        formikProps.form.setFieldValue("person_or_org.name", selectedSuggestion.name);
+
+        this.updateIdentifiersAndAffiliations(
+          formikProps,
+          organizationIdentifiers,
+          organizationAffiliations,
+          this.identifiersRef,
+          this.affiliationsRef
+        );
+      }
+    );
+  };
+
   onPersonSearchChange = ({ formikProps }, selectedSuggestions) => {
     if (selectedSuggestions[0].key === "manual-entry") {
       // Empty the autocomplete's selected values
@@ -291,55 +418,38 @@ export class BMACreatibutorsModal extends Component {
       return;
     }
 
+    const selectedSuggestion = selectedSuggestions[0].extra;
     this.setState(
       {
         showPersonForm: true,
+        personIdentifiers: selectedSuggestion.identifiers.map(
+          (identifier) => identifier.identifier
+        ),
+        personAffiliations: selectedSuggestion.affiliations.map(
+          (affiliation) => affiliation
+        ),
       },
       () => {
-        const identifiers = selectedSuggestions[0].extra.identifiers.map(
-          (identifier) => {
-            return identifier.identifier;
-          }
-        );
-        const affiliations = selectedSuggestions[0].extra.affiliations.map(
-          (affiliation) => {
-            return affiliation;
-          }
-        );
-
+        const { personIdentifiers, personAffiliations } = this.state;
         const personOrOrgPath = `person_or_org`;
         const familyNameFieldPath = `${personOrOrgPath}.family_name`;
         const givenNameFieldPath = `${personOrOrgPath}.given_name`;
-        const identifiersFieldPath = `${personOrOrgPath}.identifiers`;
-        const affiliationsFieldPath = "affiliations";
 
         let chosen = {
-          [givenNameFieldPath]: selectedSuggestions[0].extra.given_name,
-          [familyNameFieldPath]: selectedSuggestions[0].extra.family_name,
-          [identifiersFieldPath]: identifiers,
-          [affiliationsFieldPath]: affiliations,
+          [givenNameFieldPath]: selectedSuggestion.given_name,
+          [familyNameFieldPath]: selectedSuggestion.family_name,
         };
         Object.entries(chosen).forEach(([path, value]) => {
           formikProps.form.setFieldValue(path, value);
         });
-        // Update identifiers render
-        this.identifiersRef.current.setState({
-          selectedOptions: this.identifiersRef.current.valuesToOptions(identifiers),
-        });
-        // Update affiliations render
-        const affiliationsState = affiliations.map(({ name }) => ({
-          text: name,
-          value: name,
-          key: name,
-          name,
-        }));
-        this.affiliationsRef.current.setState({
-          suggestions: affiliationsState,
-          selectedSuggestions: affiliationsState,
-          searchQuery: null,
-          error: false,
-          open: false,
-        });
+
+        this.updateIdentifiersAndAffiliations(
+          formikProps,
+          personIdentifiers,
+          personAffiliations,
+          this.identifiersRef,
+          this.affiliationsRef
+        );
       }
     );
   };
@@ -347,9 +457,17 @@ export class BMACreatibutorsModal extends Component {
   render() {
     const { initialCreatibutor, autocompleteNames, roleOptions, trigger, action } =
       this.props;
-    const { open, showPersonForm, saveAndContinueLabel } = this.state;
+    const {
+      open,
+      showPersonForm,
+      personIdentifiers,
+      personAffiliations,
+      organizationIdentifiers,
+      organizationAffiliations,
+      saveAndContinueLabel,
+    } = this.state;
 
-    const ActionLabel = () => this.displayActionLabel();
+    const ActionLabel = this.displayActionLabel();
     return (
       <Formik
         initialValues={this.deserializeCreatibutor(initialCreatibutor)}
@@ -364,11 +482,10 @@ export class BMACreatibutorsModal extends Component {
           const typeFieldPath = `${personOrOrgPath}.type`;
           const familyNameFieldPath = `${personOrOrgPath}.family_name`;
           const givenNameFieldPath = `${personOrOrgPath}.given_name`;
-          const nameFieldPath = `${personOrOrgPath}.name`;
+          const organizationNameFieldPath = `${personOrOrgPath}.name`;
           const identifiersFieldPath = `${personOrOrgPath}.identifiers`;
           const affiliationsFieldPath = "affiliations";
           const roleFieldPath = "role";
-
           return (
             <Modal
               centered={false}
@@ -383,12 +500,92 @@ export class BMACreatibutorsModal extends Component {
               closeOnDimmerClick={false}
             >
               <Modal.Header as="h2" className="pt-10 pb-10">
-                <ActionLabel />
+                {ActionLabel}
               </Modal.Header>
               <Modal.Content>
                 <Form>
+                  <Form.Group>
+                    <RadioField
+                      fieldPath={typeFieldPath}
+                      label={i18next.t("Person")}
+                      checked={_get(values, typeFieldPath) === CREATIBUTOR_TYPE.PERSON}
+                      value={CREATIBUTOR_TYPE.PERSON}
+                      onChange={({ formikProps }) => {
+                        this.setState({
+                          isOrganization: false,
+                        });
+                        formikProps.form.setFieldValue(
+                          typeFieldPath,
+                          CREATIBUTOR_TYPE.PERSON
+                        );
+                        formikProps.form.setFieldValue(
+                          identifiersFieldPath,
+                          personIdentifiers
+                        );
+                        formikProps.form.setFieldValue(
+                          affiliationsFieldPath,
+                          personAffiliations
+                        );
+                      }}
+                      // eslint-disable-next-line
+                      autoFocus
+                      optimized
+                    />
+                    {/* <RadioField
+                      fieldPath={typeFieldPath}
+                      label={i18next.t("Organization")}
+                      checked={
+                        _get(values, typeFieldPath) === CREATIBUTOR_TYPE.ORGANIZATION
+                      }
+                      value={CREATIBUTOR_TYPE.ORGANIZATION}
+                      onChange={({ formikProps }) => {
+                        this.setState({
+                          isOrganization: true,
+                        });
+                        formikProps.form.setFieldValue(
+                          typeFieldPath,
+                          CREATIBUTOR_TYPE.ORGANIZATION
+                        );
+                        formikProps.form.setFieldValue(
+                          affiliationsFieldPath,
+                          organizationAffiliations
+                        );
+                        formikProps.form.setFieldValue(
+                          identifiersFieldPath,
+                          organizationIdentifiers
+                        );
+                      }}
+                      optimized
+                    /> */}
+                  </Form.Group>
                   {_get(values, typeFieldPath, "") === CREATIBUTOR_TYPE.PERSON ? (
                     <div>
+                      {autocompleteNames !== NamesAutocompleteOptions.OFF && (
+                        <RemoteSelectField
+                          selectOnBlur={false}
+                          selectOnNavigation={false}
+                          searchInput={{
+                            autoFocus: _isEmpty(initialCreatibutor),
+                          }}
+                          fieldPath="creators"
+                          clearable
+                          multiple={false}
+                          allowAdditions={false}
+                          placeholder={i18next.t(
+                            "Search for persons by name, identifier, or affiliation..."
+                          )}
+                          noQueryMessage={i18next.t(
+                            "Search for persons by name, identifier, or affiliation..."
+                          )}
+                          required={false}
+                          // Disable UI-side filtering of search results
+                          search={(options) => options}
+                          suggestionAPIUrl="/api/names"
+                          serializeSuggestions={this.serializeSuggestions}
+                          onValueChange={this.onPersonSearchChange}
+                          ref={this.namesAutocompleteRef}
+                        />
+                      )}
                       {showPersonForm && (
                         <div>
                           <Form.Group widths="equal">
@@ -404,35 +601,62 @@ export class BMACreatibutorsModal extends Component {
                               fieldPath={givenNameFieldPath}
                             />
                           </Form.Group>
-                          <Form.Group widths="equal">
-                            <BMACreatibutorsIdentifiers
-                              initialOptions={_map(
-                                _get(values, identifiersFieldPath, []),
-                                (identifier) => ({
-                                  text: identifier,
-                                  value: identifier,
-                                  key: identifier,
-                                })
-                              )}
-                              fieldPath={identifiersFieldPath}
-                              ref={this.identifiersRef}
-                            />
-                          </Form.Group>
+                          <CreatibutorsIdentifiers
+                            initialOptions={_map(
+                              _get(values, identifiersFieldPath, []),
+                              (identifier) => ({
+                                text: identifier,
+                                value: identifier,
+                                key: identifier,
+                              })
+                            )}
+                            fieldPath={identifiersFieldPath}
+                            ref={this.identifiersRef}
+                          />
+                          <AffiliationsField
+                            fieldPath={affiliationsFieldPath}
+                            selectRef={this.affiliationsRef}
+                          />
                         </div>
                       )}
                     </div>
                   ) : (
                     <>
+                      {autocompleteNames !== NamesAutocompleteOptions.OFF && (
+                        <RemoteSelectField
+                          selectOnBlur={false}
+                          selectOnNavigation={false}
+                          searchInput={{
+                            autoFocus: _isEmpty(initialCreatibutor),
+                          }}
+                          fieldPath="creators"
+                          clearable
+                          multiple={false}
+                          allowAdditions={false}
+                          placeholder={i18next.t(
+                            "Search for an organization by name, identifier, or affiliation..."
+                          )}
+                          noQueryMessage={i18next.t(
+                            "Search for organization by name, identifier, or affiliation..."
+                          )}
+                          required={false}
+                          // Disable UI-side filtering of search results
+                          search={(options) => options}
+                          suggestionAPIUrl="/api/affiliations"
+                          serializeSuggestions={this.serializeSuggestions}
+                          onValueChange={this.onOrganizationSearchChange}
+                        />
+                      )}
                       <TextField
                         label={i18next.t("Name")}
                         placeholder={i18next.t("Organization name")}
-                        fieldPath={nameFieldPath}
+                        fieldPath={organizationNameFieldPath}
                         required={this.isCreator()}
                         // forward ref to Input component because Form.Input
                         // doesn't handle it
                         input={{ ref: this.inputRef }}
                       />
-                      <BMACreatibutorsIdentifiers
+                      <CreatibutorsIdentifiers
                         initialOptions={_map(
                           _get(values, identifiersFieldPath, []),
                           (identifier) => ({
@@ -442,7 +666,12 @@ export class BMACreatibutorsModal extends Component {
                           })
                         )}
                         fieldPath={identifiersFieldPath}
+                        ref={this.identifiersRef}
                         placeholder={i18next.t("e.g. ROR, ISNI or GND.")}
+                      />
+                      <AffiliationsField
+                        fieldPath={affiliationsFieldPath}
+                        selectRef={this.affiliationsRef}
                       />
                     </>
                   )}
@@ -450,9 +679,15 @@ export class BMACreatibutorsModal extends Component {
                     (showPersonForm &&
                       _get(values, typeFieldPath) === CREATIBUTOR_TYPE.PERSON)) && (
                     <div>
-                      <AffiliationsField
-                        fieldPath={affiliationsFieldPath}
-                        selectRef={this.affiliationsRef}
+                      <SelectField
+                        fieldPath={roleFieldPath}
+                        label={i18next.t("Role")}
+                        options={roleOptions}
+                        placeholder={i18next.t("Select role")}
+                        {...(this.isCreator() && { clearable: true })}
+                        required={!this.isCreator()}
+                        optimized
+                        scrolling
                       />
                     </div>
                   )}
@@ -526,6 +761,7 @@ BMACreatibutorsModal.propTypes = {
       family_name: PropTypes.string,
       given_name: PropTypes.string,
       name: PropTypes.string,
+      type: PropTypes.string,
       identifiers: PropTypes.arrayOf(
         PropTypes.shape({
           scheme: PropTypes.string,
