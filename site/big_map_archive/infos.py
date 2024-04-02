@@ -16,7 +16,13 @@ def faqs():
     )
 
 def share_links():
-    """FAQs page."""
+    """Share links page."""
     return render_template(
         "big_map_archive/share_links.html",
+    )
+
+def tutorial():
+    """Tutorial page."""
+    return render_template(
+        "big_map_archive/tutorial.html",
     )

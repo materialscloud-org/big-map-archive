@@ -8,7 +8,7 @@ from flask_principal import AnonymousIdentity
 from flask_security.utils import url_for_security
 
 from .deposits import deposit_edit
-from .infos import faqs, share_links
+from .infos import faqs, share_links, tutorial
 
 #
 # BIG-MAP Archive blueprint
@@ -87,6 +87,12 @@ def create_blueprint(app):
     blueprint.add_url_rule(
         routes_bmarchive["share_links"],
         view_func=share_links,
+    )
+
+    # "/help/tutorial",
+    blueprint.add_url_rule(
+        routes_bmarchive["tutorial"],
+        view_func=tutorial,
     )
 
     # Add URL rules
