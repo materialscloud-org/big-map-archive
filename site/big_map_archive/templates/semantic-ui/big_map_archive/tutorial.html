@@ -1,0 +1,301 @@
+{#
+    -*- coding: utf-8 -*-
+    Copyright (C) 2024 BIG-MAP Archive Team.
+#}
+
+{% extends "invenio_theme/page.html" %}
+
+{% block page_body %}
+{%- block grid_section %}
+    <div class="ui stackable grid container rel-mt-3">
+    {% block main_column %}
+        <div class="column one wide"></div>
+        <div class="column fourteen wide">
+            <h1>Tutorial</h1>
+            <div>
+                This tutorial takes you through the process of creating, sharing, updating,
+                and retrieving records for BIG-MAP Archive.</br>
+                Before you start check you have a user account
+                on the <a href="https://big-map-archive-demo.materialscloud.org/" target="_blank">demo instance</a> of the data repository,
+                which enables you to try available features and commands without affecting the
+                <a href="https://archive.big-map.eu/" target="_blank">main instance</a>.
+                In case you do not have access to the demo instance contact us: big-map-archive@materialscloud.org.
+            </div>
+
+            <div class="pt-25"></div>
+
+            <div>
+                <h1>Data sharing via the User Interface</h1>
+                <p>
+                    This section shows you how to create, share, update, and retrieve records using the user interface
+                    of the <a href="https://big-map-archive-demo.materialscloud.org/" target="_blank">demo instance</a>.
+                </p>
+
+                <h3>Log in to the demo instance</h3>
+                <p>
+                    <ul>
+                        <li>Navigate to the homepage.</li>
+                        <li>Click "Log in" and enter your account credentials. 
+                            If you receive an error message such as "Invalid email address", 
+                            contact us.
+                        </li>
+                        <li>In case of unknown or forgotten password:
+                            <ul>
+                                <li>Click "Forgot password?".</li>
+                                <li>Enter your email address and click "Reset password".</li>
+                                <li>Follow the instructions. Choose a new password that must be at least 6 characters long.</li>
+                                <li>Upon successful login, you are automatically redirected to the shared records' first page.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Create a record</h3>
+                <p>
+                    <ul>
+                        <li>Click "New record" in the header.</li>
+                        <li>
+                            Community (compulsory to share with a community). Select the community with which you want to share the record.<br>
+                            Note that if you select BATTERY2030 the record will be shared with the members of all BATTERY2030 projects.
+                        </li>
+                        <li>Files (compulsory). Select the files to upload and link to the future record. Drag and drop them in the drop zone (light gray region). 
+                            Note that you are limited to 100 files and a total file size of 100 GB. 
+                            For this exercise, we recommend choosing small files (file size ≤ 1 MB) containing dummy data.
+                        </li>
+                        <li>Fill in the record’s metadata:
+                            <ul>
+                                <li>A resource type (compulsory), it describes the overall nature of your data files’ contents.</li>
+                                <li>A title (compulsory).</li>
+                                <li>Authors (compulsory). Note that adding another user as an author does not make him or her a record's co-owner.</li>
+                                <li>A description (compulsory).</li>
+                                <li>A license (optional). The recommended license is the BIG-MAP license which allows re-distribution and re-use
+                                    of work within the BIG-MAP community.
+                                </li>
+                                <li>Keywords (optional). Any keyword is allowed. However, each keyword should be entered separately: enter the
+                                    keyword and click on Add &lt;keyword&gt;. To delete the keyword click on the small cross on the
+                                    right side of each of keyword. You also benefit from an autocomplete feature
+                                    that suggests keywords based on input. Type, e.g., "wp". Recommendation: if you split a large dataset over
+                                    multiple entries, you may want to tag the first version of each entry with the same random number.
+                                    This helps humans and machines retrieve the whole dataset easily using the built-in search engine.
+                                </li>
+                                <li>References to external documents (optional).</li>
+                            </ul>
+                        </li>
+                        <li>Click "Save draft" to create a draft, the first version of the entry. It remains visible only to you (owner).</br>
+                            Click on "Preview" to see how the record displays once it is shared with a community.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Share the record with a community</h3>
+                <p>
+                    <ul>
+                        <li>Go to "My records" and click the record’s title.</li>
+                        <li>Check you selected a community, if not click on "Select community".</li>
+                        <li>Click "Share with community" to make your record appear in the Shared records' list. By sharing the record,
+                            you automatically give all members of the chosen community permission to read the record's metadata and download its linked files.</br>
+                            Note that if you selected BATTERY2030 the record will be shared with the members of all BATTERY2030 projects.  
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Update the record (metadata only)</h3>
+                <p>After the record has been shared you can only update the metadata of the record. The community and the record's files cannot be changed.
+                    <ul>
+                        <li>
+                            Search for your record in the search bar or in "My records", click the record’s title and then click on "Edit".
+                        </li>
+                        <li>Make the changes: e.g. add a keyword, an author, etc.</li>
+                        <li>Click on "Save draft" to save the changes, the updated record will only be visible by you.
+                            Click on "Share with community" to share the updated record with the community.</li>
+                        <li>Navigate to "Shared records" and click the record’s title.
+                            Your modifications should be visible to authenticated users.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Create and share a second version of the record</h3>
+                <p>Note that the community of a new version of a record is the same as for the first version and cannot be changed.
+                    <ul>
+                        <li>
+                            Search for your record in the search bar or in "My records", click the record’s title and then click on "New version".
+                        </li>
+                        <li>Click "Import files" to import all file links from the first version into the second one.</li>
+                        <li>Remove a file link, upload a new file, change the title, etc.</li>
+                        <li>Click on "Save draft" to save the new version as a draft, it will only be visible by you.
+                            Click on "Share with community" to share the new version with the community.</li>
+                        <li>Navigate to "Shared records". The second version should appear in the shared records’ list
+                            as only the latest shared version of an entry is displayed by default.
+                        </li>
+                        <li>Switch the toggle on the left side of the web page to show both versions.</li>
+                        <li>Click any of the two versions. Find the card entitled "Versions" on the right side of the web page.
+                            You should be able to easily navigate from one version to the other by clicking the appropriate link.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Share a record with a link</h3>
+                <p>Create and share a link to let others to read or edit your record.
+                    <ul>
+                        <li>
+                            Search for your record in the search bar or if the record is a draft and
+                            has not yet been shared with a community go to "My records", click the record’s title. 
+                        <li>
+                            Click on "Share links" and follow the <a href="./share_links" target="_blank">instructions</a>
+                            to create a link with the permission to view, preview or edit the record.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Search through shared records' metadata</h3>
+                <p>
+                    <ul>
+                        <li>Click on "Shared records".</li>
+                        <li>Type "+LNO +WP9" into the search bar to search for all shared records whose metadata contains LNO and WP9.
+                        Depending on the contents of the database, the built-in search engine returns zero or more hits.
+                        For more advanced queries, such as searching through specific fields in the metadata (e.g., the title),
+                        read the provided <a href="./search" target="_blank">search guide</a>.</li>
+                    </ul>
+                </p>
+            </div>
+
+            <div class="pt-25"></div>
+
+            <div>
+                <h1>Data sharing via the APIs</h1>
+                <p>
+                    In this section, users interact with the data repository through a command-line interface (CLI) application,
+                    which is installed on their machine. Commands to create, update, and retrieve records can be executed at terminal
+                    prompts and even invoked from custom applications.
+                    Note that more complex commands can be built upon those presented below to meet special user needs.
+                </p>
+
+                <h3>Get an API token</h3>
+                <p>
+                    <ul>
+                        <li>
+                            Login to the Archive and click over your email on the right side of the web page.
+                            Select "Applications" in the drop-down menu.
+                        </li>
+                        <li>
+                            Click "New token" and follow the instructions to create an API token with unlimited lifetime.
+                            Keep it private and in a safe storage. You will use it to access API endpoints of the data repository.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Get started with the CLI app</h3>
+                <p>
+                    <ul>
+                        <li>Follow the <a href="https://github.com/materialscloud-org/big-map-archive-api-client#quick-start" target="_blank">Quick start guide</a> to:</li>
+                        <ul>
+                            <li>install the CLI app on your machine</li>
+                            <li>prepare a YAML configuration file named `bma_config.yaml` that specifies the domain
+                                name and your API token for the data repository
+                            </li>
+                            <li>prepare a YAML file named `metadata.yaml` that contains your future record's metadata
+                                (its title, its list of authors, etc).
+                            </li>
+                        </ul>
+                        <li>Activate the virtual environment where the package `big-map-archive-api-client` is installed.</li>
+                        <li>Test that the following command is available:
+                            <ul class="p-10"><code>bma record --help</code></ul>
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Create and share (a first version of) an entry</h3>
+                <p>
+                    <ul>
+                        <li>Move `metadata.yaml` to the `data/input` directory.</li>
+                        <li>Put the data files to be uploaded and linked to the future record in the `data/input/upload` directory.</li>
+                        <li>Execute the following command:
+                            <ul class="p-10">
+                                <code>
+                                    bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --publish
+                                </code>
+                            </ul>
+                        </li>
+                        <li>Once this is done, access the record's web page by simply clicking the generated hyperlink in the terminal.</li>
+                        <li>Store the record's id.</li>
+                    </ul>
+                </p>
+
+                <h3>Update the first version (metadata only)</h3>
+                <p>
+                    <ul>
+                        <li>Update the contents of `metadata.yaml` (e.g., the title).</li>
+                        <li>Execute the following command, after replacing `&lt;record_id&gt;` with the id of the first version:
+                            <ul class="p-10">
+                                <code>
+                                    bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=&lt;record_id&gt; --update-only
+                                </code>
+                            </ul>
+                        </li>
+                        <li>Check that your modifications appear as expected in the record's web page.</li>
+                    </ul>
+                </p>
+
+                <h3>Create and share a second version</h3>
+                <p>
+                    <ul>
+                        <li>Update the contents of the `metadata.yaml` file and the `upload` directory:
+                            <ul>
+                            <li>Modify the description.</li>
+                            <li>Change the contents of a file.</li>
+                            <li>Remove a file.</li>
+                            <li>Add a new file.</li>
+                            </ul>
+                        </li>
+                        <li>
+                            Execute this command, after replacing `&lt;record_id&gt;` with the id of the first version:
+                            <ul class="p-10">
+                                <code>
+                                    bma record update --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --record-id=&lt;record_id&gt; --link-all-files-from-previous --publish
+                                </code>
+                            </ul>
+                        </li>
+                        Note that, if a data file remains unchanged from one version to the next, it is linked to both versions but uploaded only once.
+                        This saves storage space and avoids unnecessary use of bandwidth.
+                        <li>
+                            Navigate to "Shared records" and click the record's title. Observe the links imported from the first version,
+                            in addition to the links for the files in `data/input/upload`. The `--link-all-files-from-previous` flag is responsible
+                            for these extra links.
+                        </li>
+                    </ul>
+                </p>
+
+                <h3>Retrieve shared records' metadata</h3>
+                <p>
+                    <ul>
+                        <li>
+                            To retrieve the metadata of a specific shared record, execute this command, after replacing `&lt;record_id&gt;` with the record's id:
+                            <ul class="p-10">
+                                <code>
+                                    bma record get --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json --record-id=&lt;record_id&gt;
+                                </code>
+                            </ul>
+                        </li>
+                        <li>To get the metadata of the latest shared version of each entry, execute this command:
+                            <ul class="p-10">
+                            <code>bma record get-all --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json</code>
+                            </ul>
+                        </li>
+                        <li>For all shared versions of each entry:
+                            <ul class="p-10">
+                            <code>
+                                bma record get-all --config-file=$PWD/bma_config.yaml --output-file=$PWD/data/output/metadata.json --all-versions
+                            </code>
+                            </ul>
+                        </li>
+                    </ul>
+                </p>
+            </div>
+        </div>
+    {% endblock main_column %}
+    </div>
+{%- endblock grid_section %}
+{% endblock page_body %}
+
+{%- block javascript %}
+{%- endblock javascript %}
