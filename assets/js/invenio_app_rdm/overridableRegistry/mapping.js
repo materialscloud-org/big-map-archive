@@ -42,5 +42,5 @@ export const overriddenComponents = {
     "InvenioAppRdm.Search.SearchApp.layout": BMASearchAppLayout,
     "InvenioAppRdm.Search.SearchFilters.Toggle.element": BMASearchFiltersToggleElement,
     "InvenioAppRdm.RecordLandingPage.RecordManagement.container": BMARecordManagement,
-    "InvenioAppRdm.RecordLandingPage.RecordManagement.ShareButton.ShareModal.component": BMAShareModal,
+    "InvenioAppRdm.RecordLandingPage.ShareModal.component": BMAShareModal,
 }

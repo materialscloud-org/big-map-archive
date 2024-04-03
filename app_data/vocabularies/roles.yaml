@@ -1,0 +1,6 @@
+- id: contactperson
+  props:
+    datacite: ContactPerson
+  title:
+    en: Contact person
+    de: Kontaktperson
