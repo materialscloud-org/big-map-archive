@@ -148,21 +148,3 @@ def invenio_app_rdm_requests_ui_create_ui_blueprint(app):
     )
 
     return blueprint
-
-
-# Override all ui blueprint invenio_notifications_settings
-def invenio_notifications_create_blueprint_settings(app):
-    """Override all ui blueprint invenio_notifications_settings routes in invenio_notifications.
-
-    Do not associate route ("/accounts/settings/notifications/", methods=["GET", "POST"]) with blueprint below
-    route: /accounts/settings/notifications/
-    """
-    blueprint = Blueprint(
-        "invenio_notifications_settings",
-        __name__,
-        template_folder="templates/settings",
-        url_prefix="/account/settings/notifications",
-        static_folder="static",
-    )
-
-    return blueprint

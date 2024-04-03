@@ -61,7 +61,7 @@ export class BMAShareModal extends Component {
           <Icon name="share square" /> {i18next.t("Share links")}
           <div className="ui mini message">
             <i aria-hidden="true" className="warning sign icon"/>
-            Before creating and sharing links with your colleagues read on the different types of access permissions <a href="/help/share_links" target="_blank">here</a>.
+            Read on the <a href="/help/share_links" target="_blank">access permissions</a> before creating and sharing links.
           </div>
         </Modal.Header>
 

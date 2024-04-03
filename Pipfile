@@ -7,26 +7,14 @@ verify_ssl = true
 check-manifest = ">=0.25"
 
 [packages]
-## version 12.0.0b2.dev36 / 12.0.0b2.dev66
+# version 12.0.0b3.dev7
 big-map-archive = {editable="True", path="./site"}
 uwsgi = ">=2.0"
 uwsgitop = ">=0.11"
 uwsgi-tools = ">=1.1.1"
 importlib-metadata = "*"
 python-dotenv = "==1.0.0"
-#invenio-app-rdm = {extras = ["postgresql", "opensearch2", "s3"], version = "==12.0.0b2.dev36"}
-invenio-app-rdm = {extras = ["postgresql", "opensearch2", "s3"], version = "==12.0.0b2.dev66"}
-
-## version 12.0.0b2.dev8
-#big-map-archive = {editable="True", path="./site"}
-#uwsgi = ">=2.0"
-#uwsgitop = ">=0.11"
-#uwsgi-tools = ">=1.1.1"
-# invenio_s3 = "==1.0.6" # to install after the Pipfile.lock is installed, use "pip install invenio_s3==1.0.6"
-#importlib-metadata = "*"
-#python-dotenv = "==1.0.0"
-#invenio-app-rdm = {extras = ["postgresql", "opensearch2"], version = "==12.0.0b2.dev8"}
-#setuptools = "==68.0.0"
+invenio-app-rdm = {extras = ["postgresql", "opensearch2", "s3"], version = "==12.0.0b3.dev7"}
 
 [requires]
 python_version = "3.9"
