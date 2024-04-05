@@ -133,7 +133,6 @@ class BMAReviewService(ReviewService):
     @unit_of_work()
     def submit(self, identity, id_, data=None, require_review=False, uow=None):
         """Submit record for review or direct publish to the community."""
-
         if not isinstance(require_review, bool):
             raise ValidationError(
                 _("Must be a boolean, true or false"),
@@ -262,7 +261,7 @@ def init_s3fs_info(self):
     return info
 
 
-# Always download files as attachment
+# Always files download as attachment
 class BMA_RDMFileResource(FileResource):
     @request_view_args
     def read_content(self):
@@ -309,7 +308,7 @@ class BMARecordService(RecordService):
 
         # Raise an exception if no community has been selected for the draft
         if not bool(draft.parent.communities.ids):
-            raise Exception('Please select a community.')
+            raise PermissionDeniedError('Community not selected.')
 
         # Create the record from the draft
         latest_id = draft.versions.latest_id
