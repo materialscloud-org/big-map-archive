@@ -395,20 +395,24 @@ def test_create_draft_with_community(com1_reader, token_com1_reader, minimal_all
     add_community_to_draft(com1_reader, community1_id, id)
     delete_draft(api, h, id)
 
-    # # Create draft
-    # record["metadata"]["title"] = "Test draft: draft with no file and community com2"
-    # r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
-    # assert r.status_code == 201
-    # links = r.json()['links']
-    # id = r.json()['id']
+    # Attribute draft to com2
+    record = deepcopy(minimal_allowed_draft)
+    community2 = current_communities.service.search(system_identity, q="slug:com2")
+    assert community2
+    community2_id = list(community2.hits)[0]["id"]
+    assert community2_id
 
-    # # Note: the following is not an API test, it succeeds even for token com1 and community com2, to check
-    # # Try to add draft to community2: create community-submission request, DENY
-    # community2 = current_communities.service.search(system_identity, q="slug:com2")
-    # assert community2
-    # community2_id = list(community2.hits)[0]["id"]
-    # assert community2_id
-    # add_community_to_draft(com1_reader, community2_id, id)
+    # Create draft
+    record["metadata"]["title"] = "Test draft: draft with no file and community com2"
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+
+    # Add draft to community2: create community-submission request
+    # Note: cannot deny to create draft for a community of which the owner does not belong,
+    # but can deny to publish it. The draft is accessible via api but not via ui.
+    add_community_to_draft(com1_reader, community2_id, id)
+    delete_draft(api, h, id)
 
 
 # Records
@@ -430,7 +434,7 @@ def test_publish_record1(com1_reader, token_com1_reader, minimal_allowed_draft):
 
     # Publish the record: do not allow publication with no community and no files
     r = requests.post(links["publish"], headers=h, verify=False)
-    assert r.status_code in [400, 500]
+    assert r.status_code == 403
     delete_draft(api, h, id)
 
 
@@ -560,6 +564,45 @@ def test_publish_record4(com1_reader, token_com1_reader, minimal_allowed_draft, 
     assert r.text == '{"status": 400, "message": "A validation error occurred.", "errors": [{"field": "metadata.description", "messages": ["Missing data for required field."]}]}'
     assert r.status_code == 400
     delete_draft(api, h, id)
+
+
+# Publish record with files and community not the same as the owner
+def test_publish_record5(com1_reader, token_com1_reader, token_com1_reader2,
+                         token_com2_reader, minimal_allowed_draft, communities):
+    """Test 3: publish record with file and community, ALLOW"""
+
+    # record header Authorisation
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # file header Authorisation
+    fh["Authorization"] = f"Bearer {token_com1_reader}"
+
+    record = deepcopy(minimal_allowed_draft)
+
+    assert communities
+    community2 = current_communities.service.search(system_identity, q="slug:com2")
+    assert community2
+    community2_id = list(community2.hits)[0]["id"]
+    assert community2_id
+
+    record["metadata"]["title"] = "Test publish record: with file and community"
+
+    # Create draft
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    links = r.json()['links']
+    id = r.json()['id']
+
+    # Add draft to community: create community-submission request
+    add_community_to_draft(com1_reader, community2_id, id)
+
+    # Add file
+    add_file(h, fh, links, filepath)
+
+    # Accept review and publish to community
+    links["submit-review"] = f"{links['publish'].rstrip('publish')}submit-review"
+    r = requests.post(links["submit-review"], headers=h, verify=False)
+    assert r.status_code == 403
 
 
 # Published record: update access, set access to public

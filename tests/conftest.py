@@ -8,6 +8,7 @@
 """Pytest configuration."""
 
 from datetime import datetime
+from io import BytesIO
 from pathlib import Path
 
 import pytest
@@ -20,12 +21,17 @@ from invenio_communities.fixtures.tasks import create_demo_community
 from invenio_communities.members.errors import AlreadyMemberError
 from invenio_db import db
 from invenio_oauth2server.models import Client, Token
+from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.fixtures.communities import CommunitiesFixture
 from invenio_rdm_records.fixtures.users import UsersFixture
+from invenio_rdm_records.proxies import current_rdm_records
+from invenio_rdm_records.records.api import RDMDraft, RDMRecord
+from invenio_requests import current_requests_service
 from marshmallow.exceptions import ValidationError
 from sqlalchemy.exc import NoResultFound
 
-from .helpers import generate_pat_token
+from .helpers import (add_community_to_draft, generate_pat_token,
+                      get_community_id)
 
 
 @pytest.fixture
@@ -521,3 +527,116 @@ def minimal_allowed_draft():
         },
         "pids": {}
     }
+
+
+@pytest.fixture()
+def service():
+    """RDM Record Service."""
+    return current_rdm_records.records_service
+
+
+@pytest.fixture()
+def restricted_record(service, minimal_allowed_draft, identity_com1, identity2_com1, identity_com2, com1_reader):
+    """Restricted record fixture."""
+    data = minimal_allowed_draft.copy()
+    data["metadata"]["title"] = "Test api requests"
+    # data["files"]["enabled"] = True
+
+    community1_id = get_community_id("com1")
+    assert community1_id
+
+    # Create
+    draft = service.create(identity_com1, data)
+
+    # Add a file
+    service.draft_files.init_files(
+        identity_com1, draft.id, data=[{"key": "test.pdf"}]
+    )
+    service.draft_files.set_file_content(
+        identity_com1, draft.id, "test.pdf", BytesIO(b"test file")
+    )
+    service.draft_files.commit_file(identity_com1, draft.id, "test.pdf")
+
+    # Add draft to community1: create community-submission request, ALLOW
+    add_community_to_draft(com1_reader, community1_id, draft.id)
+
+    # Submit community-submission review
+    service.review.submit(identity_com1, draft.id)
+
+    # draft = RDMDraft.pid.resolve(draft.id)
+    pid = PersistentIdentifier.get(pid_type='recid', pid_value=draft.id)
+    draft = RDMDraft.get_record(pid.object_uuid)
+    reqid = draft.parent.review.id
+
+    # Accept the request and publish
+    current_requests_service.execute_action(system_identity, reqid, "accept", {})
+
+    # # Publish
+    # record = service.publish(identity_com1, draft.id)
+
+    # Get published record
+    record = RDMRecord.get_record(draft.id)
+
+    # Put published record in edit mode so that draft exists (this is for testing the preview secret link)
+    draft = service.edit(identity_com1, record.get("id"))
+
+    return RDMRecord.get_record(record.id)
+
+
+@pytest.fixture()
+def restricted_draft(service, minimal_allowed_draft, identity_com1, com1_reader):
+    """Restricted draft fixture with submitted community-submission request."""
+    data = minimal_allowed_draft.copy()
+    data["metadata"]["title"] = "Test api requests draft"
+    # data["files"]["enabled"] = True
+
+    community1_id = get_community_id("com1")
+    assert community1_id
+
+    # Create
+    draft = service.create(identity_com1, data)
+
+    # Add a file
+    service.draft_files.init_files(
+        identity_com1, draft.id, data=[{"key": "test.pdf"}]
+    )
+    service.draft_files.set_file_content(
+        identity_com1, draft.id, "test.pdf", BytesIO(b"test file")
+    )
+    service.draft_files.commit_file(identity_com1, draft.id, "test.pdf")
+
+    # Add draft to community1: create community-submission request, ALLOW
+    add_community_to_draft(com1_reader, community1_id, draft.id)
+
+    # Submit community-submission review
+    service.review.submit(identity_com1, draft.id)
+    pid = PersistentIdentifier.get(pid_type='recid', pid_value=draft.id)
+    return RDMDraft.get_record(pid.object_uuid)
+
+
+@pytest.fixture()
+def restricted_draft1(service, minimal_allowed_draft, identity_com1, com1_reader):
+    """Restricted draft fixture with created community-submission request."""
+    data = minimal_allowed_draft.copy()
+    data["metadata"]["title"] = "Test api requests draft"
+    # data["files"]["enabled"] = True
+
+    community1_id = get_community_id("com1")
+    assert community1_id
+
+    # Create
+    draft = service.create(identity_com1, data)
+
+    # Add a file
+    service.draft_files.init_files(
+        identity_com1, draft.id, data=[{"key": "test.pdf"}]
+    )
+    service.draft_files.set_file_content(
+        identity_com1, draft.id, "test.pdf", BytesIO(b"test file")
+    )
+    service.draft_files.commit_file(identity_com1, draft.id, "test.pdf")
+
+    # Add draft to community1: create community-submission request, ALLOW
+    add_community_to_draft(com1_reader, community1_id, draft.id)
+    pid = PersistentIdentifier.get(pid_type='recid', pid_value=draft.id)
+    return RDMDraft.get_record(pid.object_uuid)

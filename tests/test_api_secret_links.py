@@ -6,6 +6,7 @@
 # it under the terms of the MIT License; see LICENSE file for more details.
 
 
+import json
 from io import BytesIO
 
 import pytest
@@ -96,7 +97,6 @@ def api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reade
     token = link.data["token"]
 
     if link.data["permission"] == "view":
-        print("View")
         # Record owner
         h["Authorization"] = f"Bearer {token_com1_reader}"
         r = requests.get(f"{api}/api/records/{id}?token={token}", headers=h, verify=False)
@@ -122,7 +122,6 @@ def api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reade
         assert r.json()['id'] == id
 
     elif link.data["permission"] == "preview":
-        print("Preview")
         # Record owner
         h["Authorization"] = f"Bearer {token_com1_reader}"
         r = requests.get(f"{api}/api/records/{id}?token={token}", headers=h, verify=False)
@@ -168,7 +167,6 @@ def api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reade
         assert r.json()['is_draft'] == True
 
     elif link.data["permission"] == "edit":
-        print("Edit")
         # Record owner
         h["Authorization"] = f"Bearer {token_com1_reader}"
         r = requests.get(f"{api}/api/records/{id}?token={token}", headers=h, verify=False)
@@ -228,3 +226,147 @@ def test_api_secret_links_get(
     api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reader, id_, view_link)
     api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reader, id_, preview_link)
     api_secret_links_get(token_com1_reader, token_com1_reader2, token_com2_reader, id_, edit_link)
+
+
+def test_api_secret_links_create(
+    restricted_record, token_com1_reader,
+    token_com1_reader2, token_com2_reader
+):
+    """ Test create secret link via API """
+    id_ = restricted_record.get("id")
+    data = {"permission": "view"}
+
+    # Record owner
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 201
+
+    # Member of the same community of the record
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Member of a different community of the record
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Anonymus
+    h["Authorization"] = ""
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 400
+
+
+def test_api_secret_links_update(
+    restricted_record, token_com1_reader,
+    token_com1_reader2, token_com2_reader
+):
+    """ Test update secret link via API """
+    id_ = restricted_record.get("id")
+    data = {"permission": "view"}
+
+    # Record owner
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # create the link as view
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 201
+    link_id = r.json()['id']
+
+    # update the link as preview
+    data = {"permission": "preview"}
+    r = requests.patch(f"{api}/api/records/{id_}/access/links/{link_id}", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 200
+
+    # update the link as edit
+    data = {"permission": "edit"}
+    # Member of the same community of the record
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.patch(f"{api}/api/records/{id_}/access/links/{link_id}", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Member of a different community of the record
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.patch(f"{api}/api/records/{id_}/access/links/{link_id}", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Anonymus
+    h["Authorization"] = ""
+    r = requests.patch(f"{api}/api/records/{id_}/access/links/{link_id}", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 400
+
+
+def test_api_secret_links_delete(
+    restricted_record, token_com1_reader,
+    token_com1_reader2, token_com2_reader
+):
+    """ Test delete secret link via API """
+    id_ = restricted_record.get("id")
+    data = {"permission": "view"}
+
+    # Record owner
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # create the link as view
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 201
+    link_id = r.json()['id']
+
+    # delete the link as preview
+    r = requests.delete(f"{api}/api/records/{id_}/access/links/{link_id}", headers=h, verify=False)
+    assert r.status_code == 204
+
+    # create the link as view
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 201
+    link_id = r.json()['id']
+
+    # Member of the same community of the record
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.delete(f"{api}/api/records/{id_}/access/links/{link_id}", headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Member of a different community of the record
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.delete(f"{api}/api/records/{id_}/access/links/{link_id}", headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Anonymus
+    h["Authorization"] = ""
+    r = requests.delete(f"{api}/api/records/{id_}/access/links/{link_id}", headers=h, verify=False)
+    assert r.status_code == 400
+
+
+def test_api_secret_links_list(
+    restricted_record, token_com1_reader,
+    token_com1_reader2, token_com2_reader
+):
+    """ Test list secret links via API """
+    id_ = restricted_record.get("id")
+    data = {"permission": "view"}
+
+    # Record owner
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # create the link
+    r = requests.post(f"{api}/api/records/{id_}/access/links", data=json.dumps(data), headers=h, verify=False)
+    assert r.status_code == 201
+
+    # get links
+    r = requests.get(f"{api}/api/records/{id_}/access/links", headers=h, verify=False)
+    assert r.status_code == 200
+
+    # Member of the same community of the record
+    h["Authorization"] = f"Bearer {token_com1_reader2}"
+    r = requests.get(f"{api}/api/records/{id_}/access/links", headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Member of a different community of the record
+    h["Authorization"] = f"Bearer {token_com2_reader}"
+    r = requests.get(f"{api}/api/records/{id_}/access/links", headers=h, verify=False)
+    assert r.status_code == 403
+
+    # Anonymus
+    h["Authorization"] = ""
+    r = requests.get(f"{api}/api/records/{id_}/access/links", headers=h, verify=False)
+    assert r.status_code == 403
