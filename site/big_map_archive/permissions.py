@@ -14,9 +14,11 @@ from invenio_communities.permissions import CommunityPermissionPolicy
 from invenio_rdm_records.services.generators import (
     CommunityInclusionReviewers, IfFileIsLocal, IfRestricted,
     RecordCommunitiesAction, RecordOwners, ResourceAccessToken, SecretLinks)
-from invenio_rdm_records.services.permissions import RDMRecordPermissionPolicy
+from invenio_rdm_records.services.permissions import (
+    RDMRecordPermissionPolicy, RDMRequestsPermissionPolicy)
 from invenio_records_permissions.generators import (AuthenticatedUser, Disable,
                                                     IfConfig, SystemProcess)
+from invenio_requests.services.generators import Creator
 from invenio_users_resources.services.permissions import UserManager
 
 from big_map_archive.generators import (AnyUserWithSecretLink,
@@ -24,6 +26,8 @@ from big_map_archive.generators import (AnyUserWithSecretLink,
 
 
 class BMARecordPermissionPolicy(RDMRecordPermissionPolicy):
+    """Record permission policy."""
+
     can_search = [AuthenticatedUser(), SystemProcess()]
 
     can_manage = [
@@ -114,7 +118,7 @@ class BMARecordPermissionPolicy(RDMRecordPermissionPolicy):
 
 
 class BMACommunityPermissionPolicy(CommunityPermissionPolicy):
-
+    """Community permission policy."""
     # Important for community selection prior to record sharing
     # Allow AnyUser with secret link to read communities info - needed to make records accessible via SecretLink by anyone
     can_read = [AnyUserWithSecretLink(), CommunityMembers(), SystemProcess()]
@@ -177,3 +181,13 @@ class BMACommunityPermissionPolicy(CommunityPermissionPolicy):
     can_moderate = [Disable()]
     can_manage_access = [SystemProcess()]
     can_create_restricted = [SystemProcess()]
+
+
+class BMARequestsPermissionPolicy(RDMRequestsPermissionPolicy):
+    """Requests permission policy."""
+
+    can_action_accept = [Creator(), SystemProcess()]
+    can_action_decline = [Creator(), SystemProcess()]
+    can_create_comment = [Creator(), SystemProcess()]
+    can_update_comment = [SystemProcess()]
+    can_delete_comment = [SystemProcess()]
