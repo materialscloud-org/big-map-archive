@@ -605,6 +605,47 @@ def test_publish_record5(com1_reader, token_com1_reader, token_com1_reader2,
     assert r.status_code == 403
 
 
+def test_publication_date(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test: create draft: with community com1."""
+
+    # record header Authorisation
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    # file header Authorisation
+    fh["Authorization"] = f"Bearer {token_com1_reader}"
+
+    record = deepcopy(minimal_allowed_draft)
+
+    assert communities
+
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1
+    community1_id = list(community1.hits)[0]["id"]
+    assert community1_id
+
+    # Create draft
+    record["metadata"]["title"] = "Test publication date"
+    record["metadata"]["publication_date"] = "2024-01-01"
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+    links = r.json()['links']
+
+    # Add draft to community1: create community-submission request, ALLOW
+    add_community_to_draft(com1_reader, community1_id, id)
+
+    # Add file
+    add_file(h, fh, links, filepath)
+
+    # Accept review and publish to community: publication date should update to current date
+    links["submit-review"] = f"{links['publish'].rstrip('publish')}submit-review"
+    r = requests.post(links["submit-review"], headers=h, verify=False)
+    assert r.status_code == 202
+
+    r = requests.get(f"{api}/api/records/{id}", headers=h, verify=False)
+    assert r.json()['metadata']['publication_date'] == datetime.now().strftime("%Y-%m-%d")
+
+
 # Published record: update access, set access to public
 def test_published_record_update_access(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
     """Test: edit published record and set access to public and embargo to True.
@@ -746,10 +787,31 @@ def test_published_record_update_remove_community(com1_reader, token_com1_reader
 
 # Versions
 # New versions of record
-# def test_update_published_record3():
-#     """Test 2: create new version of published record and set access to public, DENY"""
-#     pass
+def test_new_version(com1_reader, token_com1_reader, restricted_published_record):
+    """Test: create new version of published record and check publication date is correct"""
+    # record header Authorisation
+    h["Authorization"] = f"Bearer {token_com1_reader}"
 
-# Access links
+    # file header Authorisation
+    fh["Authorization"] = f"Bearer {token_com1_reader}"
 
-# User Records
+    record = deepcopy(restricted_published_record)
+    id = record.get("id")
+
+    # create new version
+    record["metadata"]["title"] = f"{record['metadata']['title']} v2"
+    r = requests.post(f"{api}/api/records/{id}/versions", headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+    links = r.json()['links']
+
+    # import files from previous version
+    r = requests.post(f"{api}/api/records/{id}/draft/actions/files-import", headers=h, verify=False)
+    assert r.status_code == 201
+
+    # Publish to community: publication date should update to current date
+    r = requests.post(links["publish"], headers=h, verify=False)
+    assert r.status_code == 202
+
+    r = requests.get(f"{api}/api/records/{id}", headers=h, verify=False)
+    assert r.json()['metadata']['publication_date'] == datetime.now().strftime("%Y-%m-%d")

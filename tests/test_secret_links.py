@@ -16,7 +16,6 @@ from invenio_app.factory import create_app
 from invenio_communities.generators import CommunityRoleNeed
 from invenio_pidstore.errors import PIDDoesNotExistError
 from invenio_pidstore.models import PersistentIdentifier
-from invenio_rdm_records.proxies import current_rdm_records
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
 from invenio_rdm_records.secret_links.permissions import LinkNeed
 from invenio_records_resources.services.errors import PermissionDeniedError
@@ -29,10 +28,10 @@ ctx = app.app_context()
 ctx.push()
 
 
-@pytest.fixture()
-def service():
-    """RDM Record Service."""
-    return current_rdm_records.records_service
+# @pytest.fixture()
+# def service():
+#     """RDM Record Service."""
+#     return current_rdm_records.records_service
 
 
 @pytest.fixture()
