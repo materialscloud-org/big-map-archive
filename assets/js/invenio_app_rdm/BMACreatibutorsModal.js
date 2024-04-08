@@ -560,7 +560,7 @@ export class BMACreatibutorsModal extends Component {
                   </Form.Group>
                   {_get(values, typeFieldPath, "") === CREATIBUTOR_TYPE.PERSON ? (
                     <div>
-                      {autocompleteNames !== NamesAutocompleteOptions.OFF && (
+                      {/*autocompleteNames !== NamesAutocompleteOptions.OFF && (
                         <RemoteSelectField
                           selectOnBlur={false}
                           selectOnNavigation={false}
@@ -585,7 +585,7 @@ export class BMACreatibutorsModal extends Component {
                           onValueChange={this.onPersonSearchChange}
                           ref={this.namesAutocompleteRef}
                         />
-                      )}
+                          )*/}
                       {showPersonForm && (
                         <div>
                           <Form.Group widths="equal">
