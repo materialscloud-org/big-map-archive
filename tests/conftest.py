@@ -536,10 +536,52 @@ def service():
 
 
 @pytest.fixture()
-def restricted_record(service, minimal_allowed_draft, identity_com1, identity2_com1, identity_com2, com1_reader):
+def restricted_published_record(service, minimal_allowed_draft, identity_com1, com1_reader):
     """Restricted record fixture."""
     data = minimal_allowed_draft.copy()
-    data["metadata"]["title"] = "Test api requests"
+    data["metadata"]["title"] = "Test api restricted_published_record"
+
+    community1_id = get_community_id("com1")
+    assert community1_id
+
+    # Create
+    draft = service.create(identity_com1, data)
+
+    # Add a file
+    service.draft_files.init_files(
+        identity_com1, draft.id, data=[{"key": "test.pdf"}]
+    )
+    service.draft_files.set_file_content(
+        identity_com1, draft.id, "test.pdf", BytesIO(b"test file")
+    )
+    service.draft_files.commit_file(identity_com1, draft.id, "test.pdf")
+
+    # Add draft to community1: create community-submission request, ALLOW
+    add_community_to_draft(com1_reader, community1_id, draft.id)
+
+    # Submit community-submission review
+    service.review.submit(identity_com1, draft.id)
+
+    # draft = RDMDraft.pid.resolve(draft.id)
+    pid = PersistentIdentifier.get(pid_type='recid', pid_value=draft.id)
+    draft = RDMDraft.get_record(pid.object_uuid)
+    reqid = draft.parent.review.id
+
+    # Accept the request and publish
+    current_requests_service.execute_action(system_identity, reqid, "accept", {})
+
+    # # Publish
+    # record = service.publish(identity_com1, draft.id)
+
+    # Get published record
+    return RDMRecord.get_record(draft.id)
+
+
+@pytest.fixture()
+def restricted_record(service, minimal_allowed_draft, identity_com1, com1_reader):
+    """Restricted record fixture."""
+    data = minimal_allowed_draft.copy()
+    data["metadata"]["title"] = "Test api restricted record"
     # data["files"]["enabled"] = True
 
     community1_id = get_community_id("com1")
@@ -587,7 +629,7 @@ def restricted_record(service, minimal_allowed_draft, identity_com1, identity2_c
 def restricted_draft(service, minimal_allowed_draft, identity_com1, com1_reader):
     """Restricted draft fixture with submitted community-submission request."""
     data = minimal_allowed_draft.copy()
-    data["metadata"]["title"] = "Test api requests draft"
+    data["metadata"]["title"] = "Test api restriced draft"
     # data["files"]["enabled"] = True
 
     community1_id = get_community_id("com1")
@@ -618,7 +660,7 @@ def restricted_draft(service, minimal_allowed_draft, identity_com1, com1_reader)
 def restricted_draft1(service, minimal_allowed_draft, identity_com1, com1_reader):
     """Restricted draft fixture with created community-submission request."""
     data = minimal_allowed_draft.copy()
-    data["metadata"]["title"] = "Test api requests draft"
+    data["metadata"]["title"] = "Test api restricted draft"
     # data["files"]["enabled"] = True
 
     community1_id = get_community_id("com1")

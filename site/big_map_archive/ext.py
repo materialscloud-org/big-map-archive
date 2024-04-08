@@ -310,8 +310,14 @@ class BMARecordService(RecordService):
         if not bool(draft.parent.communities.ids):
             raise PermissionDeniedError('Community not selected.')
 
-        # Create the record from the draft
         latest_id = draft.versions.latest_id
+
+        # Update publication date.
+        # Do not update publication date when editing published record.
+        if draft.status != "published":
+            draft["metadata"]["publication_date"] = datetime.now().strftime("%Y-%m-%d")
+
+        # Create the record from the draft
         record = self.record_cls.publish(draft)
 
         # Run components
