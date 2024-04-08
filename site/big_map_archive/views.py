@@ -6,6 +6,7 @@ import babel
 from flask import Blueprint, current_app, g, redirect, render_template
 from flask_principal import AnonymousIdentity
 from flask_security.utils import url_for_security
+from invenio_previewer.proxies import current_previewer
 
 from .deposits import deposit_edit
 from .infos import faqs, share_links, tutorial
@@ -61,6 +62,11 @@ def create_blueprint(app):
 
         # override view /me/communities
         app.view_functions["invenio_app_rdm_users.communities"] = not_found_template
+
+        # override list of previewable_extensions, remove csv and pdf
+        current_previewer.previewable_extensions = {
+            v for v in current_previewer.previewable_extensions if v not in ["csv", "pdf", "pdfa"]
+        }
 
     @app.template_filter()
     def format_datetime(value, format='basic'):
