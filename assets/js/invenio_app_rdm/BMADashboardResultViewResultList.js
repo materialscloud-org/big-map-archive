@@ -10,7 +10,7 @@ export function BMADashboardResultViewResultList(props) {
                 <div className="flex-center">
                     <h2 className="m-0">My records</h2>
                     <Popup
-                        trigger={<Icon className="ml-5" name="info circle flex-center"/>}
+                        trigger={<Icon className="ml-5 flex-center" name="info circle"/>}
                         content={"Use the closest search box to filter through your records. The search guide provides examples of advanced search queries."}
                     />
                 </div>
