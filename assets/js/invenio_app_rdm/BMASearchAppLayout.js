@@ -20,7 +20,6 @@ const appName = "InvenioAppRdm.Search";
 
 export const BMASearchAppLayout = (props) => {
     const {config} = props;
-
     const [sidebarVisible, setSidebarVisible] = React.useState(false);
     const searchApi = new InvenioSearchApi(config.searchApi);
     const context = {
@@ -82,11 +81,11 @@ export const BMASearchAppLayout = (props) => {
                   <div className="twelve wide computer sixteen wide mobile sixteen wide tablet column">
                     <div className="ui grid">
                       <div className="middle aligned row pb-0">
-                        <div className="left eight wide column">
+                        <div className="left twelve wide column">
                             <div className="flex-center">
                                 <h2 className="m-0">Shared records</h2>
                                 <Popup
-                                    trigger={<Icon className="ml-5" name="info circle flex-center"/>}
+                                    trigger={<Icon className="ml-5 flex-center" name="info circle"/>}
                                     content={"Use the search box to filter through the records that are shared with your communities. The search guide provides examples of advanced search queries."}
                                 />
                             </div>
