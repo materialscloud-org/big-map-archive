@@ -415,6 +415,74 @@ def test_create_draft_with_community(com1_reader, token_com1_reader, minimal_all
     delete_draft(api, h, id)
 
 
+def test_create_draft_with_additional_fields(com1_reader, token_com1_reader, minimal_allowed_draft, communities):
+    """Test: create draft: with community com1."""
+
+    # record header Authorisation
+    h["Authorization"] = f"Bearer {token_com1_reader}"
+
+    record = deepcopy(minimal_allowed_draft)
+
+    assert communities
+
+    community1 = current_communities.service.search(system_identity, q="slug:com1")
+    assert community1
+    community1_id = list(community1.hits)[0]["id"]
+    assert community1_id
+
+    # Create draft adding additional fields not allowed
+    record["metadata"]["title"] = "Test draft: draft with additional fields"
+    record["metadata"]["additional_titles"] = [{"title": "My additional title", "type": {"id": "alternative-title"}}]
+    record["metadata"]["additional_descriptions"] = [{"description": "My additional description", "type": {"id": "abstract"}, "lang": {"id": "eng"}}]
+    r = requests.post(f"{api}/api/records", data=json.dumps(record), headers=h, verify=False)
+    assert r.status_code == 201
+    id = r.json()['id']
+
+    r = requests.get(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+    assert r.status_code == 200
+    draft = r.json()
+
+    assert "title" in draft["metadata"]
+    # Check the not allowed fields are not loaded
+    assert "additional_titles" not in draft["metadata"]
+    assert "additional_descriptions" not in draft["metadata"]
+
+
+def delete_api_draft(restricted_draft1, token, token_owner):
+    """Test delete draft of community 1"""
+    h["Authorization"] = f"Bearer {token}"
+
+    record = deepcopy(restricted_draft1)
+    id = record.get("id")
+
+    r = requests.delete(f"{api}/api/records/{id}/draft", headers=h, verify=False)
+
+    if not token:
+        assert r.status_code == 400
+        return
+
+    if token == token_owner:
+        assert r.status_code == 204
+    else:
+        assert r.status_code == 403
+
+
+def test_delete_draft_member_com1(restricted_draft1, token_com1_reader, token_com2_reader):
+    delete_api_draft(restricted_draft1, token_com1_reader, token_owner=token_com1_reader)
+
+
+def test_delete_draft_member2_com1(restricted_draft1, token_com1_reader, token_com1_reader2):
+    delete_api_draft(restricted_draft1, token_com1_reader2, token_owner=token_com1_reader)
+
+
+def test_delete_draft_member_com2(restricted_draft1, token_com1_reader, token_com2_reader):
+    delete_api_draft(restricted_draft1, token_com2_reader, token_owner=token_com1_reader)
+
+
+def test_delete_draft_no_member(restricted_draft1, token_com1_reader):
+    delete_api_draft(restricted_draft1, None, token_owner=token_com1_reader)
+
+
 # Records
 # Publish record with no files and no community
 def test_publish_record1(com1_reader, token_com1_reader, minimal_allowed_draft):
@@ -783,6 +851,38 @@ def test_published_record_update_remove_community(com1_reader, token_com1_reader
     assert r.status_code == 200
     assert r.json()["parent"]["communities"]["ids"][0] == community1_id
     delete_draft(api, h, id)
+
+
+def delete_api_record(restricted_published_record, token, token_owner):
+    """Test delete record of community 1"""
+    h["Authorization"] = f"Bearer {token}"
+
+    record = deepcopy(restricted_published_record)
+    id = record.get("id")
+
+    r = requests.delete(f"{api}/api/records/{id}", headers=h, verify=False)
+
+    if not token:
+        assert r.status_code == 400
+        return
+
+    assert r.status_code == 404
+
+
+def test_delete_record_member_com1(restricted_draft1, token_com1_reader, token_com2_reader):
+    delete_api_record(restricted_draft1, token_com1_reader, token_owner=token_com1_reader)
+
+
+def test_delete_record_member2_com1(restricted_draft1, token_com1_reader, token_com1_reader2):
+    delete_api_record(restricted_draft1, token_com1_reader2, token_owner=token_com1_reader)
+
+
+def test_delete_record_member_com2(restricted_draft1, token_com1_reader, token_com2_reader):
+    delete_api_record(restricted_draft1, token_com2_reader, token_owner=token_com1_reader)
+
+
+def test_delete_record_no_member(restricted_draft1, token_com1_reader):
+    delete_api_record(restricted_draft1, None, token_owner=token_com1_reader)
 
 
 # Versions

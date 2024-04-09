@@ -26,7 +26,7 @@ from invenio_rdm_records.services.errors import ReviewNotFoundError
 from invenio_rdm_records.services.review.service import ReviewService
 from invenio_rdm_records.services.schemas import RDMRecordSchema
 from invenio_rdm_records.services.schemas.metadata import (
-    RelatedIdentifierSchema, record_identifiers_schemes)
+    MetadataSchema, RelatedIdentifierSchema, record_identifiers_schemes)
 from invenio_rdm_records.services.schemas.utils import dump_empty
 from invenio_records.systemfields.relations.errors import InvalidRelationValue
 from invenio_records_resources.resources.files.resource import (
@@ -338,3 +338,20 @@ class BMARecordService(RecordService):
             expandable_fields=self.expandable_fields,
             expand=expand,
         )
+
+
+# Override MetadataSchema to make description required and remove fields not in upload form
+class BMAMetadataSchema(MetadataSchema):
+    """Override MetadataSchema.
+
+    Make description required and remove fields not in upload form.
+    """
+
+    MetadataSchema._declared_fields['description'].required = True
+
+    for field in [
+        'additional_titles', 'contributors', 'dates', 'languages',
+        'sizes', 'formats', 'identifiers', 'version',
+        'additional_descriptions', 'locations', 'funding', 'references'
+    ]:
+        MetadataSchema._declared_fields.pop(field)
