@@ -200,3 +200,16 @@ def change_owner(pid_value, email, record_cls, uow):
             uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
 
     return True
+
+
+def get_first_version(record):
+    """ Get first version of record (including retracted siblings)
+
+    @param record: any sibling of the record
+    @returns: first version of record
+    """
+    siblings = RDMRecord.get_records_by_parent(record.parent)
+    record = [child for child in siblings if child.versions.index == 1]
+    if not record:
+        return
+    return record[0]
