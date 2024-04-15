@@ -31,7 +31,7 @@ sudo rm -rf $PATH_TO_BIGMAP_VENV
 mkvirtualenv -p /usr/bin/python3.8 bm_archiverdm_migration
 
 cd $PATH_TO_BIGMAP_APP
-workon bm_archiverdm
+workon bm_archiverdm_migration
 nvm use v14.18.1
 pip install invenio-cli
 
@@ -89,27 +89,7 @@ invenio alembic upgrade
 pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_10_0_to_11_0.py)
 
 ############################
-# Step 5: Upgrade to InvenioRDM v12
-############################
-# Move to the branch develop_v12
-# You will need to remove the copied folders of migration and backup to 
-# be able to change branch
-git checkout develop_v12
-nvm use v14.18.1
-
-# Execute the database migration
-# set depends_on = None:
-# depends_on = "eb9743315a9d"  # invenio-accounts: add_userprofile
-# depends_on = None
-# in here:
-# <venv>/lib/python3.9/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
-invenio alembic upgrade
-
-# delete all indexes
-curl -X DELETE http://localhost:9200/*
-
-############################
-# Step 6: Make a dump of the migrated database v11
+# Step 4.1: Make a dump of the migrated database v11
 ############################
 cd $PATH_TO_BIGMAP_APP
 
@@ -123,8 +103,22 @@ echo "Dump of database completed"
 docker cp $DOCKER_CONTAINER_ID:$FILE_DUMP .
 
 ############################
+# Step 5: Upgrade to InvenioRDM v12
+############################
+# Move to the branch develop_v12
+# You will need to remove the copied folders of migration and backup to 
+# be able to change branch
+# IMPOTANT change to the virtualenv for v12!!!
+git checkout develop_v12
+workon bm_archiverdm
+nvm use v14.18.1
+
+############################
 # Step 7: Destroy and restart services
 ############################
+# delete all indexes
+curl -X DELETE http://localhost:9200/*
+
 invenio-cli services stop
 invenio-cli services destroy
 
@@ -134,39 +128,42 @@ docker ps
 docker stop <container_id>
 docker rm <container_id>
 
-# rebuild the assets
-nvm use v14.18.1
-invenio-cli assets build
-
+source .env
 # setup the services
 invenio-cli services setup -f --no-demo-data
-
+# Execute the database migration
+# set depends_on = None:
+# depends_on = "eb9743315a9d"  # invenio-accounts: add_userprofile
+# depends_on = None
+# in here:
+# <venv>/lib/python3.9/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
+invenio alembic upgrade # this should do nothing, it is just for a check
 ############################
 # Step 8: Restore database from v11
 ############################
 # copy last db dump to the docker container:
 DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
 docker cp big_map_archive_dump_migrated_v11.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
-# check filepath FILE_DUMP is correct in backup/restore_db.sh 
-
+# IMPOTANT !!!! check filepath FILE_DUMP is correct in backup/restore_db.sh 
+# comment restore_es in backup/v9/restore_db_es.py
 cd $PATH_TO_BIGMAP_APP/backup/v9
 python restore_db_es.py
 
+invenio alembic upgrade # this should update the db
 ############################
 # Step 9: Run migration script to v12 and recreate indexes
 ############################
 # pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_11_0_to_12_0.py)
 # I had to make few changes, run this instead:
+cd $PATH_TO_BIGMAP_APP
 pipenv run invenio shell migration/migrate_11_0_to_12_0.py
-
-# re-update the indexes after data migration
-# IMPORTANT: comment restore_db and update_files_location in file restore_db_es.py
-cd $PATH_TO_BIGMAP_APP/backup/v9
-python restore_db_es.py
 
 # create statistics indexes
 invenio queues declare
 
+# create the communities by running the app to read in app_data
+rm celerybeat-schedule.db
+invenio-cli run
 ############################
 # Step 10: create communities owner and communities,
 # and run migrate.py to: 
@@ -191,15 +188,22 @@ source ~/app/archive-rdm/big-map-archive/.env
 # create owner (not active) of communities 
 invenio users create $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL --password=$INVENIO_DEFAULT_COMMUNITY_OWNER_PASSWORD
 
-# create communities and attribute as owner INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+# Attribute owner INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL to communities,
+# the communities are already created beacuse of the file communities.yaml in app_data
 cd $PATH_TO_BIGMAP_APP
-invenio bmarchive communities create battery2030
-invenio bmarchive communities create bigmap
-invenio bmarchive communities create instabat
-invenio bmarchive communities create sensibat
-invenio bmarchive communities create bat4ever
-invenio bmarchive communities create spartacus
-invenio bmarchive communities create hidden
+invenio bmarchive users add_community battery2030 owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community bigmap owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community bat4ever owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community hidden owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community spartacus owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community sensibat owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community instabat owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community healingbat owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community opera owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community opincharge owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community phoenix owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community salamander owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
+invenio bmarchive users add_community ultrabat owner $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL
 
 # make all records/drafts and files restrictes,
 # add bigmap community to all records/drafts, 
@@ -209,5 +213,26 @@ python3 migrate_bigmap.py
 
 # run the application
 cd $PATH_TO_BIGMAP_APP
+# stop the running invenio-cli
+nvm use v14.18.1
 invenio-cli assets build
 invenio-cli run 
+
+############################
+# Step 11: Make a backup of the migrated database v12
+############################
+cd $PATH_TO_BIGMAP_APP/backup
+# !!!IMPORTANT comment the last 2 lines of backup.sh (the copy to the OS)
+. backup.sh
+# the backup of the indexes is called backup_indexes.tar.gz and is in the home directory
+# copy the db dump from the container
+docker cp $DOCKER_CONTAINER_ID:var/lib/postgresql/data/big_map_archive_dump.bak .
+
+############################
+# Step 12: Restore the backup on the production machine
+############################
+# copy backup_indexes.tar.gz in the home directory of the production machine
+# copy the db dump in the container of the production machine
+docker cp big_map_archive_dump.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data/
+cd $PATH_TO_BIGMAP_APP/backup
+python3 restore_backup.py

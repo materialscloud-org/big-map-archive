@@ -140,27 +140,25 @@ def record_identity_communities_match(record, identity):
 
 
 @unit_of_work()
-def change_owner(pid_value, email, record_cls, uow):
+def change_owner(pid_value, email, record_type, uow):
     """Change owner of record (draft or published record).
 
     @param pid_value: record id, ex: 'tqea8-ag515'
     @param email: user email
-    @param record_cls: class of record/draft (RDMRecord or RDMDraft)
+    @param record_type: type of record (record or draft)
     """
-
     # Get record owner identity
     user = User.query.filter_by(email=email).one()
     identity = get_user_identity(user)
     record_indexer = RecordIndexer()
     record_indexer_drafts = RecordIndexer(record_cls=RDMDraft, record_to_index=lambda r: (r.index._name, "_doc"))
-
-    if record_cls == "RDMRecord":
+    if record_type == "record":
         try:
             record = RDMRecord.pid.resolve(pid_value)
         except (PIDDoesNotExistError, PIDUnregistered):
             return
 
-    if record_cls == "RDMDraft":
+    if record_type == "draft":
         try:
             pid = PersistentIdentifier.get('recid', pid_value)
             obj_id = pid.get_assigned_object(object_type='rec')
