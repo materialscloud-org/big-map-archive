@@ -14,6 +14,7 @@ from flask import current_app
 from flask.cli import with_appcontext
 from flask_security.confirmable import confirm_user
 from invenio_access.permissions import system_identity
+from invenio_accounts.models import User
 from invenio_accounts.proxies import current_datastore
 from invenio_communities.members.errors import (AlreadyMemberError,
                                                 InvalidMemberError)
@@ -43,7 +44,7 @@ from werkzeug.local import LocalProxy
 from big_map_archive.ext import BMArchiveRecordCommunitiesService
 from big_map_archive.utils import (change_owner, get_community_from_yaml,
                                    get_community_id, get_first_version,
-                                   get_user_identity)
+                                   get_records, get_user_identity)
 
 _datastore = LocalProxy(lambda: current_app.extensions["security"].datastore)
 
@@ -231,21 +232,12 @@ def _commit_reindex_record_and_siblings(record, uow):
             uow.register(RecordCommitOp(child, indexer=record_indexer_drafts))
 
 
-# add community to record
-@records.command("add_community")
-@click.argument("slug", type=click.STRING, required=True)
-@click.argument("pid_value", type=click.STRING, required=True)
-@with_appcontext
-def add_to_record(slug, pid_value):
+def _add_to_record(slug, pid_value):
     """ Add record to community.
 
-    Usage: invenio bmarchive records add_community <slug> <record_pid_value>
     @param slug: community's slug
     @param pid_value: record id, ex: 'tqea8-ag515'
-    Note that the default community is the one that define the permission access to the record ui.
-    For the BIG-MAP archive there should be only one community per record and it should be set to default.
     """
-
     community_id = get_community_id(slug)
 
     if not community_id:
@@ -335,6 +327,34 @@ def add_to_record(slug, pid_value):
         _commit_reindex_record_and_siblings(record, uow)
 
     click.secho(f"SUCCESS: the community '{slug}' has been added to record {pid_value} and all versions of this record, including drafts.", fg="green")
+
+
+# add community to record
+@records.command("add_community")
+@click.argument("slug", type=click.STRING, required=True)
+@click.argument("pid_value", type=click.STRING, required=False)
+@with_appcontext
+def add_to_record(slug, pid_value):
+    """ Add record to community.
+
+    Usage: invenio bmarchive records add_community <slug> <record_pid_value>
+    @param slug: community's slug
+    @param pid_value: record id, ex: 'tqea8-ag515', if None the community is added to all records
+    Note the default community is the one that defines the permission access in the record ui.
+    For the BIG-MAP archive there should be only one community per record and it should be set to default.
+    """
+    if not pid_value:
+        click.secho("INFO: you did not specified a pid_value. "
+                    "The command will be executed to all published records and their drafts, "
+                    "it does not add the community to drafts never published (is_published=False).", fg="red")
+        if click.confirm(f'The community {slug} will be added to ALL records. Do you want to continue? ', abort=True):
+            records = get_records(RDMRecord)
+            for record in records:
+                pid_value = record.get("id", None)
+                if pid_value:
+                    _add_to_record(slug, pid_value)
+        return
+    _add_to_record(slug, pid_value)
 
 
 # remove community from record
@@ -481,15 +501,17 @@ def delete_record(pid_value, removal_reason, removal_note, is_visible):
 @records.command("owner")
 @click.argument("pid_value", type=click.STRING, required=True)
 @click.argument("email", type=click.STRING, required=True)
+@click.argument("record_type", type=click.STRING, required=True)
 @with_appcontext
-def change_record_owner(pid_value, email):
+def change_record_owner(pid_value, email, record_type):
     """ Change owner of record.
 
-    Usage: invenio bmarchive records owner <pid_value> <email>
+    Usage: invenio bmarchive records owner <pid_value> <email> <record_type>
     @param pid_value: record id, ex: 'tqea8-ag515'
     @param email: user email
+    @param record_type: record type: record or draft
     """
-    if change_owner(pid_value, email, "RDMRecord"):
+    if change_owner(pid_value, email, record_type):
         click.secho(f"SUCCESS: {email} is now owner of record {pid_value} and all versions of this record.", fg="green")
     else:
         click.secho(f"ERROR: an error occured, {email} has NOT been set as owner of record {pid_value} and all versions of this record.", fg="red")
@@ -599,13 +621,7 @@ def users():
     """Invenio BIG-MAP Archive users commands."""
 
 
-# add user to community
-@users.command("add_community")
-@click.argument("slug", type=click.STRING, required=True)
-@click.argument("role", type=click.Choice(['reader', 'curator', 'owner', 'manager']), required=True)
-@click.argument("user_email", type=click.STRING, required=True)
-@with_appcontext
-def add_community(slug, role, user_email):
+def _add_community(slug, role, user_email):
     """Add user to community with specified role.
 
     Usage: invenio bmarchive users add_community <slug> <role> <user_email>\n
@@ -639,6 +655,34 @@ def add_community(slug, role, user_email):
         click.secho(f'SUCCESS: {user_email} has been attributed to community {slug} with role {role}.', fg="green")
     except AlreadyMemberError:
         click.secho(f'WARNING: {user_email} is already a member of the community {slug}.', fg="yellow")
+
+
+# add user to community
+@users.command("add_community")
+@click.argument("slug", type=click.STRING, required=True)
+@click.argument("role", type=click.Choice(['reader', 'curator', 'owner', 'manager']), required=True)
+@click.argument("user_email", type=click.STRING, required=False)
+@with_appcontext
+def add_community(slug, role, user_email):
+    """Add user to community with specified role.
+
+    Usage: invenio bmarchive users add_community <slug> <role> <user_email>\n
+    Ex: invenio bmarchive users add_community bigmap reader myname@materialscloud.org\n
+    @param slug: community slug, type string\n
+    @param user_email: user email, type string\n
+    @param role: user role, type string, options: 'reader', 'curator'\n
+    """
+    if not user_email:
+        click.secho("INFO: you did not specified a user email. "
+                    "The command will be executed for all users", fg="red")
+        if click.confirm(f'The community {slug} will be added to ALL users. Do you want to continue? ', abort=True):
+            for user in User.query.all():
+                print(user.email)
+                user_email = user.email
+                if user_email:
+                    _add_community(slug, role, user_email)
+        return
+    _add_community(slug, role, user_email)
 
 
 # remove user from community

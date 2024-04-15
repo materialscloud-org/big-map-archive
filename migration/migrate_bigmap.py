@@ -16,7 +16,7 @@ from invenio_pidstore.errors import PIDDeletedError, PIDDoesNotExistError
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
 
-from big_map_archive.utils import get_emails, get_records
+from big_map_archive.utils import get_records
 
 
 def set_records_access_restricted(record_cls):
@@ -80,11 +80,7 @@ def set_records_to_community(slug):
 
     @param slug: community's slug
     """
-    records = get_records(RDMRecord)
-    for record in records:
-        pid_value = record.get("id", None)
-        if pid_value:
-            os.system(f'invenio bmarchive records add_community {slug} {pid_value}')
+    os.system(f'invenio bmarchive records add_community {slug}')
 
 
 def set_drafts_to_community(slug):
@@ -104,9 +100,7 @@ def set_users_to_community(slug):
 
     @param slug: community's slug
     """
-    emails = get_emails()
-    for email in emails:
-        os.system(f'invenio bmarchive users add_community {slug} reader {email}')
+    os.system(f'invenio bmarchive users add_community {slug} reader')
 
 
 if __name__ == '__main__':
@@ -131,7 +125,7 @@ if __name__ == '__main__':
         print("Set all records to community bigmap")
         print("---------------")
         set_records_to_community(slug='bigmap')
-        set_drafts_to_community(slug='bigmap')
+        # set_drafts_to_community(slug='bigmap') # this is not needed because the user will be able to select the community
 
         print("---------------")
         print("Set all users to community bigmap and battery2030")
