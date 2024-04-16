@@ -36,7 +36,11 @@ def bma_send_confirmation():
 def create_blueprint(app):
     """Register BIG-MAP Archive blueprint routes on app."""
 
-    routes_bmarchive = app.config.get("BM_ARCHIVE_ROUTES")
+    routes_bmarchive = {
+        "faqs": "/help/faqs",
+        "share_links": "/help/share_links",
+        "tutorial": "/help/tutorial",
+    }
 
     # override views functions
     @app.before_first_request
