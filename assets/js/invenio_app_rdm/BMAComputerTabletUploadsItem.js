@@ -6,6 +6,7 @@ import _get from "lodash/get";
 import { Button, Icon, Item, Label } from "semantic-ui-react";
 import { SearchItemCreators } from "@js/invenio_app_rdm/utils";
 import { CompactStats } from "@js/invenio_app_rdm/components/CompactStats";
+import { BMADisplayPartOfCommunities } from "./BMADisplayPartOfCommunities";
 
 export const BMAComputerTabletUploadsItem = ({
   result,
@@ -59,6 +60,26 @@ export const BMAComputerTabletUploadsItem = ({
               {publicationDate}
             </Label>
           )}
+          <Button
+            compact
+            size="small"
+            floated="right"
+            onClick={() => editRecord()}
+            labelPosition="left"
+            icon="edit"
+            content={i18next.t("Edit")}
+          />
+          {isPublished && (
+            <Button
+              compact
+              size="small"
+              floated="right"
+              href={viewLink}
+              labelPosition="left"
+              icon="eye"
+              content={i18next.t("View")}
+            />
+          )}
         </Item.Extra>
         <Item.Header as="h2">
           <a href={viewLink} className="truncate-lines-2">
@@ -76,7 +97,16 @@ export const BMAComputerTabletUploadsItem = ({
           })}
         </Item.Description>
         <Item.Extra>
-          <div className="flex justify-content-end">
+          {subjects.map((subject) => (
+            <Label key={subject.title_l10n} size="tiny">
+              {subject.title_l10n}
+            </Label>
+          ))}
+
+          <div className="flex justify-space-between align-items-end">
+            <small>
+              <BMADisplayPartOfCommunities communities={result.parent?.communities} />
+            </small>
             <small>
               <CompactStats
                 uniqueViews={uniqueViews}

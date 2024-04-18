@@ -85,6 +85,7 @@ celerybeat-schedule
 
 # environment variables
 .env
+.env_*
 
 # test code
 mycode

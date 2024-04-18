@@ -3,7 +3,7 @@ import _get from "lodash/get";
 import React from "react";
 import { http } from "react-invenio-forms";
 import { BMAComputerTabletUploadsItem } from "./BMAComputerTabletUploadsItem";
-import { MobileUploadsItem } from "@js/invenio_app_rdm/user_dashboard/uploads_items/MobileUploadsItem";
+import { BMAMobileUploadsItem } from "./BMAMobileUploadsItem";
 import PropTypes from "prop-types";
 
 const statuses = {
@@ -69,7 +69,7 @@ export const BMARDMRecordResultsListItem = ({ result }) => {
         access={access}
         uiMetadata={uiMetadata}
       />
-      <MobileUploadsItem
+      <BMAMobileUploadsItem
         result={result}
         editRecord={editRecord}
         statuses={statuses}
