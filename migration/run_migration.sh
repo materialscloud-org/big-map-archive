@@ -236,3 +236,54 @@ docker cp $DOCKER_CONTAINER_ID:var/lib/postgresql/data/big_map_archive_dump.bak 
 docker cp big_map_archive_dump.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data/
 cd $PATH_TO_BIGMAP_APP/backup
 python3 restore_backup.py
+
+
+############################
+# NOTE on INDEXES
+# it is enought to restore only the database and then recreate the indexes
+# because in v9 the usage statistics was not tracked.
+# After having installed the latest db follow the procedure below to
+# restore all indexes.
+############################
+# The indexing process takes time, once you run these commands you need to wait several minutes
+# check the progress via 
+curl -X GET http://127.0.0.1:9200/_cat/indices?s=index:desc
+
+# recreate indices
+invenio index destroy --yes-i-know
+invenio index init
+
+# reindex records
+invenio rdm-records rebuild-index
+invenio communities rebuild-index
+
+# reindex all other indexes in invenio shell
+$ invenio shell
+
+from invenio_access.permissions import system_identity
+from invenio_communities.proxies import current_communities
+from invenio_records_resources.proxies import current_service_registry
+from invenio_requests.proxies import current_events_service, current_requests_service
+
+# reindex users
+users_service = current_service_registry.get("users")
+users_service.rebuild_index(system_identity)
+
+# reindex groups
+groups_service = current_service_registry.get("groups")
+groups_service.rebuild_index(system_identity)
+
+# reindex members and archived invitations
+members_service = current_communities.service.members
+members_service.rebuild_index(system_identity)
+
+# reindex requests
+for req_meta in current_requests_service.record_cls.model_cls.query.all():
+    request = current_requests_service.record_cls(req_meta.data, model=req_meta)
+    if not request.is_deleted:
+        current_requests_service.indexer.index(request)
+
+# reindex requests events
+for event_meta in current_events_service.record_cls.model_cls.query.all():
+    event = current_events_service.record_cls(event_meta.data, model=event_meta)
+    current_events_service.indexer.index(event)
