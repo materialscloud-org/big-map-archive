@@ -208,10 +208,12 @@
                     <ul>
                         <li>Move `metadata.yaml` to the `data/input` directory.</li>
                         <li>Put the data files to be uploaded and linked to the future record in the `data/input/upload` directory.</li>
+                        <li>To publish a record to a community you need to insert the community slug, e.g. bigmap to publish on the BIG-MAP community.
+                            On the demo instance get the list of your communities and their slug at https://big-map-archive-demo.materialscloud.org/api/communities.</li>
                         <li>Execute the following command:
                             <ul class="p-10">
                                 <code>
-                                    bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --publish
+                                    bma record create --config-file=$PWD/bma_config.yaml --metadata-file=$PWD/data/input/metadata.yaml --data-files=$PWD/data/input/upload --slug bigmap --publish
                                 </code>
                             </ul>
                         </li>
