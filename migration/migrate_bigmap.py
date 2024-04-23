@@ -15,8 +15,68 @@ from invenio_indexer.api import RecordIndexer
 from invenio_pidstore.errors import PIDDeletedError, PIDDoesNotExistError
 from invenio_pidstore.models import PersistentIdentifier
 from invenio_rdm_records.records.api import RDMDraft, RDMRecord
+from sqlalchemy import text
 
 from big_map_archive.utils import get_records
+
+
+def clean_up_db():
+    """ Clean up all fixtures not used from database.
+
+    Set users visibility to restricted.
+    """
+    db.create_all()
+    #############
+    # Remove user admin@inveniosoftware.org and admin role,
+    # set all users with visibility restricted
+    #############
+    q = text("delete from accounts_userrole;")
+    db.engine.execute(q)
+    q = text("delete from accounts_user where email='admin@inveniosoftware.org';")
+    db.engine.execute(q)
+    q = text("delete from accounts_role;")
+    db.engine.execute(q)
+    q = text("update accounts_user set preferences='{\"visibility\": \"restricted\", \"email_visibility\": \"restricted\"}';")
+    db.engine.execute(q)
+
+    #############
+    # Remove cor and crr authors fixtures (leave only contactperson)
+    # there is no table or index for these fixtures
+    #############
+    q = text("delete from vocabularies_metadata where position('\"pid_type\": \"cor\"' in json->>'pid')>0 and not json@>'{\"id\": \"contactperson\"}';")
+    db.engine.execute(q)
+    q = text("delete from vocabularies_metadata where position('\"pid_type\": \"crr\"' in json->>'pid')>0 and not json@>'{\"id\": \"contactperson\"}';")
+    db.engine.execute(q)
+    q = text("delete from pidstore_pid where pid_type='cor' and not pid_value='contactperson';")
+    db.engine.execute(q)
+    q = text("delete from pidstore_pid where pid_type='crr' and not pid_value='contactperson';")
+    db.engine.execute(q)
+
+    #############
+    # Remove all names fixtures
+    # there is table name_metadata and index big-map-archive-names-name-v1.0.0 to clean up
+    #############
+    q = text("delete from name_metadata;")
+    db.engine.execute(q)
+    q = text("delete from pidstore_pid where pid_type='names';")
+    db.engine.execute(q)
+
+    #############
+    # Remove languages fixtures except english
+    # there is no table or index for languages
+    #############
+    q = text("delete from vocabularies_metadata where position('\"pid_type\": \"lng\"' in json->>'pid')>0 and not position('\"en\": \"English\"' in json->>'title')>0;")
+    db.engine.execute(q)
+    q = text("delete from pidstore_pid where pid_type='lng' and not pid_value='eng';")
+    db.engine.execute(q)
+
+    #############
+    # Remove funders fixtures
+    #############
+    q = text("delete from funder_metadata;")
+    db.engine.execute(q)
+
+    print("Database cleaned up from fixtures, users set to visibility restricted.")
 
 
 def set_records_access_restricted(record_cls):
@@ -114,6 +174,11 @@ if __name__ == '__main__':
         This might take some time.\n\
         Are you sure you want to continue ? (y/n)") != "y":
             exit()
+
+        print("---------------")
+        print("Clean up database from fixtures and set users visibility to restricted")
+        print("---------------")
+        clean_up_db()
 
         print("---------------")
         print("Set all records/drafts and files to restricted access")
