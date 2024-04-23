@@ -33,12 +33,12 @@ creatorsroles:
 contributorsroles:
   pid-type: cor
   data-file: vocabularies/roles.yaml
-
+funders:
+  pid-type: fun
+  data-file: vocabularies/funders.yaml
+awards:
+  pid-type: awa
+  data-file: vocabularies/awards.yaml
 affiliations:
   pid-type: aff
   data-file: vocabularies/affiliations_ror.yaml
-  # schemes:
-  #   - id: ROR
-  #     name: Research Organization Registry
-  #     uri: "https://ror.org/"
-  #     data-file: vocabularies/affiliations_ror.yaml

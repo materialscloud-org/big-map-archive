@@ -113,8 +113,40 @@ git checkout develop_v12
 workon bm_archiverdm
 nvm use v14.18.1
 
+# Execute the database migration
+# set depends_on = None:
+# depends_on = "eb9743315a9d"  # invenio-accounts: add_userprofile
+# depends_on = None
+# in here:
+# <venv>/lib/python3.9/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
+invenio alembic upgrade
+
+# pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_11_0_to_12_0.py)
+# I had to make few changes, run this instead:
+cd $PATH_TO_BIGMAP_APP
+pipenv run invenio shell migration/migrate_11_0_to_12_0.py
+
+# Clean up database from fixtures
+cd $PATH_TO_BIGMAP_APP/migration
+# comment everything, leave only the clean_up_db function
+python3 migrate_bigmap.py
+
 ############################
-# Step 7: Destroy and restart services
+# Step 6: Make a dump of the migrated database v12
+############################
+cd $PATH_TO_BIGMAP_APP
+
+DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
+FILE_DUMP="/var/lib/postgresql/data/big_map_archive_dump_migrated_v12_0.bak"
+
+# Make dump of database
+echo "Dump of database started ..."
+docker exec $DOCKER_CONTAINER_ID sh -c "pg_dump -U big-map-archive -F t big-map-archive  >  ${FILE_DUMP}"
+echo "Dump of database completed"
+docker cp $DOCKER_CONTAINER_ID:$FILE_DUMP .
+
+############################
+# Step 7: Destroy and restart services: this is necessary to create the container for opensearch
 ############################
 # delete all indexes
 curl -X DELETE http://localhost:9200/*
@@ -131,59 +163,32 @@ docker rm <container_id>
 source .env
 # setup the services
 invenio-cli services setup -f --no-demo-data
-# Execute the database migration
-# set depends_on = None:
-# depends_on = "eb9743315a9d"  # invenio-accounts: add_userprofile
-# depends_on = None
-# in here:
-# <venv>/lib/python3.9/site-packages/invenio_userprofiles/alembic/41157f1933d6_remove_table.py
-invenio alembic upgrade # this should do nothing, it is just for a check
+
 ############################
-# Step 8: Restore database from v11
+# Step 8: Restore database from v12
 ############################
 # copy last db dump to the docker container:
 DOCKER_CONTAINER_ID=$(docker ps -aqf "name=big-map-archive-db-1")
-docker cp big_map_archive_dump_migrated_v11.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
+docker cp big_map_archive_dump_migrated_v12_0.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data
 # IMPOTANT !!!! check filepath FILE_DUMP is correct in backup/restore_db.sh 
 # comment restore_es in backup/v9/restore_db_es.py
 cd $PATH_TO_BIGMAP_APP/backup/v9
 python restore_db_es.py
 
-invenio alembic upgrade # this should update the db
-############################
-# Step 9: Run migration script to v12 and recreate indexes
-############################
-# pipenv run invenio shell $(find $(pipenv --venv)/lib/*/site-packages/invenio_app_rdm -name migrate_11_0_to_12_0.py)
-# I had to make few changes, run this instead:
-cd $PATH_TO_BIGMAP_APP
-pipenv run invenio shell migration/migrate_11_0_to_12_0.py
+# Follow NOTE on INDEXES to restore indexes
 
-# create statistics indexes
-invenio queues declare
-
-# create the communities by running the app to read in app_data
-rm celerybeat-schedule.db
-invenio-cli run
 ############################
-# Step 10: create communities owner and communities,
+# Step 9: create communities owner and communities,
 # and run migrate.py to: 
 # - make all records/drafts and files restrictes
 # - add bigmap community to all records/drafts
 # - add bigmap community to all users
 ############################
 cd $PATH_TO_BIGMAP_APP
-
-# read default owner of communities 
-# IFS=" = "
-# while read var value
-# do
-# 	if [ "$var" == "INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL" ]
-# 	then
-#     	export "$var"="$value"
-# 	fi
-# done < ~/app/archive-rdm/big-map-archive/.env
-
+rm celerybeat-schedule.db # not sure if this is needed
 source ~/app/archive-rdm/big-map-archive/.env
+# create the communities by running the app to read in app_data
+invenio-cli run # needed to create the community fixtures
 
 # create owner (not active) of communities 
 invenio users create $INVENIO_DEFAULT_COMMUNITY_OWNER_MAIL --password=$INVENIO_DEFAULT_COMMUNITY_OWNER_PASSWORD
@@ -209,6 +214,7 @@ invenio bmarchive users add_community ultrabat owner $INVENIO_DEFAULT_COMMUNITY_
 # add bigmap community to all records/drafts, 
 # add bigmap community to all users.
 cd $PATH_TO_BIGMAP_APP/migration
+# comment the clean_up_db
 python3 migrate_bigmap.py
 
 # run the application
@@ -219,24 +225,24 @@ invenio-cli assets build
 invenio-cli run 
 
 ############################
-# Step 11: Make a backup of the migrated database v12
+# Step 10: Make a new backup of the migrated database v12
+# no need to backup indexes
 ############################
-cd $PATH_TO_BIGMAP_APP/backup
-# !!!IMPORTANT comment the last 2 lines of backup.sh (the copy to the OS)
-. backup.sh
-# the backup of the indexes is called backup_indexes.tar.gz and is in the home directory
-# copy the db dump from the container
-docker cp $DOCKER_CONTAINER_ID:var/lib/postgresql/data/big_map_archive_dump.bak .
+# Follow Step 6, call the dump file big_map_archive_dump_migrated_v12.bak
 
 ############################
-# Step 12: Restore the backup on the production machine
+# Step 11: Restore the db backup on the production machine
 ############################
-# copy backup_indexes.tar.gz in the home directory of the production machine
 # copy the db dump in the container of the production machine
-docker cp big_map_archive_dump.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data/
-cd $PATH_TO_BIGMAP_APP/backup
+docker cp big_map_archive_dump_migrated_v12.bak $DOCKER_CONTAINER_ID:/var/lib/postgresql/data/
+cd $PATH_TO_BIGMAP_APP/backup/v9
+# IMPOTANT !!!! check filepath FILE_DUMP is correct in backup/restore_db.sh 
+# comment restore_es in backup/v9/restore_db_es.py
 python3 restore_backup.py
+# Follow NOTE on INDEXES below to restore indexes
 
+# create statistics indexes
+invenio queues declare
 
 ############################
 # NOTE on INDEXES
@@ -249,8 +255,14 @@ python3 restore_backup.py
 # check the progress via 
 curl -X GET http://127.0.0.1:9200/_cat/indices?s=index:desc
 
+# stop invenio-cli run
+
 # recreate indices
 invenio index destroy --yes-i-know
+# or to remove all indexes
+curl -X DELETE http://localhost:9200/*
+
+# recreate the indexes
 invenio index init
 
 # reindex records
@@ -287,3 +299,5 @@ for req_meta in current_requests_service.record_cls.model_cls.query.all():
 for event_meta in current_events_service.record_cls.model_cls.query.all():
     event = current_events_service.record_cls(event_meta.data, model=event_meta)
     current_events_service.indexer.index(event)
+
+# restart invenio-cli run
