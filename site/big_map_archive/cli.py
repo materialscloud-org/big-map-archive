@@ -693,7 +693,7 @@ def add_community(slug, role, user_email):
 def remove_from_user(slug, user_email):
     """Remove user from community.
 
-    Usage: invenio bmarchive users add_community <slug> <role> <user_email>\n
+    Usage: invenio bmarchive users remove_community <slug> <user_email>\n
     Ex: invenio bmarchive users remove_community bigmap myname@materialscloud.org\n
     @param slug: community slug, type string\n
     @param user_email: user email, type string\n
@@ -724,6 +724,40 @@ def remove_from_user(slug, user_email):
         click.secho(f'WARNING: {user_email} is already not a member of the community {slug}.', fg="yellow")
 
 
+# list user communities
+@users.command("communities")
+@click.argument("user_email", type=click.STRING, required=True)
+@with_appcontext
+def list_user_communities(user_email):
+    """List user communities.
+
+    Usage: invenio bmarchive users communities <user_email>\n
+    Ex: invenio bmarchive users communities myname@materialscloud.org\n
+    @param user_email: user email, type string\n
+    """
+    community_service = current_communities.service
+    member_service = community_service.members
+
+    user = _datastore.get_user(user_email)
+    try:
+        user.id
+    except AttributeError:
+        click.secho(f'ERROR: user {user_email} does not exist.', fg="red")
+        return
+
+    member_cls = member_service.config.record_cls
+    user_communities = member_cls.get_memberships(user)
+    if not user_communities:
+        click.secho(f'WARNING: {user_email} does not belong to any community.', fg="yellow")
+
+    for user_community in user_communities:
+        community_id = user_community[0]
+        role = user_community[1]
+        community_cls = community_service.record_cls
+        slug = community_cls.pid.resolve(community_id).slug
+        click.secho(f'{user_email} belongs to community {slug} with role {role}.', fg="green")
+
+
 # update role of a user
 @users.command("role")
 @click.argument("slug", type=click.STRING, required=True)
@@ -731,13 +765,13 @@ def remove_from_user(slug, user_email):
 @click.argument("user_email", type=click.STRING, required=True)
 @with_appcontext
 def role(slug, role, user_email):
-    """Update user role.
+    """Update user role in community.
 
     User should already be a member of the community.\n
-    Usage: invenio bmarchive users role <slug> <role> <user_email>
+    Usage: invenio bmarchive users role <slug> <role> <user_email>\n
     Ex: invenio bmarchive users role bigmap curator myname@materialscloud.org\n
-    @param role: user role, type string
-    @param user_mail: user email, type string
+    @param role: user role, type string\n
+    @param user_mail: user email, type string\n
     https://github.com/inveniosoftware/invenio-communities/blob/890e3e35f98b1a8b55c6817ebcb926b53c91b3e6/invenio_communities/config.py#LL84C1-L84C18
     """
     community_service = current_communities.service
