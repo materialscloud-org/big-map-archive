@@ -96,10 +96,10 @@ def copy_dump(app, date):
                                        shell=True)
 
         # check dump is the latest
-        # if "Archive created at {}".format(date) in str(dump):
-        #     print("SUCCESS: dump of day {} exists".format(date))
-        # else:
-        #     sys.exit("ERROR: dump of day {} does not exist".format(date))
+        if "Archive created at {}".format(date) in str(dump):
+            print("SUCCESS: dump of day {} exists".format(date))
+        else:
+            sys.exit("ERROR: dump of day {} does not exist".format(date))
 
         # copy dump from docker to host
         output = os.system('docker cp {}:{}/big_map_archive_dump.bak .'.format(DOCKER_CONTAINER_ID, dump_filepath))
