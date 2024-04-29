@@ -3,6 +3,7 @@
     Copyright (C) 2024 BIG-MAP Archive Team.
 #}
 
+{%- set title = _("Tutorial") %}
 {% extends "invenio_theme/page.html" %}
 
 {% block page_body %}
@@ -299,4 +300,5 @@
 {% endblock page_body %}
 
 {%- block javascript %}
+    {% include config.THEME_JAVASCRIPT_TEMPLATE %}
 {%- endblock javascript %}
