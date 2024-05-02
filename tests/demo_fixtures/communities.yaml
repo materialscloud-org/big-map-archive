@@ -1,0 +1,36 @@
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: allprojects
+  logo: ./static/images/demo/all_projects.png
+  metadata:
+    title: All (demo) projects in the European research initative
+    description: All (demo) projects in the European research initative
+    website: https://demo_address.org
+    organizations: [{"name": "All projects"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: project1
+  logo: ./static/images/demo/project1.png
+  metadata:
+    title: Demo project 1
+    description: Demo project 1
+    website: https://demo_address_project1.org
+    organizations: [{"name": "Demo project 1"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: project2
+  logo: ./static/images/demo/project2.png
+  metadata:
+    title: Demo project 2
+    description: Demo project 2
+    website: https://demo_address_project2.org
+    organizations: [{"name": "Demo project 2"}]
