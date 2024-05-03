@@ -8,12 +8,18 @@ import React, { Component } from "react";
 
 export class BMARecordManagement extends Component {
   render() {
-    var buttonTags = document.getElementsByTagName("button");
-    for (var i = 0; i < buttonTags.length; i++) {
-      if (buttonTags[i].textContent == "Share") {
-        buttonTags[i].textContent = "Share links";
+    window.addEventListener("load", changeText);
+    function changeText() {
+      // Change text in share links button
+      var buttonTags = document.getElementsByTagName("button");
+      for (const bt of buttonTags) {
+        if (bt.textContent == "Share") {
+          bt.textContent = "Share links";
+        }
       }
     }
+    // Leave the following to do not see the text changing while the page load
+    changeText();
     return(<></>);
   }
 }
