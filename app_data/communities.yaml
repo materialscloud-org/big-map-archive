@@ -27,66 +27,6 @@
     member_policy: closed
     record_policy: open
     review_policy: open
-  slug: bat4ever
-  logo: ./static/images/bat4ever.png
-  metadata:
-    title: BAT4EVER
-    description: BAT4EVER
-    website: https://bat4ever.de/WordPress/
-    organizations: [{"name": "BAT4EVER"}]
-- access:
-    visibility: restricted
-    member_policy: closed
-    record_policy: open
-    review_policy: open
-  slug: hidden
-  logo: ./static/images/hidden.png
-  metadata:
-    title: HIDDEN
-    description: HIDDEN
-    website: https://www.hidden-project.eu/
-    organizations: [{"name": "HIDDEN"}]
-- access:
-    visibility: restricted
-    member_policy: closed
-    record_policy: open
-    review_policy: open
-  slug: spartacus
-  logo: ./static/images/spartacus.png
-  metadata:
-    title: SPARTACUS
-    description: SPARTACUS
-    website: https://www.spartacus-battery.eu/
-    organizations: [{"name": "SPARTACUS"}]
-- access:
-    visibility: restricted
-    member_policy: closed
-    record_policy: open
-    review_policy: open
-  slug: sensibat
-  logo: ./static/images/sensibat.jpg
-  metadata:
-    title: SENSIBAT
-    description: SENSIBAT
-    website: https://sensibat-project.eu/
-    organizations: [{"name": "SENSIBAT"}]
-- access:
-    visibility: restricted
-    member_policy: closed
-    record_policy: open
-    review_policy: open
-  slug: instabat
-  logo: ./static/images/instabat.png
-  metadata:
-    title: INSTABAT
-    description: INSTABAT
-    website: https://www.instabat.eu/
-    organizations: [{"name": "INSTABAT"}]
-- access:
-    visibility: restricted
-    member_policy: closed
-    record_policy: open
-    review_policy: open
   slug: healingbat
   logo: ./static/images/healingbat.png
   metadata:
