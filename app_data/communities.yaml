@@ -94,3 +94,15 @@
     description: ULTRABAT
     website: https://ultrabat.dtu.dk/
     organizations: [{"name": "ULTRABAT"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: capex
+  logo: ./static/images/capex.png
+  metadata:
+    title: CAPeX
+    description: CAPeX, Pioneer Center for Accelerating P2X Materials Discovery
+    website: https://capex.dtu.dk/
+    organizations: [{"name": "CAPeX"}]
