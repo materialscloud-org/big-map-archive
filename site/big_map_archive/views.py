@@ -9,7 +9,7 @@ from flask_security.utils import url_for_security
 from invenio_previewer.proxies import current_previewer
 
 from .deposits import deposit_edit
-from .infos import faqs, share_links, tutorial
+from .infos import disclaimer, faqs, licenses, share_links, tutorial
 
 #
 # BIG-MAP Archive blueprint
@@ -40,6 +40,8 @@ def create_blueprint(app):
         "faqs": "/help/faqs",
         "share_links": "/help/share_links",
         "tutorial": "/help/tutorial",
+        "licenses": "/licenses/nonexclusive-distrib/1.1",
+        "disclaimer": "/about/disclaimer",
     }
 
     # override views functions
@@ -87,22 +89,34 @@ def create_blueprint(app):
         template_folder="./templates",
     )
 
-    # "/help/faqs",
+    # "/help/faqs"
     blueprint.add_url_rule(
         routes_bmarchive["faqs"],
         view_func=faqs,
     )
 
-    # "/help/share_links",
+    # "/help/share_links"
     blueprint.add_url_rule(
         routes_bmarchive["share_links"],
         view_func=share_links,
     )
 
-    # "/help/tutorial",
+    # "/help/tutorial"
     blueprint.add_url_rule(
         routes_bmarchive["tutorial"],
         view_func=tutorial,
+    )
+
+    # "/licenses/nonexclusive-distrib/1.1"
+    blueprint.add_url_rule(
+        routes_bmarchive["licenses"],
+        view_func=licenses,
+    )
+
+    # "/about/disclaimer"
+    blueprint.add_url_rule(
+        routes_bmarchive["disclaimer"],
+        view_func=disclaimer,
     )
 
     # Add URL rules
