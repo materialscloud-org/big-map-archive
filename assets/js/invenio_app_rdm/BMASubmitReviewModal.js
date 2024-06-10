@@ -40,7 +40,12 @@ export class BMASubmitReviewModal extends Component {
     const directPublishCase = () => {
       headerTitle = "";
       msgWarningTitle = i18next.t(
-        "Once your record is shared with the {{communityTitle}} community, you can no longer make it private to you or change the community that it is shared with.",
+        "Once your record is shared with the <bold>{{communityTitle}}</bold> community,\
+        you can no longer make it private to you or change the community that it is shared with.<new_line/>\
+        By clicking on 'Share with community', you acknowledge that you have read and understood the terms\
+        of the license that you have chosen for your data, and that you agree to the content of the\
+        BIG-MAP Archive <disclaimerLink>disclaimer</disclaimerLink>.\
+        ",
           { communityTitle }
       );
       msgWarningText1 = i18next.t(
@@ -116,7 +121,13 @@ export class BMASubmitReviewModal extends Component {
                 <Message visible warning>
                   <p>
                     <Icon name="warning sign" />
-                    {msgWarningTitle}
+                    <Trans
+                      defaults={msgWarningTitle}
+                      values={{
+                        communityTitle: communityTitle,
+                      }}
+                      components={{disclaimerLink: <a href='/about/disclaimer' target='_blank'>Read disclaimer</a>, bold: <b />, new_line: <br /> }}
+                    />
                   </p>
                 </Message>
                   {!record && (

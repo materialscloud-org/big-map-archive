@@ -16,6 +16,18 @@
       <div class="divider hidden"></div>
       {%- block form_header %}
         <h3 class="ui login header">Log in to {{config.THEME_SITENAME}}</h3>
+        <div class="ui visible warning message bma_banner">
+          <p>
+            <div class="divider hidden"></div>
+            <i aria-hidden="true" class="warning sign icon"></i>By logging in, you agree to the limitations on
+            the redistribution of data and metadata
+            uploaded to the Archive.<br/>
+          </p>
+          <p>
+            <div class="divider hidden"></div>
+            Please read the BIG-MAP Archive <a href="/about/disclaimer" target="_blank">disclaimer</a>.
+          </p>
+        </div>
         <p>
             Access to the data repository is restricted. To request an account, please email us at
             <span>

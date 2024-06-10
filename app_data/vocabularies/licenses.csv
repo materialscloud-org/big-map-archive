@@ -34,7 +34,7 @@ artistic-1.0;Artistic License 1.0;;;all,software;https://opensource.org/licenses
 artistic-1.0-perl;Artistic License 1.0 (Perl);;;all,software;http://dev.perl.org/licenses/artistic.html;spdx;y
 artistic-1.0-cl8;Artistic License 1.0 w/clause 8;;;all,software;https://opensource.org/licenses/Artistic-1.0;spdx;y
 artistic-2.0;Artistic License 2.0;;;all,software;http://www.perlfoundation.org/artistic_license_2_0;spdx;y
-bm-1.0;BIG-MAP Archive License;The BIG-MAP Archive License allows re-distribution and re-use of work within the BIG-MAP community.;;recommended,all,data,software;https://www.big-map.eu/;spdx;
+bm-1.0;BATTERY2030+ License;The BATTERY2030+ License allows re-distribution and re-use of work within the communities of the BATTERY2030+ consortium.;;recommended,all,data,software;https://archive.big-map.eu/licenses/nonexclusive-distrib/1.1;spdx;
 bsd-1-clause;BSD 1-Clause License;;;all,software;https://svnweb.freebsd.org/base/head/include/ifaddrs.h?revision=326823;spdx;y
 bsd-2-clause;"BSD 2-Clause ""Simplified"" License";;;all,software;https://opensource.org/licenses/BSD-2-Clause;spdx;y
 bsd-2-clause-patent;BSD-2-Clause Plus Patent License;;;all,software;https://opensource.org/licenses/BSDplusPatent;spdx;y

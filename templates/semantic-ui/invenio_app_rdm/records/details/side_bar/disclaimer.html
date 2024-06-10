@@ -1,0 +1,40 @@
+{#
+  -*- coding: utf-8 -*-
+  Copyright (C) 2024 BIG-MAP Archive Team.
+#}
+<div class="sidebar-container">
+  <h2 class="ui medium top attached header mt-0">{{ _('Disclaimers') }}</h2>
+  <div id="licenses" class="ui segment bottom attached rdm-sidebar">
+    <ul class="details-list m-0 p-0">
+      <li id="disclaimer" class="has-popup">
+        <div id="title-disclaimer"
+            class="license clickable"
+            tabindex="0"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            role="button"
+            aria-label=""
+        >
+          <span class="title-text">
+            Limitations of further sharing
+          </span>
+        </div>
+        <div id="description-disclaimer"
+              class="licenses-description ui flowing popup transition hidden"
+              role="dialog"
+              aria-labelledby="title-disclaimer"
+        >
+          <i role="button" tabindex="0" class="close icon text-muted" aria-label="{{ _('Close') }}"></i>
+
+          <div id="disclaimer-description" class="description">
+            <span class="text-muted">
+              Current, former and future COMMUNITY members are not authorised to distribute
+              this dataset and the corresponding metadata outside the COMMUNITY in which
+              it was originally shared. <a href="/about/disclaimer" target="_blank">Read disclaimer.</a>
+            </span>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
