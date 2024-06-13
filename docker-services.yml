@@ -41,16 +41,17 @@ services:
       - "POSTGRES_DB=big-map-archive"
     ports:
       - "5432:5432"
-  pgadmin:
-    image: dpage/pgadmin4:6
-    restart: "unless-stopped"
-    ports:
-      - "5050:80"
-    environment:
-      PGADMIN_DEFAULT_EMAIL: "info@big-map-archive.com"
-      PGADMIN_DEFAULT_PASSWORD: "big-map-archive"
-    volumes:
-      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
+  # pgadmin is not required
+  # pgadmin:
+  #   image: dpage/pgadmin4:6
+  #   restart: "unless-stopped"
+  #   ports:
+  #     - "5050:80"
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: "info@big-map-archive.com"
+  #     PGADMIN_DEFAULT_PASSWORD: "big-map-archive"
+  #   volumes:
+  #     - ./docker/pgadmin/servers.json:/pgadmin4/servers.json
   mq:
     image: rabbitmq:3-management
     restart: "unless-stopped"
@@ -78,13 +79,14 @@ services:
     ports:
       - "9200:9200"
       - "9600:9600"
-  opensearch-dashboards:
-    image: opensearchproject/opensearch-dashboards:2.3.0
-    ports:
-      - "5601:5601"
-    expose:
-      - "5601"
-    environment:
-      # settings only for development. DO NOT use in production!
-      - 'OPENSEARCH_HOSTS=["http://search:9200"]'
-      - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"
+  # opensearch-dashboards is not required
+  # opensearch-dashboards:
+  #   image: opensearchproject/opensearch-dashboards:2.3.0
+  #   ports:
+  #     - "5601:5601"
+  #   expose:
+  #     - "5601"
+  #   environment:
+  #     # settings only for development. DO NOT use in production!
+  #     - 'OPENSEARCH_HOSTS=["http://search:9200"]'
+  #     - "DISABLE_SECURITY_DASHBOARDS_PLUGIN=true"

@@ -32,11 +32,13 @@ services:
     extends:
       file: docker-services.yml
       service: search
-  opensearch-dashboards:
-    extends:
-      file: docker-services.yml
-      service: opensearch-dashboards
-  pgadmin:
-    extends:
-      file: docker-services.yml
-      service: pgadmin
+  # opensearch-dashboards and pgadmin are not required,
+  # they are GUI to manage the db and the indexes
+  # opensearch-dashboards:
+  #   extends:
+  #     file: docker-services.yml
+  #     service: opensearch-dashboards
+  # pgadmin:
+  #   extends:
+  #     file: docker-services.yml
+  #     service: pgadmin
