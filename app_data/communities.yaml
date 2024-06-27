@@ -106,3 +106,15 @@
     description: CAPeX, Pioneer Center for Accelerating P2X Materials Discovery
     website: https://capex.dtu.dk/
     organizations: [{"name": "CAPeX"}]
+- access:
+    visibility: restricted
+    member_policy: closed
+    record_policy: open
+    review_policy: open
+  slug: batcat
+  logo: ./static/images/batcat.png
+  metadata:
+    title: BatCAT
+    description: Battery Cell Assembly Twin (BatCAT)
+    website: http://batcat.info/
+    organizations: [{"name": "BatCAT"}]
