@@ -33,8 +33,6 @@ class BMACommunityHeaderComponent extends Component {
           <div className="ui grid">
             <div className="eleven wide computer sixteen wide mobile sixteen wide tablet column">
               <div className="pl-15 pt-20">
-                <p>This is the <b>main repository</b>, intended for storing and sharing research data.
-                For testing purposes use the <a href="https://big-map-archive-demo.materialscloud.org/">demo repository</a>.</p>
                 <p className="mb-0">Proceed as follows to share a record with a community:</p>
                 <ul className="mt-0 pl-30">
                   <li>Select the community you want to share the record with.</li>
