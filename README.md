@@ -12,7 +12,7 @@ The focus is on data, raw and/or processed, that you already curated and want to
 
 ## Demo archive and tutorial
 
-In addition to the main production archive (with daily backups), a [demo archive](https://big-map-archive-demo.materialscloud.org/) is available so that you can practice creating and managing records via the graphical user interface (GUI) and the application programming interface (API). 
+In addition to the main production archive (with daily backups), a [demo archive](https://archive-demo.big-map.eu/) is available so that you can practice creating and managing records via the graphical user interface (GUI) and the application programming interface (API).
 
 A [tutorial](https://archive.big-map.eu/help/tutorial) walks you through the very basic steps to help you getting started. Please experiment on the demo archive, as you are not allowed to delete shared records on the main archive.
 
