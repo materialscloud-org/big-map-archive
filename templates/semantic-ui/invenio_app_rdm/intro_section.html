@@ -59,7 +59,11 @@
             <a href="/help/tutorial" target="_blank">{{ _("Tutorial") }}</a>
           </div>
           <div class="ui primary button labeled icon big goto-button">
+            {%- if config.SITE_DEMO %}
+            <a href="https://archive.big-map.eu/" target="_blank">{{ _("Go to main archive") }}</a>
+            {%- else %}
             <a href="https://archive-demo.big-map.eu/" target="_blank">{{ _("Test on demo") }}</a>
+            {%- endif %}
           </div>
         </div>
     </div>
