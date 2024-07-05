@@ -11,8 +11,12 @@
 {%- set html_css_classes=['cover-page'] %}
 {%- set body_css_classes=['ui grid doubling middle center aligned cover-page'] %}
 
+{%- from "invenio_banners/banner.html" import banner -%}
+
 {%- block body %}
   <div class="sixteen wide column centered">
+    {{ banner() }}
+
     {%- block flashmessages %}
       {%- from "invenio_theme/macros/messages.html" import flashed_messages with context -%}
       {{ flashed_messages(center_text=true) }}

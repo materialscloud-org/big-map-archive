@@ -15,7 +15,14 @@
     <div class="ui login segment padded">
       <div class="divider hidden"></div>
       {%- block form_header %}
-        <h3 class="ui login header">Log in to {{config.THEME_SITENAME}}</h3>
+        <h3 class="ui login header">
+          Log in to
+          {%- if config.SITE_DEMO %}
+          {{ _(config.THEME_SITENAME_DEMO) }}
+          {%- else %}
+          {{ _(config.THEME_SITENAME) }}
+          {%- endif %}
+        </h3>
         <div class="ui visible warning message bma_banner">
           <p>
             <div class="divider hidden"></div>
